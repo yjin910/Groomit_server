@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+	<!-- Javascript SDKs-->
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+	<script src="js/amazon-cognito-auth.min.js"></script>
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+	<script src="js/amazon-cognito-identity.min.js"></script>   
+  <script src="js/config.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>  
+  <link rel="stylesheet" type="text/css" href="login_style.css">
+
+  </head>
+  <body class="body">
+    <div class="login-page">
+      <form class="form">
+        <input type="text" id="inputUsername"  placeholder="&#xf007;  username" required autofocus>
+        <input type="password" id="inputPassword"  placeholder="&#xf023;  password" required>    
+        <button type="button" onclick="logInButton()">Login</button>
+        <button type="button" onclick="resetPw()">Reset password</button>
+        <button type="button" onclick="window.location.href='register.html';">Sign up</button>
+      </form>
+    </div>
+
+
+<script>
+  function logInButton() {
+    
+	var authenticationData = {
+        Username : document.getElementById("inputUsername").value,
+        Password : document.getElementById("inputPassword").value,
+    };
+	
+    var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+    
+	var poolData = {
+        UserPoolId : _config.cognito.userPoolId,
+        ClientId : _config.cognito.clientId,
+    };
+	
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+	
+    var userData = {
+        Username : document.getElementById("inputUsername").value,
+        Pool : userPool,
+    };
+	
+    var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    
+	cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: function (result) {
+          var accessToken = result.getAccessToken().getJwtToken();
+          console.log(accessToken);
+          window.location.href = 'main.html';
+        },
+        onFailure: function(err) {
+            alert(err.message || JSON.stringify(err));
+        },
+    });
+  }
+
+  function resetPw() {
+    var userName =  prompt('Enter your email', '');
+    var poolData = {
+          UserPoolId : _config.cognito.userPoolId, // Your user pool id here
+          ClientId : _config.cognito.clientId, // Your client id here
+      };
+    
+      var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+    
+      var userData = {
+          Username : userName,
+          Pool : userPool,
+      };
+    
+      var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+      
+      cognitoUser.forgotPassword({
+          onSuccess: function (result) {
+              console.log('call result: ' + result);
+          },
+          onFailure: function(err) {
+              alert(err);
+        console.log(err);
+          },
+          inputVerificationCode() {
+              var verificationCode = prompt('Please input verification code ' ,'');
+              var newPassword = prompt('Enter new password ' ,'');
+              cognitoUser.confirmPassword(verificationCode, newPassword, this);
+          }
+      });
+  }
+</script>
+</body>
+</html>

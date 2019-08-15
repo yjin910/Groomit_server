@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/amazon-cognito-identity.min.js"></script>  
+    <script src="js/config.js"></script>
+</head>
+<body>
+
+    <h2>Main Page</h2>
+
+    <div class="container">
+        <div>
+        <button type="button" onclick="signOut()">Sign out</button>
+        <button type="button" onclick="window.location.href='profile.html';">Profile</button>
+        </div>
+    
+    <div>
+    <script>
+        var data = { 
+            UserPoolId : _config.cognito.userPoolId,
+            ClientId : _config.cognito.clientId
+        };
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+        var cognitoUser = userPool.getCurrentUser();
+        
+        function signOut(){
+            if(cognitoUser != null){
+                cognitoUser.signOut();
+                window.location.href = 'logout.html';
+            }
+        }
+    </script>
+</body>
+</html> 
