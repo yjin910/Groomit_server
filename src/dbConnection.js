@@ -8,10 +8,10 @@ const mysql = require('mysql');
  * @type {Pool} the connection pool.
  */
 let pool = mysql.createPool({
-    host: 'localhost',
+    host: 'localhost', //TODO
     user: 'root',
     password: 'sung0429',
     port: 3306,
-    database: 'groomdb57ywyj',
+    database: 'groomdb57ywyj', //TODO
     connectionLimit : 100
 });
