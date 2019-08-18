@@ -1,0 +1,19 @@
+{
+  "name": "groomit_server",
+  "version": "1.0.0",
+  "description": "Server for groom",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yjin910/Groomit_server.git"
+  },
+  "author": "Yeonwoo Sung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yjin910/Groomit_server/issues"
+  },
+  "homepage": "https://github.com/yjin910/Groomit_server#readme"
+}
