@@ -1,14 +1,14 @@
 const app = require('./src/app');
 
 const http = require('http');
-const httpPort = 8090; //use the 9280 http port number
+const httpPort = 8090;
 
-var debug = require('debug')('db_implementation:server');
+var debug = require('debug')('GroomWe:server');
 
 app.set('port', httpPort);
 
 /* Create http server */
-let server = http.createServer(app);
+var server = http.createServer(app);
 
 /**
  * Event listener for HTTP server "error" event.

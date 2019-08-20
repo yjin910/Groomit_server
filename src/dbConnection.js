@@ -7,7 +7,7 @@ const mysql = require('mysql');
  *
  * @type {Pool} the connection pool.
  */
-let pool = mysql.createPool({
+var pool = mysql.createPool({
     host: 'groomdb57ywyj.c2rirrernrhc.ap-northeast-2.rds.amazonaws.com',
     port: 3306,
     user: 'admin',
