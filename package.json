@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/yjin910/Groomit_server/issues"
   },
-  "homepage": "https://github.com/yjin910/Groomit_server#readme"
+  "homepage": "https://github.com/yjin910/Groomit_server#readme",
+  "dependencies": {
+    "body-parser-xml": "^1.1.0",
+    "cookie-parser": "^1.4.4",
+    "ejs": "^2.6.2",
+    "http-errors": "^1.7.3"
+  }
 }
