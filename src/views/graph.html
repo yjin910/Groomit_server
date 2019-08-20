@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>TEMS chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
+    <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        </style>
+</head>
+    
+<body>
+        <div style="width:75%;">
+            <canvas id="canvas"></canvas>
+        </div>
+        
+        <!-- <p><%= projects %></p> -->
+        <script>
+            var datas = <%-JSON.stringify(projects)%>;
+            var c_val = <%-JSON.stringify(c)%>;
+            var labels = [];
+            var g_data = [];
+            var t_data = [];
+            var h_data = [];
+
+            // var xhr = new XMLHttpRequest();
+            // xhr.onreadystatechange = function () { // 요청에 대한 콜백
+            //     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+            //         if (xhr.status === 200 || xhr.status === 201) {
+            //             // console.log(xhr.responseText);
+            //             json_data = JSON.parse(xhr.responseText);
+            //             sortdata(json_data);
+            //             getgraph();
+            //             console.log(json_data);
+            //         } else {
+            //             console.error(xhr.responseText);
+            //         }
+            //     }
+            // };
+            // xhr.open('GET', '/graph/data?u=' + uuid); // 메소드와 주소 설정
+            // xhr.send();
+
+            function sortdata(datas) {
+                for(key in datas) {
+                    type = datas[key].type;
+                    CDate = new Date(datas[key].time);
+                    value = datas[key].val;
+
+                    if(type == 'g'){
+                        g_data.push({x : CDate, y : value})
+                    }
+                    if(type == 't'){
+                        t_data.push({x : CDate, y : value})
+                    }
+                    if(type == 'h'){
+                        h_data.push({x : CDate, y : value})
+                    }
+                    if (!labels.includes(new Date(datas[key].time))){
+                        // cDate = new Date(datas[key]['time']);
+                        labels.push(CDate)
+                    }
+                        
+                    console.log(t_data);
+                }
+            }
+    
+            function getgraph(){
+                const DATASET_G = {
+                            label: 'geiger count',
+                            data: g_data,
+                            backgroundColor: window.chartColors.red,
+                            borderColor: window.chartColors.red,
+                            type: 'line',
+					        pointRadius: 0,
+                            fill: false,
+                            lineTension: 0,
+					        borderWidth: 1,
+                        }
+
+                const DATASET_T = {
+                            label: 'temperature',
+                            data: t_data,
+                            backgroundColor: window.chartColors.blue,
+                            borderColor: window.chartColors.blue,
+                            type: 'line',
+					        pointRadius: 0,
+                            fill: false,
+                            lineTension: 0,
+					        borderWidth: 1,
+                        }
+
+                const DATASET_H = {
+                            label: 'humidity',
+                            data: h_data,
+                            backgroundColor: window.chartColors.blue,
+                            borderColor: window.chartColors.blue,
+                            type: 'line',
+					        pointRadius: 0,
+                            fill: false,
+                            lineTension: 0,
+					        borderWidth: 1,
+                        }
+                
+                let dataset_arr = [];
+
+                if (c_val.includes("g")){
+                    dataset_arr.push(DATASET_G);
+                }
+                if (c_val.includes("t")){
+                    dataset_arr.push(DATASET_T);
+                }
+                if (c_val.includes("h")){
+                    dataset_arr.push(DATASET_H);
+                }
+                // 그래프
+                var config = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: dataset_arr
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'TEMS chart'
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: 'time',
+                                // time: {
+                                    // unit: 'second',
+                                    // displayFormats: {
+                                    //     month: 'MMM YYYY'
+                                    // }
+                                // },
+                                distribution: 'series',
+                                display: true,
+                            }],
+                            yAxes: [{
+                                display: true,
+                                type: 'linear',
+                            }]
+                        }
+                    }
+                };
+            
+                window.onload = function() {
+                   
+                };
+                var ctx = document.getElementById('canvas').getContext('2d');
+                window.myLine = new Chart(ctx, config);
+                window.myLine.update();
+            }
+
+            sortdata(datas);
+            getgraph();
+    </script>
+</body>
+</html>

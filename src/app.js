@@ -1,41 +1,37 @@
-'use strict';
+'use strict'
 
 //import required libraries
-let createError = require('http-errors');
-let express = require('express');
-let path = require('path');
-let cookieParser = require('cookie-parser');
-let logger = require('morgan');
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
-let app = express()
+var app = express();
 
+var bodyParser = require('body-parser');
+require('body-parser-xml')(bodyParser);
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs'); //use the html as a template engine
+app.engine('html', require('ejs').renderFile);
+
+
+//basic set ups
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'views')));
+app.use(express.static(path.join(__dirname, 'lib')));
+// app.use(express.static()
 
+// add routers
+app.use('/login', require('./login'));
+app.use('/graph', require('./graph'));
+app.use('/logoneg', require('./logoneg'));
+app.use('/logoneth', require('./logoneth'));
+app.use('/time', require('./time'));
 
-//TODO use favicon
-const favicon = require('express-favicon');
-//app.use(favicon(path.resolve(__dirname + '/../public/images/book.ico')));
-
-
-//The routers objects.
-let loginRouter = require('./routes/login');
-
-//Add router objects
-app.use('/login', loginRouter);
-
-
-//Set the view engine
-app.engine('pug', require('pug').__express)
-app.set('views', path.join(__dirname, '../public'));
-app.set('view engine', 'pug'); //use the pug as a template engine
-
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
-});
-
-module.exports = app
+// module.exports.app = app;
+module.exports = app;
