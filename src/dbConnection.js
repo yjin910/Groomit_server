@@ -47,7 +47,7 @@ exports.addOwner = function(email, deviceNum) {
     });
 }
 
-exports.addData = function(deviceNum, type, value, time) {
+exports.addData = function(deviceNum, type, value, time, res) {
     var queryString ="INSERT INTO measurement (deviceNum, type, val, time) VALUES(?, ?, ?, ?)";
     var params = [deviceNum, type, value, time];
 
@@ -68,7 +68,7 @@ exports.addData = function(deviceNum, type, value, time) {
     });
 }
 
-exports.getData =  function(graphres, deviceNum, type) {
+exports.getData = (res, deviceNum, type) => {
     var queryString =`SELECT * from measurement WHERE deviceNum = "${deviceNum}"`;
     // var params = [deviceNum, type, value, time];
 
@@ -80,7 +80,7 @@ exports.getData =  function(graphres, deviceNum, type) {
                 if (err) {
                     res.send(err);
                 } else {
-                    graphres.render('graph.html', {c: type, projects: results}); // (3)
+                    res.render('graph.html', {c: type, projects: results}); // (3)
                 }
             });
 

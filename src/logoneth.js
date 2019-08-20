@@ -17,8 +17,8 @@ router.get('/', (req, res) => {
         var time_val = s2;
         var seq = req.query.s;
 
-        dbcon.addData(device_uid, "t", t_value, time_val);
-        dbcon.addData(device_uid, "h", h_value, time_val);
+        dbcon.addData(device_uid, "t", t_value, time_val, res);
+        dbcon.addData(device_uid, "h", h_value, time_val, res);
 
         console.log(s1);
         res.send(time_val);

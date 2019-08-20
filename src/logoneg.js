@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
         var seq = req.query.s;
 
         if(g_value){
-            dbcon.addData(device_uid, "g", g_value, time_val);
+            dbcon.addData(device_uid, "g", g_value, time_val, res);
             res.send("success");
         }
     } catch (e){
