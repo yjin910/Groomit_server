@@ -70,6 +70,7 @@ exports.addData = function(deviceNum, type, value, time, res) {
 
 exports.getData = (res, deviceNum, type) => {
     var queryString =`SELECT * from measurement WHERE deviceNum = "${deviceNum}"`;
+    console.log(queryString);
     // var params = [deviceNum, type, value, time];
 
     pool.getConnection(function(err, conn) {
