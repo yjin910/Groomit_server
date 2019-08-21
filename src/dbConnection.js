@@ -68,9 +68,8 @@ exports.addData = function(deviceNum, type, value, time, res) {
     });
 }
 
-exports.getData = (res, deviceNum, type) => {
+exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)`;
-    console.log(queryString);
     // var params = [deviceNum, type, value, time];
 
     pool.getConnection(function(err, conn) {
@@ -82,6 +81,27 @@ exports.getData = (res, deviceNum, type) => {
                     res.send(err);
                 } else {
                     res.render('graph.html', {c: type, projects: results}); // (3)
+                }
+            });
+
+            conn.release();
+        }
+    });
+}
+
+exports.getData = (res, deviceNum, type) => {
+    var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)`;
+    // var params = [deviceNum, type, value, time];
+
+    pool.getConnection(function (err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(queryString, function (err, results, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(results);
                 }
             });
 
