@@ -69,7 +69,7 @@ exports.addData = function(deviceNum, type, value, time, res) {
 }
 
 exports.getData = (res, deviceNum, type) => {
-    var queryString =`SELECT * from measurement WHERE deviceNum = "${deviceNum}"`;
+    var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)`;
     console.log(queryString);
     // var params = [deviceNum, type, value, time];
 
