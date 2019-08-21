@@ -7,7 +7,7 @@ var moment = require('moment');
 
 router.get('/', (req, res) => {
     try{
-        var s1 = moment(new Date().toLocaleString('en-GB', { timeZone: 'Asia/Seoul', hour12: false }), 'DD/MM/YYYY, hh:mm:ss');
+        var s1 = moment(new Date().toLocaleString('en-GB', { timeZone: 'Asia/Seoul', hour12: false }), 'MM/DD/YYYY, hh:mm:ss');
         var s2 = s1.format('YYYY-MM-DDTHH:mm:ssZ')
 
         //get datas from req
