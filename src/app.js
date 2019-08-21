@@ -32,6 +32,7 @@ app.use('/graph', require('./graph'));
 app.use('/logoneg', require('./logoneg'));
 app.use('/logoneth', require('./logoneth'));
 app.use('/time', require('./time'));
+app.use('/getdata', require('./getdata'));
 
 // module.exports.app = app;
 module.exports = app;

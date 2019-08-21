@@ -6,7 +6,7 @@ var dbcon = require('./dbConnection');
 var fs = require('fs');
 
 router.get('/', (req, res) => {
-  dbcon.getData(res, req.query.u, req.query.c);
+  dbcon.sendGraphPage(res, req.query.u, req.query.c);
   console.log("Successfully sent data");
 });
 
