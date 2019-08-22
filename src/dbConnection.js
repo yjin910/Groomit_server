@@ -72,6 +72,32 @@ exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)`;
     // var params = [deviceNum, type, value, time];
 
+    if (type.length == 2) {
+        if (!type.includes('t')) {
+            queryString += ` AND type != 't'`
+        } else if (!type.includes('h')) {
+            queryString += ` AND type != 'h'`
+        } else if (!type.includes('g')) {
+            queryString += ` AND type != 'g'`
+        }
+    } else if (type.length == 1) {
+        switch (type) {
+            case 't' :
+                queryString += ` AND type = 't'`
+                break;
+            case 'h' :
+                queryString += ` AND type = 'h'`
+                break;
+            case 'g' :
+                queryString += ` AND type = 'g'`
+                break;
+            default :
+                console.log('Invalid type: ', type);
+        }
+    }
+
+    console.log(type);
+
     pool.getConnection(function(err, conn) {
         if (err) {
             res.send(err);
