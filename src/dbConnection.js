@@ -70,29 +70,32 @@ exports.addData = function(deviceNum, type, value, time, res) {
 
 exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
+    // TODO select * from measurement where deviceNum = 18 and time >= '2019-08-23 01:00:00';
     // var params = [deviceNum, type, value, time];
 
-    if (type.length == 2) {
-        if (!type.includes('t')) {
-            queryString += ` AND type != 't'`
-        } else if (!type.includes('h')) {
-            queryString += ` AND type != 'h'`
-        } else if (!type.includes('g')) {
-            queryString += ` AND type != 'g'`
-        }
-    } else if (type.length == 1) {
-        switch (type) {
-            case 't' :
-                queryString += ` AND type = 't'`
-                break;
-            case 'h' :
-                queryString += ` AND type = 'h'`
-                break;
-            case 'g' :
-                queryString += ` AND type = 'g'`
-                break;
-            default :
-                console.log('Invalid type: ', type);
+    if (type) {
+        if (type.length == 2) {
+            if (!type.includes('t')) {
+                queryString += ` AND type != 't'`
+            } else if (!type.includes('h')) {
+                queryString += ` AND type != 'h'`
+            } else if (!type.includes('g')) {
+                queryString += ` AND type != 'g'`
+            }
+        } else if (type.length == 1) {
+            switch (type) {
+                case 't' :
+                    queryString += ` AND type = 't'`
+                    break;
+                case 'h' :
+                    queryString += ` AND type = 'h'`
+                    break;
+                case 'g' :
+                    queryString += ` AND type = 'g'`
+                    break;
+                default :
+                    console.log('Invalid type: ', type);
+            }
         }
     }
 
@@ -119,27 +122,29 @@ exports.getData = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     // var params = [deviceNum, type, value, time];
 
-    if (type.length == 2) {
-        if (!type.includes('t')) {
-            queryString += ` AND type != 't'`
-        } else if (!type.includes('h')) {
-            queryString += ` AND type != 'h'`
-        } else if (!type.includes('g')) {
-            queryString += ` AND type != 'g'`
-        }
-    } else if (type.length == 1) {
-        switch (type) {
-            case 't':
-                queryString += ` AND type = 't'`
-                break;
-            case 'h':
-                queryString += ` AND type = 'h'`
-                break;
-            case 'g':
-                queryString += ` AND type = 'g'`
-                break;
-            default:
-                console.log('Invalid type: ', type);
+    if (type) {
+        if (type.length == 2) {
+            if (!type.includes('t')) {
+                queryString += ` AND type != 't'`
+            } else if (!type.includes('h')) {
+                queryString += ` AND type != 'h'`
+            } else if (!type.includes('g')) {
+                queryString += ` AND type != 'g'`
+            }
+        } else if (type.length == 1) {
+            switch (type) {
+                case 't':
+                    queryString += ` AND type = 't'`
+                    break;
+                case 'h':
+                    queryString += ` AND type = 'h'`
+                    break;
+                case 'g':
+                    queryString += ` AND type = 'g'`
+                    break;
+                default:
+                    console.log('Invalid type: ', type);
+            }
         }
     }
 
