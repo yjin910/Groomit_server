@@ -69,7 +69,7 @@ exports.addData = function(deviceNum, type, value, time, res) {
 }
 
 exports.sendGraphPage = (res, deviceNum, type) => {
-    var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 5 HOUR)`;
+    var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     // var params = [deviceNum, type, value, time];
 
     if (type.length == 2) {
@@ -116,7 +116,7 @@ exports.sendGraphPage = (res, deviceNum, type) => {
 }
 
 exports.getData = (res, deviceNum, type) => {
-    var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 5 HOUR)`;
+    var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     // var params = [deviceNum, type, value, time];
 
     if (type.length == 2) {
