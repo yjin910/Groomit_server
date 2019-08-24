@@ -99,8 +99,6 @@ exports.sendGraphPage = (res, deviceNum, type) => {
         }
     }
 
-    console.log(type);
-
     pool.getConnection(function(err, conn) {
         if (err) {
             res.send(err);
