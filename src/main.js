@@ -10,11 +10,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:mainUuid', (req, res) => {
-     dbcon.getUuid(res, req.query.email);
+    dbcon.getUuid(res, req.query.email);
 });
 
 router.post('/:graphInfo', (req, res) => {
-      dbcon.getData(res, req.query.u, req.query.type);
+    dbcon.getData(res, req.query.u, req.query.type);
 });
 
 module.exports = router;

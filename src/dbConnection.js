@@ -164,7 +164,7 @@ exports.getData = (res, deviceNum, type) => {
 }
 
 exports.addDevice = function(email, deviceNum) {
-    var queryString ="INSERT INTO measurement (deviceNum, email) VALUES(?, ?)";
+    var queryString ="INSERT INTO device_owner (deviceNum, email) VALUES(?, ?)";
     var params = [deviceNum, email];
 
     pool.getConnection(function(err, conn) {
@@ -191,7 +191,7 @@ exports.getUuid = function(res, email) {
         if (err) {
             res.send(err);
         } else {
-            conn.query(queryString, params, function(err, result, fields) {
+            conn.query(queryString, function(err, result, fields) {
                 if (err) {
                     res.send(err);
                 } else {
