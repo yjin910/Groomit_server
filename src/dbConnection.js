@@ -162,3 +162,45 @@ exports.getData = (res, deviceNum, type) => {
         }
     });
 }
+
+exports.addDevice = function(email, deviceNum) {
+    var queryString ="INSERT INTO measurement (deviceNum, email) VALUES(?, ?)";
+    var params = [deviceNum, email];
+
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(queryString, params, function(err, result, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    console.log("Successfully added new device");
+                }
+            });
+
+            conn.release();
+        }
+    });
+}
+
+exports.getUuid = function(res, email) {
+    var queryString =`SELECT * from device_owner WHERE email = "${email}"`;
+
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(queryString, params, function(err, result, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(result)
+                    console.log("Successfully send device info");
+                }
+            });
+
+            conn.release();
+        }
+    });
+}

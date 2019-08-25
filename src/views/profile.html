@@ -5,27 +5,52 @@
 	 <!--Cognito JavaScript-->
 	<script src="js/amazon-cognito-identity.min.js"></script>  
 	<script src="js/config.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>  
+	<link rel="stylesheet" type="text/css" href="profile.css">
   </head>
 
   <body>
-		<h4>Personal Information</h4>
-		
-		<br>
-		<div>
-			<label>Email <span>(Username)</span></label>
+		<div class="sc-user-profile">
+			<div class="data">
+				<span class="entypo-heart" style="font-size: 30px"> Personal Information</span>
+			</div>
+			<div>
+				<div class="left">Username</div>
+				<div class="right" id="username"></div>
+				<div class="left">Email</div>
+				<div class="right" id="email"></div>
+			</div>
+			<br/>
+
+			<div class="data">
+					<span class="entypo-heart" style="font-size: 30px"> Edit Information</span>
+			</div>
+			<div>
+				<div class="left" >Add device</div>
+				<div class="right">
+					<input type="device_uuid" id="uuid" placeholder="Device ID" required>    
+					<button type="button" onclick="addDevice()">Add device</button>
+				</div>
+				<p id="message_uuid"></p>
+				<div class="left">Change Password</div>
+				<div class="left">
+					<input type="text" id="oldPassword"  placeholder="Current password" name="oldPassword" required autofocus>
+				</div>
+				<div class="right">
+					<input type="password" id="newPassword"  placeholder="New Password" name="newPassword" required>
+				</div>
+				<div class="right">
+						<button type="button" onclick="changePw()">Save</button>
+				</div>
+				<p id="message_pw"></p>
+				<button type="button" id="main" onclick="window.location.href='main.html';">Main</button>
+			</div>
 		</div>
-		<div>
-			<label id="email_value"></label>
-		</div>
-		<div>
-			<input type="text" id="oldPassword"  placeholder="Current password" name="oldPassword" required autofocus>
-			<input type="password" id="newPassword"  placeholder="New Password" name="newPassword" required>    
-			<button type="button" onclick="changePw()">Save</button>
-		</div>
-		
-    </div>
 
     <script>
+		// var dbcon = require('../dbConnection');
+		var email;
+
 		var data = { 
 			UserPoolId : _config.cognito.userPoolId,
 			ClientId : _config.cognito.clientId
@@ -48,7 +73,11 @@
 							return;
 						}
 						console.log(result);
-						document.getElementById("email_value").innerHTML = result[2].getValue();	
+						email = result[3].getValue();
+						var name = result[2].getValue();
+						
+						document.getElementById("username").innerHTML = name;	
+						document.getElementById("email").innerHTML = email;
 					});			
 					
 				});
@@ -56,15 +85,30 @@
 		}
 
 		function changePw() {			
-			// 작동안함. https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#changePassword-property 참조
-			// changePassword에 AccessToken 필요한데 잘 모르겠음
-			cognitoUser.changePassword('oldPassword', 'newPassword', function(err, result) {
+			var oldPassword = document.getElementById('oldPassword').value;
+			var newPassword = document.getElementById('newPassword').value;
+			cognitoUser.changePassword(oldPassword, newPassword, function(err, result) {
 				if (err) {
 					alert(err);
 					return;
+				}else {
+					console.log('call result: ' + result);
+					// document.getElementById('message_pw').innerHTML = "Successfully changed password"
+					document.getElementById('oldPassword').innerText = '';
+					document.getElementById('newPassword').innerText = '';
+					alert("Successfully changed password");
+					// window.location.href = 'login.html';
 				}
-				console.log('call result: ' + result);
 			});
+		}
+
+		function addDevice(){
+			var uuid = document.getElementById('uuid').value;
+			var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/profile/:userInfo?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
+			xhr.send();
+			document.getElementById('uuid').innerText = '';
+			alert("Successfully added new device");
 		}
     </script>
   </body>

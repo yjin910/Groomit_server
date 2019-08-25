@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
+    <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
     <script src="js/amazon-cognito-identity.min.js"></script>  
     <script src="js/config.js"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
 </head>
 <body>
 
     <h2>Main Page</h2>
+
+    <div style="width:75%;">
+        <canvas id="canvas"></canvas>
+    </div>
 
     <div class="container">
         <div>
@@ -16,6 +30,9 @@
     
     <div>
     <script>
+        var uuid;
+        var email;
+        
         var data = { 
             UserPoolId : _config.cognito.userPoolId,
             ClientId : _config.cognito.clientId
@@ -23,12 +40,200 @@
         var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
         var cognitoUser = userPool.getCurrentUser();
         
+        window.onload = function(){
+            if (cognitoUser != null) {
+				cognitoUser.getSession(function(err, session) {
+					if (err) {
+						alert(err);
+						return;
+					}
+					console.log('session validity: ' + session.isValid());
+					//Set the profile info
+					cognitoUser.getUserAttributes(function(err, result) {
+						if (err) {
+							console.log(err);
+							return;
+						}
+						console.log(result);
+                        email = result[3].getValue();
+                        console.log(email)
+                        getGraph()
+                    });			
+					
+				});
+			}
+        }
+
         function signOut(){
             if(cognitoUser != null){
                 cognitoUser.signOut();
                 window.location.href = 'logout.html';
             }
         }
+
+        function getGraph(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/main/:mainUuid?email=' + email); // 메소드와 주소 설정
+            xhr.onreadystatechange = function () { // 요청에 대한 콜백
+                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                    if (xhr.status === 200 || xhr.status === 201) {
+                        // 메인 uuid설정란 db에 만들기?
+                        var uuids = JSON.parse(xhr.responseText);
+                        console.log(uuids.length)
+                        if (uuids.length == 0){
+                            uuid = null;
+                        }else{
+                            uuid = uuids[0].deviceNum;
+                            getGraphData();
+                        }
+                    } else {
+                        console.error(xhr.responseText);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function getGraphData(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/main/:graphInfo?u=' + uuid + '&type= gth'); // 메소드와 주소 설정
+            xhr.onreadystatechange = function () { // 요청에 대한 콜백
+                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                    if (xhr.status === 200 || xhr.status === 201) {
+                        // console.log(JSON.parse(xhr.responseText));
+                        var datas = JSON.parse(xhr.responseText);
+                        var c_val = 'gth';
+
+                        sortdata(datas, c_val);
+                    } else {
+                        console.error(xhr.responseText);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function sortdata(datas, c_val) {
+            var labels = [];
+            var g_data = [];
+            var t_data = [];
+            var h_data = [];
+
+            for(key in datas) {
+                // console.log(datas[key].type)
+                type = datas[key].type;
+                CDate = new Date(datas[key].time);
+                value = datas[key].val;
+
+                if(type == 'g'){
+                    g_data.push({x : CDate, y : value})
+                }
+                if(type == 't'){
+                    t_data.push({x : CDate, y : value})
+                }
+                if(type == 'h'){
+                    h_data.push({x : CDate, y : value})
+                }
+                if (!labels.includes(new Date(datas[key].time))){
+                    labels.push(CDate)
+                }
+            }
+            // console.log(g_data)
+            drawGraph(c_val, labels, g_data, t_data, h_data);
+        }
+    
+            function drawGraph(c_val, labels, g_data, t_data, h_data){
+                // console.log(g_data)
+                const DATASET_G = {
+                            label: 'geiger count',
+                            data: g_data,
+                            backgroundColor: window.chartColors.red,
+                            borderColor: window.chartColors.red,
+                            type: 'line',
+					        pointRadius: 0,
+                            fill: false,
+                            lineTension: 0,
+					        borderWidth: 1,
+                        }
+
+                const DATASET_T = {
+                            label: 'temperature',
+                            data: t_data,
+                            backgroundColor: window.chartColors.blue,
+                            borderColor: window.chartColors.blue,
+                            type: 'line',
+					        pointRadius: 0,
+                            fill: false,
+                            lineTension: 0,
+					        borderWidth: 1,
+                        }
+
+                const DATASET_H = {
+                            label: 'humidity',
+                            data: h_data,
+                            backgroundColor: window.chartColors.blue,
+                            borderColor: window.chartColors.blue,
+                            type: 'line',
+					        pointRadius: 0,
+                            fill: false,
+                            lineTension: 0,
+					        borderWidth: 1,
+                        }
+                
+                let dataset_arr = [];
+
+                if (c_val.includes("g")){
+                    dataset_arr.push(DATASET_G);
+                }
+                if (c_val.includes("t")){
+                    dataset_arr.push(DATASET_T);
+                }
+                if (c_val.includes("h")){
+                    dataset_arr.push(DATASET_H);
+                }
+                // 그래프
+                var config = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: dataset_arr
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Graph of device: ' + uuid
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: 'time',
+                                // time: {
+                                    // unit: 'second',
+                                    // displayFormats: {
+                                    //     month: 'MMM YYYY'
+                                    // }
+                                // },
+                                distribution: 'series',
+                                display: true,
+                            }],
+                            yAxes: [{
+                                display: true,
+                                type: 'linear',
+                            }]
+                        }
+                    }
+                };
+            
+                window.onload = function() {
+                   
+                };
+                var ctx = document.getElementById('canvas').getContext('2d');
+                window.myLine = new Chart(ctx, config);
+                window.myLine.update();
+            }
+
+        //     sortdata(datas);
+        //     getgraph();
     </script>
 </body>
 </html> 

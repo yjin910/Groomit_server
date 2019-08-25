@@ -33,6 +33,8 @@ app.use('/logoneg', require('./logoneg'));
 app.use('/logoneth', require('./logoneth'));
 app.use('/time', require('./time'));
 app.use('/getdata', require('./getdata'));
+app.use('/profile', require('./profile'));
+app.use('/main', require('./main'))
 
 // module.exports.app = app;
 module.exports = app;

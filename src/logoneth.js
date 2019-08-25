@@ -7,11 +7,14 @@ var moment = require('moment');
 
 router.get('/', (req, res) => {
     try{
+        var s1 = moment(new Date().toLocaleString('en-GB', { timeZone: 'Asia/Seoul', hour12: false }), 'MM/DD/YYYY, hh:mm:ss');
+        var s2 = s1.format('YYYY-MM-DDTHH:mm:ssZ')
+
         //get datas from req
         var device_uid = req.query.u;
         var t_value = req.query.t;
         var h_value =  req.query.h;
-        var time_val = moment(new Date().toLocaleString('en-GB', { timeZone: 'Asia/Seoul', hour12: false }), 'MM/DD/YYYY, hh:mm:ss').format('YYYY-MM-DDTHH:mm:ssZ');
+        var time_val = s2;
         var seq = req.query.s;
 
         dbcon.addData(device_uid, "t", t_value, time_val, res);

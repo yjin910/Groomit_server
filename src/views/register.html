@@ -28,11 +28,14 @@
 		</form>
 	</div>
 
+	<!-- "window.location.href='login.html';" -->
 	<script>
 		var user_Email;
 		var user_Pw;
 		var user_Name;
 		var poolData;
+		var cognitoUser;
+		var userPool;
 			
 		function registerButton() {
 			var email_reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -53,7 +56,7 @@
 		}
 
 		function sendEmailVaification(){		
-			var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+			userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 			var attributeList = [];
 			
 			var dataEmail = {
@@ -71,6 +74,7 @@
 			
 			attributeList.push(attributeEmail);
 			attributeList.push(attributePersonalName);
+
 			userPool.signUp(user_Email, user_Pw, attributeList, null, function(err, result){
 				if (err) {
 					alert(err.message || JSON.stringify(err));
@@ -82,6 +86,14 @@
 				document.getElementById("message").innerHTML = "Check your email for a verification link";
 			});
 		}
+
+		// function checkUserStatus(){
+			// var cognitoUser = userPool.getCurrentUser();
+			// if (cognitoUser != null) {
+			// 	var userStatus = cognitoUser.getUserStatus();
+			// 	alert(userStatus)
+			// }
+		// }
 	</script>
  
  </body>
