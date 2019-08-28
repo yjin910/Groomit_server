@@ -10,6 +10,7 @@
   </head>
 
   <body>
+		<img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
 		<div class="sc-user-profile">
 			<div class="data">
 				<span class="entypo-heart" style="font-size: 30px"> Personal Information</span>
@@ -103,12 +104,17 @@
 		}
 
 		function addDevice(){
+			var uuid_reg = /^[a-zA-Z0-9_.-]*$/i;
 			var uuid = document.getElementById('uuid').value;
-			var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/profile/:userInfo?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
-			xhr.send();
-			document.getElementById('uuid').innerText = '';
-			alert("Successfully added new device");
+
+			if (!uuid_reg.test(uuid)){
+			}else{
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', '/profile/:userInfo?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
+				xhr.send();
+				document.getElementById('uuid').innerText = '';
+				alert("Successfully added new device");
+			}
 		}
     </script>
   </body>

@@ -12,10 +12,11 @@
 	<link rel="stylesheet" type="text/css" href="register_style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>  
-  </head>
+</head>
 
 	
-  <body>
+<body>
+		<img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
 	<div class="login-page">
 		<form class="form">
 			<h2 class="h3 mb-3 font-weight-normal" id="titleheader">Register an Account</h1>
@@ -23,7 +24,7 @@
 			<input type="email" class="form-control" id="signup_email" placeholder="Email" pattern=".*" required>
 			<input type="password" class="form-control" id="signup_pwd" placeholder="Password" pattern=".*" required>
 			<button id="confirmemail" type="button" onclick="registerButton()" >Confirm email</button>
-			<button id="mainbutton" class="btn btn-lg btn-primary btn-block" type="button" onclick="window.location.href='login.html';">Register</button>
+			<button id="mainbutton" class="btn btn-lg btn-primary btn-block" type="button" onclick="checkUserStatus()">Register</button>
 			<confirm class="message" id="message"></confirm>
 		</form>
 	</div>
@@ -81,19 +82,64 @@
 					return;
 				}
 				cognitoUser = result.user;
+				
+				
+				cognitoUser.getSession(function(err, session) {
+					if (err) {
+						alert('Noo!!'+ err);
+						return;
+					}
+					console.log('session validity: ' + session.isValid());
+					//Set the profile info
+					cognitoUser.getUserAttributes(function(err, result) {
+						if (err) {
+							console.log(err);
+							return;
+						}
+						console.log(result);
+						// email = result[3].getValue();
+						// console.log(email)
+						// getGraph()
+					});					
+				});
+
+				console.log(cognitoUser)
 				console.log('user name is ' + cognitoUser.getUsername());
 				//change elements of page
 				document.getElementById("message").innerHTML = "Check your email for a verification link";
 			});
 		}
 
-		// function checkUserStatus(){
-			// var cognitoUser = userPool.getCurrentUser();
-			// if (cognitoUser != null) {
-			// 	var userStatus = cognitoUser.getUserStatus();
-			// 	alert(userStatus)
-			// }
-		// }
+		function checkUserStatus(){
+			var data = { 
+				UserPoolId : _config.cognito.userPoolId,
+				ClientId : _config.cognito.clientId
+			};
+			var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+			var cognitoUser = userPool.getCurrentUser();
+			
+			console.log(cognitoUser)
+			if (cognitoUser != null) {
+				cognitoUser.getSession(function(err, session) {
+					if (err) {
+						alert(err);
+						return;
+					}
+					console.log('session validity: ' + session.isValid());
+					//Set the profile info
+					cognitoUser.getUserAttributes(function(err, result) {
+						if (err) {
+							console.log(err);
+							return;
+						}
+						console.log(result);
+						// email = result[3].getValue();
+						// console.log(email)
+						// getGraph()
+					});					
+				});
+			}
+		}
 	</script>
  
  </body>

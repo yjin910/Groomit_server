@@ -16,16 +16,6 @@ var pool = mysql.createPool({
     connectionLimit : 100
 });
 
-// pool.connect(function(err) {
-//     if (err) {
-//         console.error('mysql connection error');
-//         console.error(err);
-//         throw err;
-//     }else{ 
-//         console.log("연결에 성공하였습니다."); 
-//     } 
-// });
-
 exports.addOwner = function(email, deviceNum) {
     var queryString ="INSERT INTO device_owner (email, deviceNum) VALUES(?, ?)";
     var params = [email, deviceNum];

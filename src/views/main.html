@@ -15,23 +15,46 @@
     </style>
 </head>
 <body>
+    <img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
+    <img src="technonia_logo.png" alt="Technonia logo" onclick="window.location.href='login.html'" width="150" height="20">
 
     <h2>Main Page</h2>
 
-    <div style="width:75%;">
-        <canvas id="canvas"></canvas>
+    <!-- select device -->
+    <div class="devices">
+            <select id="devices" onchange="changeGraph(this.value)">
+                <option value=''>기기 선택 list box</option>
+            </select>
     </div>
 
-    <div class="container">
-        <div>
-        <button type="button" onclick="signOut()">Sign out</button>
-        <button type="button" onclick="window.location.href='profile.html';">Profile</button>
-        </div>
+    <!-- select term -->
+    <form action="/action_page.php">
+        조회기간 선택 ( 시작~종료 )  : <input type="date" name="bday">
+        <input type="submit">
+    </form>
     
+    <!-- buttons for logout or see profile -->
+    <div class="container">
+            <div>
+            <button type="button" onclick="signOut()">Sign out</button>
+            <button type="button" onclick="window.location.href='profile.html';">Profile</button>
+            </div>
     <div>
-    <script>
+
+    <!-- graph for giger -->
+    <div style="width:75%;">
+        <canvas id="canvasG"></canvas>
+    </div>
+
+    <!-- graph for temperature and humadity -->
+    <div style="width:75%;">
+        <canvas id="canvasTH"></canvas>
+    </div>
+
+<script>
         var uuid;
         var email;
+        var c_val = 'gth';
         
         var data = { 
             UserPoolId : _config.cognito.userPoolId,
@@ -40,34 +63,31 @@
         var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
         var cognitoUser = userPool.getCurrentUser();
         
-        window.onload = function(){
-            if (cognitoUser != null) {
-				cognitoUser.getSession(function(err, session) {
+        if (cognitoUser != null) {
+			cognitoUser.getSession(function(err, session) {
+				if (err) {
+					alert(err);
+					return;
+				}
+				console.log('session validity: ' + session.isValid());
+				//Set the profile info
+				cognitoUser.getUserAttributes(function(err, result) {
 					if (err) {
-						alert(err);
+						console.log(err);
 						return;
 					}
-					console.log('session validity: ' + session.isValid());
-					//Set the profile info
-					cognitoUser.getUserAttributes(function(err, result) {
-						if (err) {
-							console.log(err);
-							return;
-						}
-						console.log(result);
-                        email = result[3].getValue();
-                        console.log(email)
-                        getGraph()
-                    });			
-					
-				});
-			}
-        }
+					console.log(result);
+                    email = result[3].getValue();
+                    console.log(email)
+                    getGraph()
+                });					
+			});
+		}
 
         function signOut(){
             if(cognitoUser != null){
                 cognitoUser.signOut();
-                window.location.href = 'logout.html';
+                window.location.href = 'login.html';
             }
         }
 
@@ -82,9 +102,9 @@
                         console.log(uuids.length)
                         if (uuids.length == 0){
                             uuid = null;
-                            // console.log("DSLKJFLKDJLFJSLJSKLDJFLJ")
                         }else{
                             uuid = uuids[0].deviceNum;
+                            addSelection(uuids);
                             getGraphData();
                         }
                     } else {
@@ -97,15 +117,14 @@
 
         function getGraphData(){
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/main/:graphInfo?u=' + uuid + '&type= gth'); // 메소드와 주소 설정
+            xhr.open('POST', '/main/:graphInfo?u=' + uuid + '&type=' + c_val); // 메소드와 주소 설정
             xhr.onreadystatechange = function () { // 요청에 대한 콜백
                 if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                     if (xhr.status === 200 || xhr.status === 201) {
                         // console.log(JSON.parse(xhr.responseText));
                         var datas = JSON.parse(xhr.responseText);
-                        var c_val = 'gth';
 
-                        sortdata(datas, c_val);
+                        sortdata(datas);
                     } else {
                         console.error(xhr.responseText);
                     }
@@ -114,7 +133,7 @@
             xhr.send();
         }
 
-        function sortdata(datas, c_val) {
+        function sortdata(datas) {
             var labels = [];
             var g_data = [];
             var t_data = [];
@@ -172,8 +191,8 @@
                 const DATASET_H = {
                             label: 'humidity',
                             data: h_data,
-                            backgroundColor: window.chartColors.blue,
-                            borderColor: window.chartColors.blue,
+                            backgroundColor: window.chartColors.orange,
+                            borderColor: window.chartColors.orange,
                             type: 'line',
 					        pointRadius: 0,
                             fill: false,
@@ -181,29 +200,36 @@
 					        borderWidth: 1,
                         }
                 
-                let dataset_arr = [];
+                let dataset_arr_g = [];
+                let dataset_arr_th = []
 
                 if (c_val.includes("g")){
-                    dataset_arr.push(DATASET_G);
+                    dataset_arr_g.push(DATASET_G);
+                    getGgraph(labels, dataset_arr_g);
                 }
-                if (c_val.includes("t")){
-                    dataset_arr.push(DATASET_T);
+                if (c_val.includes("t") || c_val.includes("h")){
+                    if(c_val.includes("t")){
+                    dataset_arr_th.push(DATASET_T);
+                    }
+                    if(c_val.includes("h")){
+                        dataset_arr_th.push(DATASET_H);
+                    }
+                    getTHgraph(labels, dataset_arr_th);
                 }
-                if (c_val.includes("h")){
-                    dataset_arr.push(DATASET_H);
-                }
-                // 그래프
-                var config = {
+            }
+
+            function getGgraph(labels, dataset_arr_g){
+                var config_g = {
                     type: 'line',
                     data: {
                         labels: labels,
-                        datasets: dataset_arr
+                        datasets: dataset_arr_g
                     },
                     options: {
                         responsive: true,
                         title: {
                             display: true,
-                            text: 'Graph of device: ' + uuid
+                            text: 'G_graph of device: ' + uuid
                         },
                         scales: {
                             xAxes: [{
@@ -224,17 +250,74 @@
                         }
                     }
                 };
-            
-                window.onload = function() {
-                   
-                };
-                var ctx = document.getElementById('canvas').getContext('2d');
-                window.myLine = new Chart(ctx, config);
+
+                var ctx_g = document.getElementById('canvasG').getContext('2d');
+                window.myLine = new Chart(ctx_g, config_g);
                 window.myLine.update();
             }
 
-        //     sortdata(datas);
-        //     getgraph();
+            function getTHgraph(labels, dataset_arr_th){
+                var config_th = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: dataset_arr_th
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'T&H_raph of device: ' + uuid
+                        },
+                        scales: {
+                            xAxes: [{
+                                type:       "time",
+                                time:       {
+                                    parser: 'DD h:mm a',
+                                    tooltipFormat: 'll'
+                                },
+                                scaleLabel: {
+                                    display:     true,
+                                    labelString: 'Date'
+                                },
+                                distribution: 'series',
+                                display: true,
+                            }],
+                            yAxes: [{
+                                display: true,
+                                type: 'linear',
+                                labelString: 'value'
+                            }]
+                        }
+                    }
+                };
+
+                var ctx_th = document.getElementById('canvasTH').getContext('2d');
+                window.myLine = new Chart(ctx_th, config_th);
+                window.myLine.update();
+            }
+
+            function addSelection(uuids){
+                var selection = document.getElementById("devices");
+
+                if(selection.length == 1){
+                    for (i in uuids){
+                        var option = document.createElement("option");
+
+                        option.text = uuids[i].deviceNum;
+                        option.value = uuids[i].deviceNum;
+                        selection.add(option)
+                        console.log(uuids[i].deviceNum)
+                    }
+                } else if(uuids.length > selection.length){
+                    // TODO:: 추가시 어떻게 할지 확인
+                }
+            }
+
+            function changeGraph(device){
+                uuid = device;
+                getGraphData()
+            }
     </script>
 </body>
 </html> 
