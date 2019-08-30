@@ -1,5 +1,4 @@
 'use strict';
-
 var express = require('express');
 var router = express.Router();
 var dbcon = require('./dbConnection');
@@ -9,12 +8,16 @@ router.get('/', (req, res) => {
     res.render('main.html');
 });
 
-router.get('/:mainUuid', (req, res) => {
+router.get('/graphInfo', (req, res) => {
+    dbcon.getData(res, req.query.u, req.query.type, req.query.startD, req.query.endD);
+});
+
+router.get('/mainUuid', (req, res) => {
     dbcon.getUuid(res, req.query.email);
 });
 
-router.post('/:graphInfo', (req, res) => {
-    dbcon.getData(res, req.query.u, req.query.type);
+router.get('/dateLimit', (req, res) => {
+    dbcon.getDateLimit(res, req.query.u);
 });
 
 module.exports = router;

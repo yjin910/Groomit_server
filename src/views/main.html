@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
     <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
-    <script src="js/amazon-cognito-identity.min.js"></script>  
+    <script src="js/amazon-cognito-identity.min.js"></script>
     <script src="js/config.js"></script>
     <style>
         canvas {
@@ -14,211 +15,230 @@
         }
     </style>
 </head>
+
 <body>
-    <img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
+    <img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="170" height="60">
     <img src="technonia_logo.png" alt="Technonia logo" onclick="window.location.href='login.html'" width="150" height="20">
 
     <h2>Main Page</h2>
 
     <!-- select device -->
     <div class="devices">
-            <select id="devices" onchange="changeGraph(this.value)">
-                <option value=''>기기 선택 list box</option>
-            </select>
+        <select id="devices" onchange="changeGraph(this.value)">
+            <option value=''>기기 선택 list box</option>
+        </select>
     </div>
 
     <!-- select term -->
-    <form action="/action_page.php">
-        조회기간 선택 ( 시작~종료 )  : <input type="date" name="bday">
-        <input type="submit">
-    </form>
-    
+    <div class="date">
+        조회기간 선택 (시작 ~ 종료) :
+        <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
+        <input type="date" id="end_date" onchange="chanegMaxStartD()"><br>
+        <input type=" submit "onclick="changeDate()">
+    </div>
+
     <!-- buttons for logout or see profile -->
     <div class="container">
-            <div>
+        <div>
             <button type="button" onclick="signOut()">Sign out</button>
-            <button type="button" onclick="window.location.href='profile.html';">Profile</button>
+            <button type="button" onclick="window.location.href='profile.html' ;">Profile</button>
+        </div>
+        <div>
+
+            <!-- graph for giger -->
+            <div style="width:75%;">
+                <canvas id="canvasG"></canvas>
             </div>
-    <div>
 
-    <!-- graph for giger -->
-    <div style="width:75%;">
-        <canvas id="canvasG"></canvas>
-    </div>
+            <!-- graph for temperature and humadity -->
+            <div style="width:75%;">
+                <canvas id="canvasTH"></canvas>
+            </div>
+        </div>
 
-    <!-- graph for temperature and humadity -->
-    <div style="width:75%;">
-        <canvas id="canvasTH"></canvas>
-    </div>
+        <form method="get" action="test.csv">
+            <button type="submit" onclick="JSON2CSV()">Download!</button>
+        </form>
+         
+        <script>
+            var uuid;
+            var email;
+            var datas;
+            var c_val = 'gth';
 
-<script>
-        var uuid;
-        var email;
-        var c_val = 'gth';
-        
-        var data = { 
-            UserPoolId : _config.cognito.userPoolId,
-            ClientId : _config.cognito.clientId
-        };
-        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
-        var cognitoUser = userPool.getCurrentUser();
-        
-        if (cognitoUser != null) {
-			cognitoUser.getSession(function(err, session) {
-				if (err) {
-					alert(err);
-					return;
-				}
-				console.log('session validity: ' + session.isValid());
-				//Set the profile info
-				cognitoUser.getUserAttributes(function(err, result) {
-					if (err) {
-						console.log(err);
-						return;
-					}
-					console.log(result);
-                    email = result[3].getValue();
-                    console.log(email)
-                    getGraph()
-                });					
-			});
-		}
+            var data = {
+                UserPoolId: _config.cognito.userPoolId,
+                ClientId: _config.cognito.clientId
+            };
+            var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+            var cognitoUser = userPool.getCurrentUser();
 
-        function signOut(){
-            if(cognitoUser != null){
-                cognitoUser.signOut();
-                window.location.href = 'login.html';
-            }
-        }
-
-        function getGraph(){
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/main/:mainUuid?email=' + email); // 메소드와 주소 설정
-            xhr.onreadystatechange = function () { // 요청에 대한 콜백
-                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                    if (xhr.status === 200 || xhr.status === 201) {
-                        // 메인 uuid설정란 db에 만들기?
-                        var uuids = JSON.parse(xhr.responseText);
-                        console.log(uuids.length)
-                        if (uuids.length == 0){
-                            uuid = null;
-                        }else{
-                            uuid = uuids[0].deviceNum;
-                            addSelection(uuids);
-                            getGraphData();
+            if (cognitoUser != null) {
+                cognitoUser.getSession(function(err, session) {
+                    if (err) {
+                        alert(err);
+                        return;
+                    }
+                    console.log('session validity: ' + session.isValid());
+                    //Set the profile info
+                    cognitoUser.getUserAttributes(function(err, result) {
+                        if (err) {
+                            console.log(err);
+                            return;
                         }
-                    } else {
-                        console.error(xhr.responseText);
-                    }
-                }
-            };
-            xhr.send();
-        }
+                        console.log(result);
+                        email = result[3].getValue();
+                        console.log(email)
+                        getGraph();
+                    });
+                });
+            }
 
-        function getGraphData(){
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/main/:graphInfo?u=' + uuid + '&type=' + c_val); // 메소드와 주소 설정
-            xhr.onreadystatechange = function () { // 요청에 대한 콜백
-                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                    if (xhr.status === 200 || xhr.status === 201) {
-                        // console.log(JSON.parse(xhr.responseText));
-                        var datas = JSON.parse(xhr.responseText);
-
-                        sortdata(datas);
-                    } else {
-                        console.error(xhr.responseText);
-                    }
-                }
-            };
-            xhr.send();
-        }
-
-        function sortdata(datas) {
-            var labels = [];
-            var g_data = [];
-            var t_data = [];
-            var h_data = [];
-
-            for(key in datas) {
-                // console.log(datas[key].type)
-                type = datas[key].type;
-                CDate = new Date(datas[key].time);
-                value = datas[key].val;
-
-                if(type == 'g'){
-                    g_data.push({x : CDate, y : value})
-                }
-                if(type == 't'){
-                    t_data.push({x : CDate, y : value})
-                }
-                if(type == 'h'){
-                    h_data.push({x : CDate, y : value})
-                }
-                if (!labels.includes(new Date(datas[key].time))){
-                    labels.push(CDate)
+            function signOut() {
+                if (cognitoUser != null) {
+                    cognitoUser.signOut();
+                    window.location.href = 'login.html';
                 }
             }
-            // console.log(g_data)
-            drawGraph(c_val, labels, g_data, t_data, h_data);
-        }
-    
-            function drawGraph(c_val, labels, g_data, t_data, h_data){
+
+            function getGraph() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/main/mainUuid?email=' + email); // 메소드와 주소 설정
+                xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            // 메인 uuid설정란 db에 만들기?
+                            var uuids = JSON.parse(xhr.responseText);
+                            console.log(uuids.length)
+                            if (uuids.length == 0) {
+                                uuid = null;
+                            } else {
+                                uuid = uuids[0].deviceNum;
+                                addSelection(uuids);
+                                getGraphData(null, null);
+                                getDateLimit();
+                            }
+                        } else {
+                            console.error(xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            function getGraphData(startD, endD) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/main/graphInfo?u=' + uuid + '&type=' + c_val + '&startD=' + startD + '&endD=' + endD); // 메소드와 주소 설정
+                xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            console.log(JSON.parse(xhr.responseText));
+                            // console.log(startD)
+                            datas = JSON.parse(xhr.responseText);
+                            sortdata();
+                        } else {
+                            console.error(xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            function sortdata() {
+                var labels = [];
+                var g_data = [];
+                var t_data = [];
+                var h_data = [];
+
+                for (key in datas) {
+                    // console.log(datas[key].type)
+                    type = datas[key].type;
+                    CDate = new Date(datas[key].time);
+                    value = datas[key].val;
+
+                    if (type == 'g') {
+                        g_data.push({
+                            x: CDate,
+                            y: value
+                        })
+                    }
+                    if (type == 't') {
+                        t_data.push({
+                            x: CDate,
+                            y: value
+                        })
+                    }
+                    if (type == 'h') {
+                        h_data.push({
+                            x: CDate,
+                            y: value
+                        })
+                    }
+                    if (!labels.includes(new Date(datas[key].time))) {
+                        labels.push(CDate)
+                    }
+                }
+                // console.log(g_data)
+                drawGraph(c_val, labels, g_data, t_data, h_data);
+            }
+
+            function drawGraph(c_val, labels, g_data, t_data, h_data) {
                 // console.log(g_data)
                 const DATASET_G = {
-                            label: 'geiger count',
-                            data: g_data,
-                            backgroundColor: window.chartColors.red,
-                            borderColor: window.chartColors.red,
-                            type: 'line',
-					        pointRadius: 0,
-                            fill: false,
-                            lineTension: 0,
-					        borderWidth: 1,
-                        }
+                    label: 'geiger count',
+                    data: g_data,
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    type: 'line',
+                    pointRadius: 0,
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 1,
+                }
 
                 const DATASET_T = {
-                            label: 'temperature',
-                            data: t_data,
-                            backgroundColor: window.chartColors.blue,
-                            borderColor: window.chartColors.blue,
-                            type: 'line',
-					        pointRadius: 0,
-                            fill: false,
-                            lineTension: 0,
-					        borderWidth: 1,
-                        }
+                    label: 'temperature',
+                    data: t_data,
+                    backgroundColor: window.chartColors.blue,
+                    borderColor: window.chartColors.blue,
+                    type: 'line',
+                    pointRadius: 0,
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 1,
+                }
 
                 const DATASET_H = {
-                            label: 'humidity',
-                            data: h_data,
-                            backgroundColor: window.chartColors.orange,
-                            borderColor: window.chartColors.orange,
-                            type: 'line',
-					        pointRadius: 0,
-                            fill: false,
-                            lineTension: 0,
-					        borderWidth: 1,
-                        }
-                
+                    label: 'humidity',
+                    data: h_data,
+                    backgroundColor: window.chartColors.orange,
+                    borderColor: window.chartColors.orange,
+                    type: 'line',
+                    pointRadius: 0,
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 1,
+                }
+
                 let dataset_arr_g = [];
                 let dataset_arr_th = []
 
-                if (c_val.includes("g")){
+                if (c_val.includes("g")) {
                     dataset_arr_g.push(DATASET_G);
                     getGgraph(labels, dataset_arr_g);
                 }
-                if (c_val.includes("t") || c_val.includes("h")){
-                    if(c_val.includes("t")){
-                    dataset_arr_th.push(DATASET_T);
+                if (c_val.includes("t") || c_val.includes("h")) {
+                    if (c_val.includes("t")) {
+                        dataset_arr_th.push(DATASET_T);
                     }
-                    if(c_val.includes("h")){
+                    if (c_val.includes("h")) {
                         dataset_arr_th.push(DATASET_H);
                     }
                     getTHgraph(labels, dataset_arr_th);
                 }
             }
 
-            function getGgraph(labels, dataset_arr_g){
+            function getGgraph(labels, dataset_arr_g) {
                 var config_g = {
                     type: 'line',
                     data: {
@@ -235,10 +255,10 @@
                             xAxes: [{
                                 type: 'time',
                                 // time: {
-                                    // unit: 'second',
-                                    // displayFormats: {
-                                    //     month: 'MMM YYYY'
-                                    // }
+                                // unit: 'second',
+                                // displayFormats: {
+                                //     month: 'MMM YYYY'
+                                // }
                                 // },
                                 distribution: 'series',
                                 display: true,
@@ -256,7 +276,7 @@
                 window.myLine.update();
             }
 
-            function getTHgraph(labels, dataset_arr_th){
+            function getTHgraph(labels, dataset_arr_th) {
                 var config_th = {
                     type: 'line',
                     data: {
@@ -271,24 +291,47 @@
                         },
                         scales: {
                             xAxes: [{
-                                type:       "time",
-                                time:       {
-                                    parser: 'DD h:mm a',
-                                    tooltipFormat: 'll'
+                                type: "time",
+                                time: {
+                                    parser: "MM/DD/YYYY HH:mm",
+                                    // round: 'day'
+                                    tooltipFormat: "ll HH:mm"
                                 },
                                 scaleLabel: {
-                                    display:     true,
-                                    labelString: 'Date'
+                                    display: true,
+                                    labelString: "Date"
+                                },
+                                ticks: {
+                                    maxRotation: 0
                                 },
                                 distribution: 'series',
-                                display: true,
                             }],
                             yAxes: [{
-                                display: true,
                                 type: 'linear',
-                                labelString: 'value'
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "value"
+                                }
                             }]
-                        }
+                        },
+                        pan: {
+                            enabled: true,
+                            mode: 'x' // is panning about the y axis neccessary for bar charts?
+                        },
+                        zoom: {
+                            enabled: true,
+                            mode: "x",
+                            sensitivity: 1
+                        },
+                        // zoom: {
+                        //     enabled: true,
+                        //     drag: false,
+
+                        //     limits: {
+                        //         max: 10,
+                        //         min: 0.5
+                        //     }
+                        // }
                     }
                 };
 
@@ -297,27 +340,116 @@
                 window.myLine.update();
             }
 
-            function addSelection(uuids){
+            function addSelection(uuids) {
                 var selection = document.getElementById("devices");
-
-                if(selection.length == 1){
-                    for (i in uuids){
+                console.log(selection.length)
+                if (selection.length == 1) {
+                    for (i in uuids) {
                         var option = document.createElement("option");
 
                         option.text = uuids[i].deviceNum;
                         option.value = uuids[i].deviceNum;
                         selection.add(option)
-                        console.log(uuids[i].deviceNum)
+                        console.log(uuids[i])
                     }
-                } else if(uuids.length > selection.length){
+                } else if (uuids.length > selection.length) {
                     // TODO:: 추가시 어떻게 할지 확인
                 }
             }
 
-            function changeGraph(device){
+            function changeGraph(device) {
                 uuid = device;
                 getGraphData()
             }
-    </script>
+
+            function getDateLimit() {
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', '/main/dateLimit?u=' + uuid); // 메소드와 주소 설정
+                xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            var mintime = "MIN(time)"
+                            console.log(JSON.parse(xhr.responseText)[0]);
+                            var date_limits = JSON.parse(xhr.responseText);
+
+                            var min_date = (new Date(date_limits[0].mintime)).toISOString().substr(0, 10);
+                            var max_date = (new Date(date_limits[0].maxtime)).toISOString().substr(0, 10);
+
+                            document.getElementById("start_date").min = min_date;
+                            document.getElementById("end_date").max = max_date;
+                        } else {
+                            console.error(xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            function changeDate() {
+                var startDate = document.getElementById("start_date");
+                var endDate = new Date(document.getElementById("end_date").value);
+
+                endDate.setDate(endDate.getDate() + 1);
+                endDate = endDate.toISOString().substr(0, 10);
+
+                if (startDate == '' || endDate == '') {
+                    alert("Please enter the term to check");
+                } else {
+                    getGraphData(startDate, endDate)
+                }
+            }
+
+            function chanegMinEndD(){
+                var startDate = new Date(document.getElementById("start_date"));
+                document.getElementById("start_date").min = min_date;
+            }
+
+            function JSON2CSV() {
+                var array = typeof datas != 'object' ? JSON.parse(datas) : datas;
+
+                var str = '';
+                var line = '';
+
+                if ($("#labels").is(':checked')) {
+                    var head = array[0];
+                    if ($("#quote").is(':checked')) {
+                        for (var index in array[0]) {
+                            var value = index + "";
+                            line += '"' + value.replace(/"/g, '""') + '",';
+                        }
+                    } else {
+                        for (var index in array[0]) {
+                            line += index + ',';
+                        }
+                    }
+
+                    line = line.slice(0, -1);
+                    str += line + '\r\n';
+                }
+
+                for (var i = 0; i < array.length; i++) {
+                    var line = '';
+
+                    if ($("#quote").is(':checked')) {
+                        for (var index in array[i]) {
+                            var value = array[i][index] + "";
+                            line += '"' + value.replace(/"/g, '""') + '",';
+                        }
+                    } else {
+                        for (var index in array[i]) {
+                            line += array[i][index] + ',';
+                        }
+                    }
+
+                    line = line.slice(0, -1);
+                    str += line + '\r\n';
+                }
+                console.log(str);
+                
+            }
+
+        </script>
 </body>
-</html> 
+
+</html>

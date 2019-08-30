@@ -13,11 +13,11 @@ var pool = mysql.createPool({
     user: 'admin',
     password: 'sung0429',
     database: 'groomdata',
-    connectionLimit : 100
+    connectionLimit: 100
 });
 
 exports.addOwner = function(email, deviceNum) {
-    var queryString ="INSERT INTO device_owner (email, deviceNum) VALUES(?, ?)";
+    var queryString = "INSERT INTO device_owner (email, deviceNum) VALUES(?, ?)";
     var params = [email, deviceNum];
 
     pool.getConnection(function(err, conn) {
@@ -38,7 +38,7 @@ exports.addOwner = function(email, deviceNum) {
 }
 
 exports.addData = function(deviceNum, type, value, time, res) {
-    var queryString ="INSERT INTO measurement (deviceNum, type, val, time) VALUES(?, ?, ?, ?)";
+    var queryString = "INSERT INTO measurement (deviceNum, type, val, time) VALUES(?, ?, ?, ?)";
     var params = [deviceNum, type, value, time];
 
     pool.getConnection(function(err, conn) {
@@ -74,16 +74,16 @@ exports.sendGraphPage = (res, deviceNum, type) => {
             }
         } else if (type.length == 1) {
             switch (type) {
-                case 't' :
+                case 't':
                     queryString += ` AND type = 't'`
                     break;
-                case 'h' :
+                case 'h':
                     queryString += ` AND type = 'h'`
                     break;
-                case 'g' :
+                case 'g':
                     queryString += ` AND type = 'g'`
                     break;
-                default :
+                default:
                     console.log('Invalid type: ', type);
             }
         }
@@ -97,7 +97,7 @@ exports.sendGraphPage = (res, deviceNum, type) => {
                 if (err) {
                     res.send(err);
                 } else {
-                    res.render('graph.html', {c: type, projects: results}); // (3)
+                    res.render('graph.html', { c: type, projects: results }); // (3)
                 }
             });
 
@@ -106,8 +106,15 @@ exports.sendGraphPage = (res, deviceNum, type) => {
     });
 }
 
-exports.getData = (res, deviceNum, type) => {
-    var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
+exports.getData = (res, deviceNum, type, startD, endD) => {
+    var queryString;
+
+    if (startD == 'null' & endD == 'null') {
+        console.log("TESTTEST")
+        queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
+    } else {
+        queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND (time BETWEEN "${startD}" AND "${endD}")`;
+    }
     // var params = [deviceNum, type, value, time];
 
     if (type) {
@@ -136,15 +143,16 @@ exports.getData = (res, deviceNum, type) => {
         }
     }
 
-    pool.getConnection(function (err, conn) {
+    pool.getConnection(function(err, conn) {
         if (err) {
             res.send(err);
         } else {
-            conn.query(queryString, function (err, results, fields) {
+            conn.query(queryString, function(err, results, fields) {
                 if (err) {
                     res.send(err);
                 } else {
                     res.send(results);
+                    console.log("Successfully send data")
                 }
             });
 
@@ -154,7 +162,7 @@ exports.getData = (res, deviceNum, type) => {
 }
 
 exports.addDevice = function(email, deviceNum) {
-    var queryString ="INSERT INTO device_owner (deviceNum, email) VALUES(?, ?)";
+    var queryString = "INSERT INTO device_owner (deviceNum, email) VALUES(?, ?)";
     var params = [deviceNum, email];
 
     pool.getConnection(function(err, conn) {
@@ -175,7 +183,7 @@ exports.addDevice = function(email, deviceNum) {
 }
 
 exports.getUuid = function(res, email) {
-    var queryString =`SELECT * from device_owner WHERE email = "${email}"`;
+    var queryString = `SELECT * from device_owner WHERE email = "${email}"`;
 
     pool.getConnection(function(err, conn) {
         if (err) {
@@ -186,6 +194,28 @@ exports.getUuid = function(res, email) {
                     res.send(err);
                 } else {
                     res.send(result)
+                    console.log("Successfully send device info!");
+                }
+            });
+
+            conn.release();
+        }
+    });
+}
+
+exports.getDateLimit = function(res, uuid) {
+    var queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}"`;
+
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(queryString, function(err, result, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(result)
+                    console.log(result)
                     console.log("Successfully send device info");
                 }
             });
