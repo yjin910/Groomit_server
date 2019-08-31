@@ -24,7 +24,7 @@
 			<input type="email" class="form-control" id="signup_email" placeholder="Email" pattern=".*" required>
 			<input type="password" class="form-control" id="signup_pwd" placeholder="Password" pattern=".*" required>
 			<button id="confirmemail" type="button" onclick="registerButton()" >Confirm email</button>
-			<button id="mainbutton" class="btn btn-lg btn-primary btn-block" type="button" onclick="checkUserStatus()">Register</button>
+			<button id="reconfirmemail" type="button" onclick="resendVerification()"  style="display:none;">Resend email</button>
 			<confirm class="message" id="message"></confirm>
 		</form>
 	</div>
@@ -34,28 +34,25 @@
 		var user_Email;
 		var user_Pw;
 		var user_Name;
-		var poolData;
 		var cognitoUser;
-		var userPool;
-			
+		
+		var poolData = {
+					UserPoolId : _config.cognito.userPoolId,
+					ClientId : _config.cognito.clientId
+				};
+
 		function registerButton() {
 			var email_reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 			user_Email = document.getElementById("signup_email").value;
 			user_Pw =  document.getElementById("signup_pwd").value;	
 			user_Name =  document.getElementById("signup_name").value;	
-
-			poolData = {
-					UserPoolId : _config.cognito.userPoolId,
-					ClientId : _config.cognito.clientId
-				};
-
+			
 			if (!email_reg.test(user_Email)){
 				document.getElementById("message").innerHTML = "*** Invalid email";
 			} else {
 				sendEmailVaification()
 			}
 		}
-
 		function sendEmailVaification(){		
 			userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 			var attributeList = [];
@@ -75,71 +72,36 @@
 			
 			attributeList.push(attributeEmail);
 			attributeList.push(attributePersonalName);
-
 			userPool.signUp(user_Email, user_Pw, attributeList, null, function(err, result){
 				if (err) {
 					alert(err.message || JSON.stringify(err));
 					return;
 				}
 				cognitoUser = result.user;
-				
-				
-				cognitoUser.getSession(function(err, session) {
-					if (err) {
-						alert('Noo!!'+ err);
-						return;
-					}
-					console.log('session validity: ' + session.isValid());
-					//Set the profile info
-					cognitoUser.getUserAttributes(function(err, result) {
-						if (err) {
-							console.log(err);
-							return;
-						}
-						console.log(result);
-						// email = result[3].getValue();
-						// console.log(email)
-						// getGraph()
-					});					
-				});
-
-				console.log(cognitoUser)
 				console.log('user name is ' + cognitoUser.getUsername());
 				//change elements of page
 				document.getElementById("message").innerHTML = "Check your email for a verification link";
+				document.getElementById("confirmemail").style.display = "none";
+				document.getElementById("reconfirmemail").style.display = "";
 			});
 		}
 
-		function checkUserStatus(){
-			var data = { 
-				UserPoolId : _config.cognito.userPoolId,
-				ClientId : _config.cognito.clientId
-			};
-			var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
-			var cognitoUser = userPool.getCurrentUser();
+		function resendVerification(){
+			var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+            var userData = {
+                Username: user_Email,
+                Pool: userPool,
+            };
 			
-			console.log(cognitoUser)
-			if (cognitoUser != null) {
-				cognitoUser.getSession(function(err, session) {
-					if (err) {
-						alert(err);
-						return;
-					}
-					console.log('session validity: ' + session.isValid());
-					//Set the profile info
-					cognitoUser.getUserAttributes(function(err, result) {
-						if (err) {
-							console.log(err);
-							return;
-						}
-						console.log(result);
-						// email = result[3].getValue();
-						// console.log(email)
-						// getGraph()
-					});					
-				});
-			}
-		}
+			cognitoUser.resendConfirmationCode(function(err, result) {
+				if (err) {
+					alert(err.message || JSON.stringify(err));
+					return;
+				}
+				console.log('call result: ' + result);
+			});
+		}	
 	</script>
  
  </body>
