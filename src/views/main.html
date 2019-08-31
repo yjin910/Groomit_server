@@ -34,7 +34,7 @@
         조회기간 선택 (시작 ~ 종료) :
         <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
         <input type="date" id="end_date" onchange="chanegMaxStartD()"><br>
-        <input type=" submit "onclick="changeDate()">
+        <button type="submit" onclick="changeDate()">select</button>
     </div>
 
     <!-- buttons for logout or see profile -->
@@ -56,9 +56,7 @@
             </div>
         </div>
 
-        <form method="get" action="test.csv">
-            <button type="submit" onclick="JSON2CSV()">Download!</button>
-        </form>
+        <button type="submit" onclick="json2csv()">Download!</button>
          
         <script>
             var uuid;
@@ -132,7 +130,7 @@
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
-                            console.log(JSON.parse(xhr.responseText));
+                            // console.log(JSON.parse(xhr.responseText));
                             // console.log(startD)
                             datas = JSON.parse(xhr.responseText);
                             sortdata();
@@ -374,7 +372,10 @@
                             var date_limits = JSON.parse(xhr.responseText);
 
                             var min_date = (new Date(date_limits[0].mintime)).toISOString().substr(0, 10);
-                            var max_date = (new Date(date_limits[0].maxtime)).toISOString().substr(0, 10);
+                            var max_date = new Date(date_limits[0].maxtime);
+
+                            max_date.setDate(max_date.getDate() + 1);
+                            max_date = max_date.toISOString().substr(0, 10);
 
                             document.getElementById("start_date").min = min_date;
                             document.getElementById("end_date").max = max_date;
@@ -393,6 +394,7 @@
                 endDate.setDate(endDate.getDate() + 1);
                 endDate = endDate.toISOString().substr(0, 10);
 
+                alert(endDate)
                 if (startDate == '' || endDate == '') {
                     alert("Please enter the term to check");
                 } else {
@@ -401,54 +403,50 @@
             }
 
             function chanegMinEndD(){
-                var startDate = new Date(document.getElementById("start_date"));
-                document.getElementById("start_date").min = min_date;
+                var min_date = document.getElementById("start_date").value;
+                document.getElementById("end_date").min = min_date;
             }
 
-            function JSON2CSV() {
+            function chanegMaxStartD(){
+                var max_date = document.getElementById("end_date").value;
+                document.getElementById("start_date").max = max_date;
+            }
+
+            function json2csv() {
                 var array = typeof datas != 'object' ? JSON.parse(datas) : datas;
 
                 var str = '';
                 var line = '';
 
-                if ($("#labels").is(':checked')) {
-                    var head = array[0];
-                    if ($("#quote").is(':checked')) {
-                        for (var index in array[0]) {
-                            var value = index + "";
-                            line += '"' + value.replace(/"/g, '""') + '",';
-                        }
-                    } else {
-                        for (var index in array[0]) {
-                            line += index + ',';
-                        }
-                    }
+                var head = array[0];
 
-                    line = line.slice(0, -1);
-                    str += line + '\r\n';
+                for (var index in array[0]) {
+                    var value = index + "";
+                    line += '"' + value.replace(/"/g, '""') + '",';
                 }
+
+                line = line.slice(0, -1);
+                str += line + '\r\n';
 
                 for (var i = 0; i < array.length; i++) {
                     var line = '';
 
-                    if ($("#quote").is(':checked')) {
-                        for (var index in array[i]) {
-                            var value = array[i][index] + "";
-                            line += '"' + value.replace(/"/g, '""') + '",';
-                        }
-                    } else {
-                        for (var index in array[i]) {
-                            line += array[i][index] + ',';
-                        }
+                    for (var index in array[i]) {
+                        var value = array[i][index] + "";
+                        line += '"' + value.replace(/"/g, '""') + '",';
                     }
 
                     line = line.slice(0, -1);
                     str += line + '\r\n';
                 }
-                console.log(str);
-                
-            }
 
+                var hiddenElement = document.createElement('a');
+                hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(str);
+                hiddenElement.target = '_blank';
+                hiddenElement.download = uuid + '.csv';
+                hiddenElement.click();
+                // window.open("data:text/csv;charset=utf-8," + escape(str));
+            }
         </script>
 </body>
 
