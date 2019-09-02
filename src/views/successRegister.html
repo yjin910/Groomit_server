@@ -2,12 +2,14 @@
 <html lang="en">
 
     <head>
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="successRegister.css">
     </head>
     <body>
         <img src="groomit_logo.jpg" alt="Groomit logo" onclick="window.location.href='login.html'" width="180" height="90">
-        <h1>Welcome to Groomit!</h1>
-        <div>Redirecting to login page after <count id="counter">3</count> seconds
-        </div>
+        
+        <h2>Welcome to Groomit!</h2>
+        <div class="counter">Redirecting to login page after <count class="counter" id="counter">3</count> seconds</div>
         
         <script>
             setInterval(function() {
