@@ -1,82 +1,88 @@
-/* @import url(http://weloveiconfonts.com/api/?family=entypo);
-@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+@import url('https://fonts.googleapis.com/css?family=Lexend+Exa|Source+Code+Pro&display=swap');
 
-.body {
-  font-family: 'Roboto', sans-serif;
+body, .user-profile {
+  font-family: 'Roboto Mono', monospace;
 }
 
-.sc-user-profile {
+.logo_groomit {
+  cursor: pointer;
+  width: 200px;
+  height: 105px;
+  margin-left: 30px;
+}
+
+.user-profile {
   margin: auto;
   width: 25em;
   background: #fff;
   border-radius: .3em;
 }
 
-.sc-user-profile .left {
+.left {
   float: left;
   padding: 0 15px 10px;
   width: 20%;
   font-weight: bold;
 }
 
-.sc-user-profile .right {
-  padding: 0 5px 10px;
-  width: 80%;
+.right {
+  padding: 0 0 10px 100px;
+  width: 90%;
 }
 
-.sc-user-profile .username {
+#username {
   margin: auto;
-  margin-top: -4.40em;
-  margin-left: 5.80em;
   color: #658585;
-  font-size: 1.53em;
-  font-family: "Coda", sans-serif;
-  font-weight: bold;
+  font-size: 15px;
 }
 
-.sc-user-profile .bio {
+#email {
   margin: auto;
-  display: inline-block;
-  margin-left: 10.43em;
-  color: #e76043;
-  font-size: .87em;
-  font-family: "varela round", sans-serif;
-}
-
-.sc-user-profile > .email {
-  margin: auto;
-  margin-top: 1.35em;
-  margin-right: 4.43em;
   width: 14em;
-  color: #c0c5c5;
-  font-size: .87em;
-  font-family: "varela round", sans-serif;
+  color: #658585;
+  font-size: 15px;
 }
 
-.sc-user-profile > img.avatar {
-  padding: .7em;
-  margin-left: .3em;
-  margin-top: .3em;
-  height: 6.23em;
-  width: 6.23em;
-  border-radius: 18em;
+#uuid, #oldPassword, #newPassword{
+  background: #f2f2f2;
+  margin: 0 0 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-family: 'Roboto Mono', monospace;
 }
 
-.sc-user-profile div.data {
+#uuid {
+  width: 49%;
+}
+
+#adddevice, #changePw, #main{
+  background-color: white;
+  color: black;
+  border: 2px solid #5F9EA0;
+  font-family: 'Roboto Mono', monospace;
+}
+
+#main {
+  margin: 20px 0;
+  float: right;
+  width: 15%;
+  font-size: 15px;
+}
+
+#adddevice:hover, #changePw:hover, #main:hover{
+  background: #e3eeee;
+}
+
+.data {
   margin: 2em auto 1em;
   background: #4eb6b6;
   text-align: center;
   border-radius: 0 0 .3em .3em;
 }
-
-.sc-user-profile span {
-  font-family: "varela round", sans-serif;
+span {
+  font-family: 'Lexend Exa', sans-serif;
   color: #e3eeee;
   white-space: nowrap;
-  font-size: 1.27em;
+  font-size: 25px;
   font-weight: bold;
 }
-
-.sc-user-profile span:hover {
-  color: #daebea;
-} */

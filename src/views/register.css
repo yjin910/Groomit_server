@@ -16,11 +16,11 @@
     margin-right: 80px;
 } */
 
-body, .login-page {
+body, .register-page {
     font-family: 'Roboto Mono', monospace;
 }
 
-.login-page {
+.register-page {
     width: 360px;
     /* padding: 0 0 10% 0; */
     margin: auto;

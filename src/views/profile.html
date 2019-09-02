@@ -10,42 +10,35 @@
   </head>
 
   <body>
-		<img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
-		<div class="sc-user-profile">
+	<img class="logo_groomit" src="groomit_logo.jpg" alt="Groomit logo" onclick="window.location.href='login.html'">
+		<div class="user-profile">
 			<div class="data">
-				<span class="entypo-heart" style="font-size: 30px"> Personal Information</span>
+				<span> Personal Information</span>
 			</div>
-			<div>
-				<div class="left">Username</div>
-				<div class="right" id="username"></div>
-				<div class="left">Email</div>
-				<div class="right" id="email"></div>
-			</div>
+			<div class="left">Username</div>
+			<div class="right" id="username"></div>
+		</br>
+			<div class="left">Email</div>
+			<div class="right" id="email"></div>
 			<br/>
 
 			<div class="data">
-					<span class="entypo-heart" style="font-size: 30px"> Edit Information</span>
+					<span> Edit Information</span>
 			</div>
-			<div>
-				<div class="left" >Add device</div>
-				<div class="right">
-					<input type="device_uuid" id="uuid" placeholder="Device ID" required>    
-					<button type="button" onclick="addDevice()">Add device</button>
-				</div>
-				<p id="message_uuid"></p>
-				<div class="left">Change Password</div>
-				<div class="left">
-					<input type="text" id="oldPassword"  placeholder="Current password" name="oldPassword" required autofocus>
-				</div>
-				<div class="right">
-					<input type="password" id="newPassword"  placeholder="New Password" name="newPassword" required>
-				</div>
-				<div class="right">
-						<button type="button" onclick="changePw()">Save</button>
-				</div>
-				<p id="message_pw"></p>
-				<button type="button" id="main" onclick="window.location.href='main.html';">Main</button>
+			<div class="left" >Add device</div>
+			<div class="right">
+				<input type="device_uuid" id="uuid" placeholder="Device ID" required>    
+				<button type="button" id="adddevice" onclick="addDevice()">Add device</button>
 			</div>
+		</br>
+			<div class="left">Change Password</div>
+			<div class="right">
+				<input type="text" id="oldPassword"  placeholder="Current password" name="oldPassword" required autofocus>
+				<input type="password" id="newPassword"  placeholder="New Password" name="newPassword" required>
+				<button type="button" id="changePw" onclick="changePw()">Save</button>
+			</div>
+			<message id="message_pw"></message>
+			<button type="button" id="main" onclick="window.location.href='main.html';">Main</button>
 		</div>
 
     <script>
