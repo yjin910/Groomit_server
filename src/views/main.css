@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap');
+
+* {
+    font-family: 'Roboto Mono', monospace;
+}
+
+body{
+    width: 90%;
+    margin: auto;
+}
+
+.logo_groomit {
+    cursor: pointer;
+    width: 200px;
+    height: 105px;
+  }
+
+.info {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.detail {
+    font-size: 15px;
+}
+
+button {
+    float: right;
+    margin: 0 10px 0 0;
+}
+
+select {
+    margin: 20px 0;
+}
+
+canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#graph {
+    width: 48%;
+    display: inline-block;
+}
+
+.date {
+    float: left;
+}
+#changeDate {
+    margin-left: 20px;
+}
+
+button:hover{
+    background: #e3eeee;
+}

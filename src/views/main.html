@@ -7,58 +7,45 @@
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
     <script src="js/amazon-cognito-identity.min.js"></script>
     <script src="js/config.js"></script>
-    <style>
-        canvas {
-            -moz-user-select: none;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 
 <body>
-    <img src="groomit_logo.jpg" alt="Groomit logo" onclick="window.location.href='login.html'" width="180" height="90">
-    <img src="technonia_logo.png" alt="Technonia logo" onclick="window.location.href='login.html'" width="150" height="20">
+    <img class="logo_groomit" src="groomit_logo.jpg" alt="Groomit logo" onclick="window.location.href='login.html'">
 
-    <h2>Main Page</h2>
+    <div class="info">9room Server <detail class="detail">무선 방사능 및 온습도 측정시스템</detail></div>
 
     <!-- select device -->
     <div class="devices">
         <select id="devices" onchange="changeGraph(this.value)">
             <option value=''>기기 선택 list box</option>
         </select>
-    </div>
 
-    <!-- select term -->
-    <div class="date">
-        조회기간 선택 (시작 ~ 종료) :
-        <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
-        <input type="date" id="end_date" onchange="chanegMaxStartD()"><br>
-        <button type="submit" onclick="changeDate()">select</button>
+        <button type="button" onclick="signOut()">Sign out</button>
+        <button type="button" onclick="window.location.href='profile.html' ;">Profile</button>
     </div>
 
     <!-- buttons for logout or see profile -->
     <div class="container">
-        <div>
-            <button type="button" onclick="signOut()">Sign out</button>
-            <button type="button" onclick="window.location.href='profile.html' ;">Profile</button>
+        <div id="graph">
+            <canvas id="canvasG"></canvas>
         </div>
-        <div>
-
-            <!-- graph for giger -->
-            <div style="width:75%;">
-                <canvas id="canvasG"></canvas>
-            </div>
-
-            <!-- graph for temperature and humadity -->
-            <div style="width:75%;">
-                <canvas id="canvasTH"></canvas>
-            </div>
+        <div id="graph">
+            <canvas id="canvasTH"></canvas>
         </div>
+    </div>
 
-        <button type="submit" onclick="json2csv()">Download!</button>
-         
-        <script>
+    <!-- select term -->
+    <div class="date">
+        조회기간 선택:
+        <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
+        <input type="date" id="end_date" onchange="chanegMaxStartD()">
+        <button id="changeDate" type="submit" onclick="changeDate()">select</button>
+    </div>
+    <button type="submit" onclick="json2csv()">Download!</button>
+
+    <script>
             var uuid;
             var email;
             var datas;
@@ -295,10 +282,10 @@
                                     // round: 'day'
                                     tooltipFormat: "ll HH:mm"
                                 },
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: "Date"
-                                },
+                                // scaleLabel: {
+                                //     display: true,
+                                //     labelString: "Date"
+                                // },
                                 ticks: {
                                     maxRotation: 0
                                 },
@@ -306,10 +293,10 @@
                             }],
                             yAxes: [{
                                 type: 'linear',
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: "value"
-                                }
+                                // scaleLabel: {
+                                //     display: true,
+                                //     labelString: "value"
+                                // }
                             }]
                         },
                         pan: {
@@ -357,7 +344,7 @@
 
             function changeGraph(device) {
                 uuid = device;
-                getGraphData()
+                getGraphData(null, null)
             }
 
             function getDateLimit() {
@@ -394,7 +381,6 @@
                 endDate.setDate(endDate.getDate() + 1);
                 endDate = endDate.toISOString().substr(0, 10);
 
-                alert(endDate)
                 if (startDate == '' || endDate == '') {
                     alert("Please enter the term to check");
                 } else {
