@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap');
+
+.logo_groomit {
+    cursor: pointer;
+    width: 200px;
+    height: 105px;
+    margin-left: 30px;
+}
+
+/* .logo_technonia {
+    cursor: pointer;
+    width: 160px;
+    height: 20px;
+    float: right;
+    margin-top: 40px;
+    margin-right: 80px;
+} */
+
+body, .login-page {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.login-page {
+    width: 360px;
+    /* padding: 0 0 10% 0; */
+    margin: auto;
+}
+
+.form input, button{
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    outline: 0;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+}
+
+.form input {
+    background: #f2f2f2;
+    margin: 0 0 15px;
+    box-sizing: border-box;
+}
+
+#verificationCode {
+    width: 70%;
+    float: left;
+}
+
+.form button {
+    font-weight: bold;
+    letter-spacing: .1em;
+    background: #17a589;
+    margin: 0px 0px 8px;
+    color: #FFFFFF;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+
+#confirmemail, #reconfirmemail{
+    width: 26%;
+    float: right;
+    font-size: 8px;
+    /* font-weight: bold; */
+}
+
+#message {
+    font-size: 13px;
+    font-weight: bold;
+    color: #9B1C31;
+}
+
+.form button:hover,.form button:active,.form button:focus {
+    background: #148f77;
+}
+
+.form {
+    position: relative;
+    z-index: 1;
+    background: #48c9b0;
+    max-width: 360px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    
+  }
+
+  body {
+    background: #76b852; /* fallback for old browsers */
+    background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+    background: -moz-linear-gradient(right, #76b852, #8DC26F);
+    background: -o-linear-gradient(right, #76b852, #8DC26F);
+    background: linear-gradient(to left, #76b852, #8DC26F);
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;    
+  }

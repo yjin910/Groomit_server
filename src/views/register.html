@@ -9,26 +9,24 @@
 	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
 	<script src="js/amazon-cognito-identity.min.js"></script>  
 	<script src="js/config.js"></script>
-	<link rel="stylesheet" type="text/css" href="register_style.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>  
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="register.css">
 </head>
 
 	
 <body>
-	<img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
+	<img class="logo_groomit" src="groomit_logo.jpg" alt="Groomit logo" onclick="window.location.href='login.html'" width="180" height="90">
 	<div class="login-page">
 		<form class="form">
-			<form class="form">
-				<h2 class="h3 mb-3 font-weight-normal" id="titleheader">Register an Account</h1>
-				<input type="personalname" class="form-control" id="signup_name" placeholder="Name" pattern=".*" required>
-				<input type="email" class="form-control" id="signup_email" placeholder="Email" pattern=".*" required>
-				<input type="password" class="form-control" id="signup_pwd" placeholder="Password" pattern=".*" required>
-				<confirm class="message" id="message"></confirm>
-				<button id="confirmemail" type="button" onclick="registerButton()">Get Verifications Code</button>
-				<button id="reconfirmemail" type="button" onclick="resendVerification()" style="display:none">Resend Verifications Code</button>
-				<input class="form-control" id="verificationCode" placeholder="Verification code">
+				<h2 class="login" id="titleheader">Register</h1>
+				<input type="personalname" id="signup_name" placeholder="Name" pattern=".*" required>
+				<input type="email" id="signup_email" placeholder="Email" pattern=".*" required>
+				<input type="password" id="signup_pwd" placeholder="Password" pattern=".*" required>
+				<input id="verificationCode" placeholder="Verification code">
+				<button id="reconfirmemail" type="button" onclick="resendVerification()" style="display:none">Get Code</button>
+				<button id="confirmemail" type="button" onclick="registerButton()">Get Code</button>
 				<button id="verify" type="button" onclick="veryfyAccount()">Verify Account</button>
+				<confirm class="message" id="message"></confirm>
 		</form>
 	</div>
 
@@ -40,6 +38,7 @@
 		var user_Pw;
 		var user_Name;
 		var cognitoUser;
+		var register = false;
 		
 		var poolData = {
 					UserPoolId : _config.cognito.userPoolId,
@@ -48,9 +47,10 @@
 
 		function registerButton() {
 			var email_reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+			
 			user_Email = document.getElementById("signup_email").value;
 			user_Pw =  document.getElementById("signup_pwd").value;	
-			user_Name =  document.getElementById("signup_name").value;	
+			user_Name =  document.getElementById("signup_name").value;
 			
 			if (!email_reg.test(user_Email)){
 				document.getElementById("message").innerHTML = "*** Invalid email";
@@ -88,6 +88,7 @@
 				document.getElementById("message").innerHTML = "Check your email for a verification link";
 				document.getElementById("confirmemail").style.display = "none";
 				document.getElementById("reconfirmemail").style.display = "";
+				register = true;
 			});
 		}
 
@@ -109,34 +110,37 @@
 		}	
 
 		function veryfyAccount(){
+			if(register){
+				var poolData = {
+					UserPoolId: _config.cognito.userPoolId, // Your user pool id here
+					ClientId: _config.cognito.clientId, // Your client id here
+				};
 
-			var poolData = {
-                UserPoolId: _config.cognito.userPoolId, // Your user pool id here
-                ClientId: _config.cognito.clientId, // Your client id here
-            };
+				var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-            var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+				var userData = {
+					Username: user_Email,
+					Pool: userPool,
+				};
 
-            var userData = {
-                Username: user_Email,
-                Pool: userPool,
-            };
+				var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+				var code = document.getElementById("verificationCode").value;
 
-			var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-			var code = document.getElementById("verificationCode").value;
-
-			cognitoUser.confirmRegistration(code, true, function(err, result) {
-				if (err) {
-					alert(err.message || JSON.stringify(err));
-					return;
-				}
-				if(result == "SUCCESS"){
-					console.log('call result: ' + result);
-					window.location.href = "successRegister.html"
-				}else{
-					document.getElementById("message").innerHTML = "Wrong verification code!";
-				}
-			});
+				cognitoUser.confirmRegistration(code, true, function(err, result) {
+					if (err) {
+						alert(err.message || JSON.stringify(err));
+						return;
+					}
+					if(result == "SUCCESS"){
+						console.log('call result: ' + result);
+						window.location.href = "successRegister.html"
+					}else{
+						document.getElementById("message").innerHTML = "Wrong verification code!";
+					}
+				});
+			}else{
+				document.getElementById("message").innerHTML = "Please press \"Get Verification Code\" button first";
+			}
         }
 	</script>
  
