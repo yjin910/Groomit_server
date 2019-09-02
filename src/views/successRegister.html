@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+    </head>
+    <body>
+        <h1>Welcome to Groomit!</h1>
+        <div>Redirecting to login page after <count id="counter">3</count> seconds
+        </div>
+        
+        <script>
+            setInterval(function() {
+                var div = document.querySelector("#counter");
+                var count = div.textContent * 1 - 1;
+                div.textContent = count;
+                if (count <= 0) {
+                    window.location.replace("login.html");
+                }
+            }, 1000);
+        </script>
+    </body>
+</html>

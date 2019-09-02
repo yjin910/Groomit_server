@@ -16,21 +16,26 @@
 
 	
 <body>
-		<img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
+	<img src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'" width="160" height="60">
 	<div class="login-page">
 		<form class="form">
-			<h2 class="h3 mb-3 font-weight-normal" id="titleheader">Register an Account</h1>
-			<input type="personalname" class="form-control" id="signup_name" placeholder="Name" pattern=".*" required>
-			<input type="email" class="form-control" id="signup_email" placeholder="Email" pattern=".*" required>
-			<input type="password" class="form-control" id="signup_pwd" placeholder="Password" pattern=".*" required>
-			<button id="confirmemail" type="button" onclick="registerButton()" >Confirm email</button>
-			<button id="reconfirmemail" type="button" onclick="resendVerification()"  style="display:none;">Resend email</button>
-			<confirm class="message" id="message"></confirm>
+			<form class="form">
+				<h2 class="h3 mb-3 font-weight-normal" id="titleheader">Register an Account</h1>
+				<input type="personalname" class="form-control" id="signup_name" placeholder="Name" pattern=".*" required>
+				<input type="email" class="form-control" id="signup_email" placeholder="Email" pattern=".*" required>
+				<input type="password" class="form-control" id="signup_pwd" placeholder="Password" pattern=".*" required>
+				<confirm class="message" id="message"></confirm>
+				<button id="confirmemail" type="button" onclick="registerButton()">Get Verifications Code</button>
+				<button id="reconfirmemail" type="button" onclick="resendVerification()" style="display:none">Resend Verifications Code</button>
+				<input class="form-control" id="verificationCode" placeholder="Verification code">
+				<button id="verify" type="button" onclick="veryfyAccount()">Verify Account</button>
 		</form>
 	</div>
 
 	<!-- "window.location.href='login.html';" -->
 	<script>
+		/// <reference types="aws-sdk" />
+
 		var user_Email;
 		var user_Pw;
 		var user_Name;
@@ -99,9 +104,40 @@
 					alert(err.message || JSON.stringify(err));
 					return;
 				}
-				console.log('call result: ' + result);
+				document.getElementById("message").innerHTML = "Recheck your email for a verification link";
 			});
 		}	
+
+		function veryfyAccount(){
+
+			var poolData = {
+                UserPoolId: _config.cognito.userPoolId, // Your user pool id here
+                ClientId: _config.cognito.clientId, // Your client id here
+            };
+
+            var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+            var userData = {
+                Username: user_Email,
+                Pool: userPool,
+            };
+
+			var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+			var code = document.getElementById("verificationCode").value;
+
+			cognitoUser.confirmRegistration(code, true, function(err, result) {
+				if (err) {
+					alert(err.message || JSON.stringify(err));
+					return;
+				}
+				if(result == "SUCCESS"){
+					console.log('call result: ' + result);
+					window.location.href = "successRegister.html"
+				}else{
+					document.getElementById("message").innerHTML = "Wrong verification code!";
+				}
+			});
+        }
 	</script>
  
  </body>
