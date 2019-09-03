@@ -116,6 +116,7 @@ exports.getData = (res, deviceNum, type, startD, endD) => {
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND (time BETWEEN "${startD}" AND "${endD}")`;
     }
     // var params = [deviceNum, type, value, time];
+    console.log(queryString);
 
     if (type) {
         if (type.length == 2) {
