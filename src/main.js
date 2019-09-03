@@ -20,4 +20,8 @@ router.get('/dateLimit', (req, res) => {
     dbcon.getDateLimit(res, req.query.u);
 });
 
+router.get('/representative', (req, res) => {
+    dbcon.getDataOfRepresentiveDevice(res, req.query.email);
+});
+
 module.exports = router;
