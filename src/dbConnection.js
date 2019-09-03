@@ -109,14 +109,12 @@ exports.sendGraphPage = (res, deviceNum, type) => {
 exports.getData = (res, deviceNum, type, startD, endD) => {
     var queryString;
 
-    if (startD == 'null' & endD == 'null') {
-        console.log("TESTTEST")
-        queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
-    } else {
+    if (startD & endD) {
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND (time BETWEEN "${startD}" AND "${endD}")`;
+    } else {
+        queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     }
     // var params = [deviceNum, type, value, time];
-    console.log(queryString);
 
     if (type) {
         if (type.length == 2) {
