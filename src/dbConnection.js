@@ -20,42 +20,16 @@ exports.addOwner = function(email, deviceNum) {
     var queryString = "INSERT INTO device_owner (email, deviceNum) VALUES(?, ?)";
     var params = [email, deviceNum];
 
-    pool.getConnection(function(err, conn) {
-        if (err) {
-            res.send(err);
-        } else {
-            conn.query(queryString, params, function(err, result, fields) {
-                if (err) {
-                    res.send(err);
-                } else {
-                    console.log("Successfully added new owner");
-                }
-            });
-
-            conn.release();
-        }
-    });
+    var success_msg = "Successfully added new owner";
+    executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
 exports.addData = function(deviceNum, type, value, time, res) {
     var queryString = "INSERT INTO measurement (deviceNum, type, val, time) VALUES(?, ?, ?, ?)";
     var params = [deviceNum, type, value, time];
+    var success_msg = "Successfully added new data"
 
-    pool.getConnection(function(err, conn) {
-        if (err) {
-            res.send(err);
-        } else {
-            conn.query(queryString, params, function(err, result, fields) {
-                if (err) {
-                    res.send(err);
-                } else {
-                    console.log("Successfully added new data");
-                }
-            });
-
-            conn.release();
-        }
-    });
+    executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
 exports.sendGraphPage = (res, deviceNum, type) => {
@@ -109,7 +83,7 @@ exports.sendGraphPage = (res, deviceNum, type) => {
 exports.getData = (res, deviceNum, type, startD, endD) => {
     var queryString;
 
-    if (startD & endD) {
+    if (startD && endD) {
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND (time BETWEEN "${startD}" AND "${endD}")`;
     } else {
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
@@ -142,59 +116,43 @@ exports.getData = (res, deviceNum, type, startD, endD) => {
         }
     }
 
-    pool.getConnection(function(err, conn) {
-        if (err) {
-            res.send(err);
-        } else {
-            conn.query(queryString, function(err, results, fields) {
-                if (err) {
-                    res.send(err);
-                } else {
-                    console.log(results);
-                    res.send(results);
-                    console.log("Successfully send data")
-                }
-            });
-
-            conn.release();
-        }
-    });
+    executeQuery(res, queryString);
 }
 
 exports.addDevice = function(email, deviceNum) {
     var queryString = "INSERT INTO device_owner (deviceNum, email) VALUES(?, ?)";
     var params = [deviceNum, email];
+    var success_msg = "Successfully added new device";
 
-    pool.getConnection(function(err, conn) {
-        if (err) {
-            res.send(err);
-        } else {
-            conn.query(queryString, params, function(err, result, fields) {
-                if (err) {
-                    res.send(err);
-                } else {
-                    console.log("Successfully added new device");
-                }
-            });
-
-            conn.release();
-        }
-    });
+    executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
 exports.getUuid = function(res, email) {
     var queryString = `SELECT * from device_owner WHERE email = "${email}"`;
+    executeQuery(res, queryString);
+}
 
-    pool.getConnection(function(err, conn) {
+exports.getDateLimit = function(res, uuid) {
+    var queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}"`;
+    executeQuery(res, queryString);
+}
+
+exports.getDataOfRepresentiveDevice = (res, email) => {
+    var queryString = `select * from measurement where deviceNum = (select deviceNum from device_owner where email = '${email}' order by deviceNum limit 1) and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
+    executeQuery(res, queryString);
+}
+
+
+var executeQuery = (res, queryString) => {
+    pool.getConnection(function (err, conn) {
         if (err) {
             res.send(err);
         } else {
-            conn.query(queryString, function(err, result, fields) {
+            conn.query(queryString, function (err, result, fields) {
                 if (err) {
                     res.send(err);
                 } else {
                     res.send(result)
-                    console.log("Successfully send device info!");
                 }
             });
 
@@ -203,20 +161,16 @@ exports.getUuid = function(res, email) {
     });
 }
 
-exports.getDateLimit = function(res, uuid) {
-    var queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}"`;
-
-    pool.getConnection(function(err, conn) {
+var executeQuery_withParams_NoRespond = (params, queryString, success_msg) => {
+    pool.getConnection(function (err, conn) {
         if (err) {
-            res.send(err);
+            console.log(err);
         } else {
-            conn.query(queryString, function(err, result, fields) {
+            conn.query(queryString, params, function (err, result, fields) {
                 if (err) {
-                    res.send(err);
+                    console.log(err);
                 } else {
-                    res.send(result)
-                    console.log(result)
-                    console.log("Successfully send device info");
+                    console.log(success_msg);
                 }
             });
 
