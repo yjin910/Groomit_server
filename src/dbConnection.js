@@ -151,6 +151,7 @@ exports.getData = (res, deviceNum, type, startD, endD) => {
                 if (err) {
                     res.send(err);
                 } else {
+                    console.log(results);
                     res.send(results);
                     console.log("Successfully send data")
                 }
