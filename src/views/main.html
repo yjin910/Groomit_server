@@ -12,18 +12,24 @@
 </head>
 
 <body>
-    <img class="logo_groomit" src="groomit_logo.jpg" alt="Groomit logo" onclick="window.location.href='login.html'">
+    <div class="info">
+        <img class="logo_groomit" src="groomit_logo.jpg" alt="Groomit logo" onclick="window.location.href='login.html'">
+        무선 방사능 및 온습도 측정시스템
+        <button type="button" class="member_info" onclick="signOut()">Sign out</button>
+        <button type="button" class="member_info" onclick="window.location.href='profile.html' ;">Profile</button>
+    </div>
 
-    <div class="info">9room Server <detail class="detail">무선 방사능 및 온습도 측정시스템</detail></div>
 
     <!-- select device -->
-    <div class="devices">
-        <select id="devices" onchange="changeGraph(this.value)">
-            <option value=''>기기 선택 list box</option>
-        </select>
+    <div class="data_info">
+        <select id="devices" onchange="changeGraph(this.value)"></select>
 
-        <button type="button" onclick="signOut()">Sign out</button>
-        <button type="button" onclick="window.location.href='profile.html' ;">Profile</button>
+        <!-- select term -->
+        <input type="radio" name="date" value="24" onclick="changeDate()"> 1일</input>
+        <input type="radio" name="date" value="168" onclick="changeDate()"> 1주일</input>
+        <input type="radio" name="date" value="720" onclick="changeDate()"> 1달</input>
+
+        <button type="submit" onclick="json2csv()">Download!</button>
     </div>
 
     <!-- buttons for logout or see profile -->
@@ -31,19 +37,15 @@
         <div id="graph">
             <canvas id="canvasG"></canvas>
         </div>
+    </br>
         <div id="graph">
-            <canvas id="canvasTH"></canvas>
+            <canvas id="canvasT"></canvas>
+        </div>
+    </br>
+        <div id="graph">
+            <canvas id="canvasH"></canvas>
         </div>
     </div>
-
-    <!-- select term -->
-    <div class="date">
-        조회기간 선택:
-        <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
-        <input type="date" id="end_date" onchange="chanegMaxStartD()">
-        <button id="changeDate" type="submit" onclick="changeDate()">select</button>
-    </div>
-    <button type="submit" onclick="json2csv()">Download!</button>
 
     <script>
             var uuid;
@@ -100,8 +102,7 @@
                             } else {
                                 uuid = uuids[0].deviceNum;
                                 addSelection(uuids);
-                                getGraphData(null, null);
-                                getDateLimit();
+                                getGraphData();
                             }
                         } else {
                             console.error(xhr.responseText);
@@ -111,9 +112,11 @@
                 xhr.send();
             }
 
-            function getGraphData(startD, endD) {
+            function getGraphData(term) {
+                let tempURL = '/main/graphInfo?u=' + uuid + '&type=' + c_val;
+                if (term) tempURL += ('&term=' + term);
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', '/main/graphInfo?u=' + uuid + '&type=' + c_val + '&startD=' + startD + '&endD=' + endD); // 메소드와 주소 설정
+                xhr.open('GET', tempURL); // 메소드와 주소 설정
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
@@ -206,21 +209,21 @@
                 }
 
                 let dataset_arr_g = [];
-                let dataset_arr_th = []
+                let dataset_arr_t = [];
+                let dataset_arr_h = [];
 
                 if (c_val.includes("g")) {
                     dataset_arr_g.push(DATASET_G);
                     getGgraph(labels, dataset_arr_g);
                 }
-                if (c_val.includes("t") || c_val.includes("h")) {
-                    if (c_val.includes("t")) {
-                        dataset_arr_th.push(DATASET_T);
-                    }
-                    if (c_val.includes("h")) {
-                        dataset_arr_th.push(DATASET_H);
-                    }
-                    getTHgraph(labels, dataset_arr_th);
+                if (c_val.includes("t")) {
+                    dataset_arr_t.push(DATASET_T);
+                    getTgraph(labels, dataset_arr_t);
                 }
+                if (c_val.includes("h")) {
+                    dataset_arr_h.push(DATASET_H);
+                    getHgraph(labels, dataset_arr_h)
+                }        
             }
 
             function getGgraph(labels, dataset_arr_g) {
@@ -231,10 +234,13 @@
                         datasets: dataset_arr_g
                     },
                     options: {
+                        legend:{
+                            display:false
+                        },
                         responsive: true,
                         title: {
                             display: true,
-                            text: 'G_graph of device: ' + uuid
+                            text: 'G_graph'
                         },
                         scales: {
                             xAxes: [{
@@ -261,18 +267,21 @@
                 window.myLine.update();
             }
 
-            function getTHgraph(labels, dataset_arr_th) {
-                var config_th = {
+            function getTgraph(labels, dataset_arr_t) {
+                var config_t = {
                     type: 'line',
                     data: {
                         labels: labels,
-                        datasets: dataset_arr_th
+                        datasets: dataset_arr_t
                     },
                     options: {
+                        legend:{
+                            display:false
+                        },
                         responsive: true,
                         title: {
                             display: true,
-                            text: 'T&H_raph of device: ' + uuid
+                            text: 'T_graph'
                         },
                         scales: {
                             xAxes: [{
@@ -282,10 +291,6 @@
                                     // round: 'day'
                                     tooltipFormat: "ll HH:mm"
                                 },
-                                // scaleLabel: {
-                                //     display: true,
-                                //     labelString: "Date"
-                                // },
                                 ticks: {
                                     maxRotation: 0
                                 },
@@ -293,42 +298,61 @@
                             }],
                             yAxes: [{
                                 type: 'linear',
-                                // scaleLabel: {
-                                //     display: true,
-                                //     labelString: "value"
-                                // }
                             }]
-                        },
-                        pan: {
-                            enabled: true,
-                            mode: 'x' // is panning about the y axis neccessary for bar charts?
-                        },
-                        zoom: {
-                            enabled: true,
-                            mode: "x",
-                            sensitivity: 1
-                        },
-                        // zoom: {
-                        //     enabled: true,
-                        //     drag: false,
-
-                        //     limits: {
-                        //         max: 10,
-                        //         min: 0.5
-                        //     }
-                        // }
+                        }
                     }
                 };
 
-                var ctx_th = document.getElementById('canvasTH').getContext('2d');
-                window.myLine = new Chart(ctx_th, config_th);
+                var ctx_t = document.getElementById('canvasT').getContext('2d');
+                window.myLine = new Chart(ctx_t, config_t);
+                window.myLine.update();
+            }
+
+            function getHgraph(labels, dataset_arr_h) {
+                var config_h = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: dataset_arr_h
+                    },
+                    options: {
+                        legend:{
+                            display:false
+                        },
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'H_graph'
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: "time",
+                                time: {
+                                    parser: "MM/DD/YYYY HH:mm",
+                                    // round: 'day'
+                                    tooltipFormat: "ll HH:mm"
+                                },
+                                ticks: {
+                                    maxRotation: 0
+                                },
+                                distribution: 'series',
+                            }],
+                            yAxes: [{
+                                type: 'linear',
+                            }]
+                        }
+                    }
+                };
+
+                var ctx_h = document.getElementById('canvasH').getContext('2d');
+                window.myLine = new Chart(ctx_h, config_h);
                 window.myLine.update();
             }
 
             function addSelection(uuids) {
                 var selection = document.getElementById("devices");
                 console.log(selection.length)
-                if (selection.length == 1) {
+                if (selection.length == 0) {
                     for (i in uuids) {
                         var option = document.createElement("option");
 
@@ -344,58 +368,19 @@
 
             function changeGraph(device) {
                 uuid = device;
-                getGraphData(null, null)
+                getGraphData()
             }
 
-            function getDateLimit() {
-                var xhr = new XMLHttpRequest();
-
-                xhr.open('GET', '/main/dateLimit?u=' + uuid); // 메소드와 주소 설정
-                xhr.onreadystatechange = function() { // 요청에 대한 콜백
-                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                        if (xhr.status === 200 || xhr.status === 201) {
-                            var mintime = "MIN(time)"
-                            console.log(JSON.parse(xhr.responseText)[0]);
-                            var date_limits = JSON.parse(xhr.responseText);
-
-                            var min_date = (new Date(date_limits[0].mintime)).toISOString().substr(0, 10);
-                            var max_date = new Date(date_limits[0].maxtime);
-
-                            max_date.setDate(max_date.getDate() + 1);
-                            max_date = max_date.toISOString().substr(0, 10);
-
-                            document.getElementById("start_date").min = min_date;
-                            document.getElementById("end_date").max = max_date;
-                        } else {
-                            console.error(xhr.responseText);
-                        }
-                    }
-                };
-                xhr.send();
-            }
 
             function changeDate() {
-                var startDate = document.getElementById("start_date");
-                var endDate = new Date(document.getElementById("end_date").value);
+                var date = document.getElementsByName('date');
 
-                endDate.setDate(endDate.getDate() + 1);
-                endDate = endDate.toISOString().substr(0, 10);
-
-                if (startDate == '' || endDate == '') {
-                    alert("Please enter the term to check");
-                } else {
-                    getGraphData(startDate, endDate)
+                for( i=0; i<date.length; i++ ) {
+                    if(date[i].checked) {
+                        var checked_value = date[i].value;
+                        getGraphData(checked_value);
+                    }
                 }
-            }
-
-            function chanegMinEndD(){
-                var min_date = document.getElementById("start_date").value;
-                document.getElementById("end_date").min = min_date;
-            }
-
-            function chanegMaxStartD(){
-                var max_date = document.getElementById("end_date").value;
-                document.getElementById("start_date").max = max_date;
             }
 
             function json2csv() {
