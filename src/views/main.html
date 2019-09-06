@@ -52,6 +52,7 @@
             var email;
             var datas;
             var c_val = 'gth';
+            var gChart, tChart, hChart;
 
             var data = {
                 UserPoolId: _config.cognito.userPoolId,
@@ -245,12 +246,6 @@
                         scales: {
                             xAxes: [{
                                 type: 'time',
-                                // time: {
-                                // unit: 'second',
-                                // displayFormats: {
-                                //     month: 'MMM YYYY'
-                                // }
-                                // },
                                 distribution: 'series',
                                 display: true,
                             }],
@@ -262,9 +257,12 @@
                     }
                 };
 
+                if (gChart){
+                    gChart.destroy();
+                }
                 var ctx_g = document.getElementById('canvasG').getContext('2d');
-                window.myLine = new Chart(ctx_g, config_g);
-                window.myLine.update();
+                gChart = new Chart(ctx_g, config_g);
+                gChart.update();
             }
 
             function getTgraph(labels, dataset_arr_t) {
@@ -303,9 +301,12 @@
                     }
                 };
 
+                if (tChart){
+                    tChart.destroy();
+                }
                 var ctx_t = document.getElementById('canvasT').getContext('2d');
-                window.myLine = new Chart(ctx_t, config_t);
-                window.myLine.update();
+                tChart = new Chart(ctx_t, config_t);
+                tChart.update();
             }
 
             function getHgraph(labels, dataset_arr_h) {
@@ -344,9 +345,12 @@
                     }
                 };
 
+                if (hChart){
+                    hChart.destroy();
+                }
                 var ctx_h = document.getElementById('canvasH').getContext('2d');
-                window.myLine = new Chart(ctx_h, config_h);
-                window.myLine.update();
+                hChart = new Chart(ctx_h, config_h);
+                hChart.update();
             }
 
             function addSelection(uuids) {
