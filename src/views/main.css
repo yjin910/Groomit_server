@@ -14,6 +14,7 @@ body{
     width: 200px;
     height: 105px;
     vertical-align: -35px;
+    margin-top: 20px;
   }
 
 .info {
@@ -44,7 +45,6 @@ canvas {
 #graph {
     width: 80%;
     margin: auto;
-    /* display: inline-block; */
 }
 
 #changeDate {
