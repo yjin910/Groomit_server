@@ -26,7 +26,7 @@ body, .user-profile {
 }
 
 .right {
-  padding: 0 0 10px 100px;
+  padding: 0 0 10px 10px;
   width: 90%;
 }
 
@@ -52,7 +52,8 @@ body, .user-profile {
 }
 
 #uuid {
-  width: 49%;
+  width: 40%;
+  margin-right: 10px
 }
 
 #adddevice, #changePw, #main{
@@ -63,7 +64,7 @@ body, .user-profile {
 }
 
 #main {
-  margin: 20px 0;
+  margin: 10px 0;
   float: right;
   width: 15%;
   font-size: 15px;
