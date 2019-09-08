@@ -11,14 +11,14 @@ body{
 
 .logo_groomit {
     cursor: pointer;
-    width: 200px;
-    height: 105px;
-    vertical-align: -35px;
+    width:180px;
+    height: 70px;
+    vertical-align: -15px;
     margin-top: 20px;
   }
 
 .info {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold;
     margin-bottom: 10px
 }
@@ -54,3 +54,12 @@ canvas {
 button:hover{
     background: #e3eeee;
 }
+
+footer{ 
+    /* position:fixed;  */
+    left:0px; 
+    bottom:0px; 
+    height:80px; 
+    width:100%; 
+    background:grey; 
+    color: white; }

@@ -45,8 +45,9 @@
         <div id="graph">
             <canvas id="canvasH"></canvas>
         </div>
+    </br>
     </div>
-
+    <footer> example <footer></footer> </footer>
     <script>
             var uuid;
             var email;
@@ -241,17 +242,25 @@
                         responsive: true,
                         title: {
                             display: true,
-                            text: 'G_graph'
+                            text: 'Geiger',
+                            fontSize: 20
                         },
                         scales: {
                             xAxes: [{
-                                type: 'time',
+                                type: "time",
+                                time: {
+                                    parser: "MM/DD/YYYY HH:mm",
+                                    tooltipFormat: "ll HH:mm"
+                                },
+                                ticks: {
+                                    maxRotation: 0
+                                },
                                 distribution: 'series',
                                 display: true,
                             }],
                             yAxes: [{
-                                display: true,
                                 type: 'linear',
+                                display: true,
                             }]
                         }
                     }
@@ -279,23 +288,25 @@
                         responsive: true,
                         title: {
                             display: true,
-                            text: 'T_graph'
+                            text: 'Temperature',
+                            fontSize: 20
                         },
                         scales: {
                             xAxes: [{
                                 type: "time",
                                 time: {
                                     parser: "MM/DD/YYYY HH:mm",
-                                    // round: 'day'
                                     tooltipFormat: "ll HH:mm"
                                 },
                                 ticks: {
                                     maxRotation: 0
                                 },
                                 distribution: 'series',
+                                display: true,
                             }],
                             yAxes: [{
                                 type: 'linear',
+                                display: true,
                             }]
                         }
                     }
@@ -323,23 +334,25 @@
                         responsive: true,
                         title: {
                             display: true,
-                            text: 'H_graph'
+                            text: 'Humidity',
+                            fontSize: 20
                         },
                         scales: {
                             xAxes: [{
                                 type: "time",
                                 time: {
                                     parser: "MM/DD/YYYY HH:mm",
-                                    // round: 'day'
                                     tooltipFormat: "ll HH:mm"
                                 },
                                 ticks: {
                                     maxRotation: 0
                                 },
                                 distribution: 'series',
+                                display: true,
                             }],
                             yAxes: [{
                                 type: 'linear',
+                                display: true,
                             }]
                         }
                     }
@@ -389,7 +402,6 @@
 
             function json2csv() {
                 var array = typeof datas != 'object' ? JSON.parse(datas) : datas;
-
                 var str = '';
                 var line = '';
 
@@ -407,7 +419,14 @@
                     var line = '';
 
                     for (var index in array[i]) {
-                        var value = array[i][index] + "";
+                        var value = array[i][index];
+
+                        if (value == (array[i].time)){
+                            value = new Date(value) + "";
+                        }else{
+                            value = value + "";
+                        }
+                        // if(value == array[i].)
                         line += '"' + value.replace(/"/g, '""') + '",';
                     }
 
@@ -424,5 +443,4 @@
             }
         </script>
 </body>
-
 </html>
