@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/graphInfo', (req, res) => {
-    dbcon.getData(res, req.query.u, req.query.type, req.query.startD, req.query.endD);
+    dbcon.getData(res, req.query.u, req.query.type, req.query.term);
 });
 
 router.get('/mainUuid', (req, res) => {
