@@ -7,7 +7,10 @@
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
     <script src="js/amazon-cognito-identity.min.js"></script>
     <script src="js/config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="lightpick.js"></script>  
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="lightpick.css">  
     <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 
@@ -28,6 +31,7 @@
         <input type="radio" name="date" value="24" onclick="changeDate()"> 1일</input>
         <input type="radio" name="date" value="168" onclick="changeDate()"> 1주일</input>
         <input type="radio" name="date" value="720" onclick="changeDate()"> 1달</input>
+        <input type="text" id="datepicker"/>
 
         <button type="submit" onclick="json2csv()">Download!</button>
     </div>
@@ -54,6 +58,17 @@
             var datas;
             var c_val = 'gth';
             var gChart, tChart, hChart;
+
+            var picker = new Lightpick({
+                field: document.getElementById('datepicker'),
+                singleDate: false,
+                onSelect: function(start, end){
+                    var str = '';
+                    str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
+                    str += end ? end.format('Do MMMM YYYY') : '...';
+                    document.getElementById('result-2').innerHTML = str;
+                }
+            });
 
             var data = {
                 UserPoolId: _config.cognito.userPoolId,
