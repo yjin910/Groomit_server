@@ -40,7 +40,7 @@
 			<message id="message_pw"></message>
 			<button type="button" id="main" onclick="window.location.href='main.html';">Main</button>
 		</div>
-
+		<button type="button" id="signout" onclick="sighout()">Sign out</button>
     <script>
 		// var dbcon = require('../dbConnection');
 		var email;
@@ -108,6 +108,18 @@
 				document.getElementById('uuid').innerText = '';
 				alert("Successfully added new device");
 			}
+		}
+
+		function sighout(){
+			//TODO: db에서 데이터 지우기
+			cognitoUser.deleteUser(function(err, result) {
+				if (err) {
+					alert(err.message || JSON.stringify(err));
+					return;
+				}
+				console.log('call result: ' + result);
+				window.location.href = 'login.html';
+			});
 		}
     </script>
   </body>
