@@ -28,10 +28,14 @@
         <select id="devices" onchange="changeGraph(this.value)"></select>
 
         <!-- select term -->
-        <input type="radio" name="date" value="24" onclick="changeDate()"> 1일</input>
-        <input type="radio" name="date" value="168" onclick="changeDate()"> 1주일</input>
-        <input type="radio" name="date" value="720" onclick="changeDate()"> 1달</input>
-        <input type="text" id="datepicker"/>
+        <input type="radio" name="date" value="24" onclick="changeDate()"/>
+            <label for="24">1일</label>
+        <input type="radio" name="date" value="168" onclick="changeDate()"/>
+            <label for="168">1주일</label>
+        <input type="radio" name="date" value="720" onclick="changeDate()"/>
+            <label for="720">1달</label>
+        <input type="text" id="sDate" class="form-control form-control-sm"/>
+        <input type="text" id="eDate" class="form-control form-control-sm"/>
 
         <button type="submit" onclick="json2csv()">Download!</button>
     </div>
@@ -60,8 +64,12 @@
             var gChart, tChart, hChart;
 
             var picker = new Lightpick({
-                field: document.getElementById('datepicker'),
+                field: document.getElementById('sDate'),
+                secondField: document.getElementById('eDate'),
                 singleDate: false,
+                numberOfMonths: 2,
+                hoveringTooltip: true,
+                repick: true,
                 onSelect: function(start, end){
                     var str = '';
                     str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
