@@ -133,6 +133,30 @@ exports.getUuid = function(res, email) {
     executeQuery(res, queryString);
 }
 
+exports.delUser = function(res, email){
+    var uuidQueryString = `SELECT * from device_owner WHERE email = "${email}"`;
+    var devices;
+
+    pool.getConnection(function (err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(uuidQueryString, function (err, result, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    devices = result;
+                    console.log(result);
+                }
+            });
+            conn.release();
+        }
+    });
+
+    // var queryString = `DELETE from device_owner WHERE email = "${email}"`;
+    // executeQuery(res, queryString);
+}
+
 exports.getDateLimit = function(res, uuid) {
     var queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}"`;
     executeQuery(res, queryString);

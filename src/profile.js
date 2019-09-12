@@ -15,4 +15,10 @@ router.post('/:userInfo', (req, res) => {
   res.send("hi");
 });
 
+router.post('/:delUser', (req, res) => {
+  //   console.log(req.query);
+    dbcon.delUser(res, req.query.email);
+    res.send("hi");
+  });
+
 module.exports = router;

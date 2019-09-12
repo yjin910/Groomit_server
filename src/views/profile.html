@@ -40,7 +40,7 @@
 			<message id="message_pw"></message>
 			<button type="button" id="main" onclick="window.location.href='main.html';">Main</button>
 		</div>
-		<button type="button" id="signout" onclick="sighout()">Sign out</button>
+		<button type="button" id="signout" onclick="signout()">Sign out</button>
     <script>
 		// var dbcon = require('../dbConnection');
 		var email;
@@ -110,15 +110,20 @@
 			}
 		}
 
-		function sighout(){
+		function signout(){
 			//TODO: db에서 데이터 지우기
 			cognitoUser.deleteUser(function(err, result) {
 				if (err) {
 					alert(err.message || JSON.stringify(err));
 					return;
+				}else{
+					var xhr = new XMLHttpRequest();
+					xhr.open('POST', '/profile/:delUser?email=' + email); // 메소드와 주소 설정
+					xhr.send();
+
+					console.log('call result: ' + result);
+					window.location.href = 'login.html';
 				}
-				console.log('call result: ' + result);
-				window.location.href = 'login.html';
 			});
 		}
     </script>
