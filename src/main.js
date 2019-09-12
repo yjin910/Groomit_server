@@ -21,7 +21,11 @@ router.get('/dateLimit', (req, res) => {
 });
 
 router.get('/representative', (req, res) => {
-    dbcon.getDataOfRepresentiveDevice(res, req.query.email);
+    if (req.query.term) {
+        dbcon.getDataOfRepresentiveDevice(res, req.query.email, req.query.term);
+    } else {
+        dbcon.getDataOfRepresentiveDevice(res, req.query.email, undefined);
+    }
 });
 
 module.exports = router;

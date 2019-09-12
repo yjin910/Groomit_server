@@ -138,8 +138,15 @@ exports.getDateLimit = function(res, uuid) {
     executeQuery(res, queryString);
 }
 
-exports.getDataOfRepresentiveDevice = (res, email) => {
-    var queryString = `select * from measurement where deviceNum = (select deviceNum from device_owner where email = '${email}' order by deviceNum limit 1) and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
+exports.getDataOfRepresentiveDevice = (res, email, term) => {
+    var queryString;
+
+    if (term) {
+        queryString = `select * from measurement where deviceNum = (select deviceNum from device_owner where email = '${email}' order by deviceNum limit 1) and time > DATE_SUB(NOW(), INTERVAL ${term} HOUR);`;
+    } else {
+        queryString = `select * from measurement where deviceNum = (select deviceNum from device_owner where email = '${email}' order by deviceNum limit 1) and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
+    }
+
     executeQuery(res, queryString);
 }
 
