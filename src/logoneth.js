@@ -20,6 +20,9 @@ router.get('/', (req, res) => {
         dbcon.addData(device_uid, "t", t_value, time_val, res);
         dbcon.addData(device_uid, "h", h_value, time_val, res);
 
+        dbcon.addCurrentData(device_uid, "temperature", t_value, res);
+        dbcon.addCurrentData(device_uid, "humidity", h_value, res);
+
         console.log(s1);
         res.send(time_val);
     } catch (e){

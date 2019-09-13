@@ -32,6 +32,41 @@ exports.addData = function(deviceNum, type, value, time, res) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
+exports.addCurrentData = function(deviceNum, type, value, res){
+    var queryString = `SELECT * from recent_value WHERE deviceNum = "${deviceNum}"`
+    var success_msg = "Successfully updated latest data";
+
+    pool.getConnection(function (err, conn) {
+        if (err) {
+            console.log(err);
+        } else {
+            conn.query(queryString, function (err, result, fields) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if(true){
+                        queryString = `UPDATE recent_value SET "${type}" = ${value} WHERE deviceNum = "${deviceNum}"`
+                    }else{
+                        var params;
+                        queryString = "INSERT INTO recent_value (deviceNum, geiger, temperature, humidity) VALUES(?, ?, ?, ?)";
+                        if(type == "geiger"){
+                            params = [deviceNum, value, null, null];
+                        }else if(type == "temperature"){
+                            params = [deviceNum, null, value, null];
+                        }else{
+                            params = [deviceNum, null, null, value];
+                        }
+
+                        executeQuery_withParams_NoRespond(params, queryString, success_msg);
+                    }
+                }
+            });
+
+            conn.release();
+        }
+    });
+}
+
 exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     // TODO select * from measurement where deviceNum = 18 and time >= '2019-08-23 01:00:00';
