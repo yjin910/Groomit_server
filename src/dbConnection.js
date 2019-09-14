@@ -176,9 +176,10 @@ exports.getUuid = function(res, email) {
     executeQuery(res, queryString);
 }
 
+//TODO: 각 테이블에 유저 정보 다 없애기
 exports.delUser = function(res, email){
     var uuidQueryString = `SELECT * from device_owner WHERE email = "${email}"`;
-    var devices;
+    var devices = [];
 
     pool.getConnection(function (err, conn) {
         if (err) {
@@ -188,16 +189,17 @@ exports.delUser = function(res, email){
                 if (err) {
                     res.send(err);
                 } else {
-                    devices = result;
-                    console.log(result);
+                    if(result.length != 0){
+                        for (let key in result){
+                            devices.push(result[key].deviceNum);
+                        }
+                        console.log(devices)
+                    }
                 }
             });
             conn.release();
         }
     });
-
-    // var queryString = `DELETE from device_owner WHERE email = "${email}"`;
-    // executeQuery(res, queryString);
 }
 
 exports.getDateLimit = function(res, uuid) {

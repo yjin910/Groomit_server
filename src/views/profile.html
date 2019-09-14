@@ -103,7 +103,7 @@
 			if (!uuid_reg.test(uuid)){
 			}else{
 				var xhr = new XMLHttpRequest();
-				xhr.open('POST', '/profile/:userInfo?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
+				xhr.open('POST', '/profile/userInfo?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
 				xhr.send();
 				document.getElementById('uuid').innerText = '';
 				alert("Successfully added new device");
@@ -117,9 +117,9 @@
 					alert(err.message || JSON.stringify(err));
 					return;
 				}else{
-					var xhr = new XMLHttpRequest();
-					xhr.open('POST', '/profile/:delUser?email=' + email); // 메소드와 주소 설정
-					xhr.send();
+					// var xhr = new XMLHttpRequest();
+					// xhr.open('POST', '/profile/:delUser?email=' + email); // 메소드와 주소 설정
+					// xhr.send();
 
 					console.log('call result: ' + result);
 					window.location.href = 'login.html';
