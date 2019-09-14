@@ -15,8 +15,8 @@ router.get('/', (req, res) => {
         var seq = req.query.s;
 
         if(g_value){
-            // dbcon.addData(device_uid, "g", g_value, time_val, res);
-            dbcon.addCurrentData(device_uid, "geiger", g_value, res);
+            dbcon.addData(device_uid, "g", g_value, time_val, res);
+            dbcon.addCurrentData(device_uid, "g", g_value, res);
             res.send("success");
         } else {
             res.send('Please provide suitable parameters');

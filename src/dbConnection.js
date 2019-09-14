@@ -44,20 +44,28 @@ exports.addCurrentData = function(deviceNum, type, value, res){
                 if (err) {
                     console.log(err);
                 } else {
-                    if(true){
-                        queryString = `UPDATE recent_value SET "${type}" = ${value} WHERE deviceNum = "${deviceNum}"`
-                    }else{
+                    if(result.length == 0){
                         var params;
                         queryString = "INSERT INTO recent_value (deviceNum, geiger, temperature, humidity) VALUES(?, ?, ?, ?)";
-                        if(type == "geiger"){
+                        if(type == "g"){
                             params = [deviceNum, value, null, null];
-                        }else if(type == "temperature"){
+                        }else if(type == "t"){
                             params = [deviceNum, null, value, null];
-                        }else{
+                        }else if(type == 'h'){
                             params = [deviceNum, null, null, value];
                         }
 
                         executeQuery_withParams_NoRespond(params, queryString, success_msg);
+                    }else{
+                        if(type == "g"){
+                            queryString = `UPDATE recent_value SET geiger = ${value} WHERE deviceNum = "${deviceNum}"`
+                        }else if(type == "t"){
+                            queryString = `UPDATE recent_value SET temperature = ${value} WHERE deviceNum = "${deviceNum}"`
+                        }else if(type == 'h'){
+                            queryString = `UPDATE recent_value SET humidity = ${value} WHERE deviceNum = "${deviceNum}"`
+                        }
+
+                        executeQuery_withParams_NoRespond(null, queryString, success_msg);
                     }
                 }
             });
@@ -219,7 +227,7 @@ var executeQuery = (res, queryString) => {
                 if (err) {
                     res.send(err);
                 } else {
-                    res.send(result)
+                    res.send(result);
                 }
             });
 
@@ -233,14 +241,23 @@ var executeQuery_withParams_NoRespond = (params, queryString, success_msg) => {
         if (err) {
             console.log(err);
         } else {
-            conn.query(queryString, params, function (err, result, fields) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log(success_msg);
-                }
-            });
-
+            if(params){
+                conn.query(queryString, params, function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(success_msg);
+                    }
+                });
+            }else{
+                conn.query(queryString, function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(success_msg);
+                    }
+                });
+            }
             conn.release();
         }
     });
