@@ -45,7 +45,7 @@
         <div id="graph">
             <canvas id="canvasG"></canvas>
         </div>
-        <div>
+        <div id="g_val">
             시작 : <sDate id='g_sdate'></sDate>
         </br>
             종료: <eDate id='g_edate'></eDate>
@@ -63,6 +63,20 @@
     </br>
         <div id="graph">
             <canvas id="canvasH"></canvas>
+        </div>
+        <div id="th_val">
+            시작 : <sDate id='th_sdate'></sDate>
+        </br>
+            종료: <eDate id='th_edate'></eDate>
+        </br>
+            현재 온도: <currentVal id='t_currentVal'></currentVal>
+            현재 습도: <currentVal id='h_currentVal'></currentVal>
+        </br>
+            최고 온도: <highestVal id='t_highestVal'></highestVal>
+            최고 습도: <highestVal id='h_highestVal'></highestVal>
+        </br>
+            최저 온도: <lowestVal id='t_lowestVal'></lowestVal>
+            최저 습도: <lowestVal id='h_lowestVal'></lowestVal>
         </div>
     </br>
     </div>
@@ -212,7 +226,7 @@
                         })
 
                         if (!highest_t){
-                            higehest_t = value;
+                            highest_t = value;
                         } else if (!lowest_t){
                             lowest_t = value;
                         } else if (value > highest_t){
@@ -244,6 +258,15 @@
                 document.getElementById("g_highestVal").innerHTML = highest_g;
                 document.getElementById("g_lowestVal").innerHTML = lowest_g;
                 document.getElementById("g_currentVal").innerHTML = g_data[g_data.length - 1].y;
+
+                document.getElementById("t_highestVal").innerHTML = highest_t + "°C";
+                document.getElementById("t_lowestVal").innerHTML = lowest_t + "°C";
+                document.getElementById("t_currentVal").innerHTML = t_data[t_data.length - 1].y + "°C";
+
+                document.getElementById("h_highestVal").innerHTML = highest_h + "%";
+                document.getElementById("h_lowestVal").innerHTML = lowest_h + "%";
+                document.getElementById("h_currentVal").innerHTML = h_data[h_data.length - 1].y + "%";
+
                 console.log(g_data[g_data.length - 1])
                 drawGraph(c_val, labels, g_data, t_data, h_data);
             }
@@ -530,8 +553,9 @@
                             eDate = changeFormat(eDate);
 
                             document.getElementById("g_sdate").innerHTML = sDate;
+                            document.getElementById("th_sdate").innerHTML = sDate;
                             document.getElementById("g_edate").innerHTML = eDate;
-                            // document.write(curr_date + "-" + curr_month + "-" + curr_year);
+                            document.getElementById("th_edate").innerHTML = eDate;
                         } else {
                             console.error(xhr.responseText);
                         }
@@ -540,6 +564,7 @@
                 xhr.send();
             }
 
+            //TODO: 가이거과 온습도 시간의 차이에 따라 따로 해야함.
             function changeFormat(date){
                 newDate = new Date(date);
                 // var seconds = date.getSeconds();
