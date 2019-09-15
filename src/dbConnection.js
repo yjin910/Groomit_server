@@ -77,7 +77,7 @@ exports.addCurrentData = function(deviceNum, type, value, res){
                                 console.log('invalid type', type);
                         }
 
-                        executeQuery_noRespond(res, queryString);
+                        executeQuery_noRespond(res, queryString, success_msg);
                     }
                 }
             });
@@ -250,7 +250,7 @@ var executeQuery = (res, queryString) => {
     });
 }
 
-var executeQuery_noRespond = (res, queryString) => {
+var executeQuery_noRespond = (res, queryString, success_msg) => {
     pool.getConnection(function (err, conn) {
         if (err) {
             res.send(err);
@@ -259,7 +259,7 @@ var executeQuery_noRespond = (res, queryString) => {
                 if (err) {
                     res.send(err);
                 } else {
-                    console.log(err);
+                    console.log(success_msg);
                 }
             });
 
