@@ -16,7 +16,7 @@ router.get('/mainUuid', (req, res) => {
     dbcon.getUserProfile(res, req.query.email);
 });
 
-router.get('/dateLimit', (req, res) => {
+router.post('/dateLimit', (req, res) => {
     dbcon.getDateLimit(res, req.query.u);
 });
 
