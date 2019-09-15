@@ -47,25 +47,37 @@ exports.addCurrentData = function(deviceNum, type, value, res){
                     if(result.length == 0){
                         var params;
                         queryString = "INSERT INTO recent_value (deviceNum, geiger, temperature, humidity) VALUES(?, ?, ?, ?)";
-                        if(type == "g"){
-                            params = [deviceNum, value, null, null];
-                        }else if(type == "t"){
-                            params = [deviceNum, null, value, null];
-                        }else if(type == 'h'){
-                            params = [deviceNum, null, null, value];
+                        switch (type) {
+                            case 'g':
+                                params = [deviceNum, value, null, null];
+                                break;
+                            case 'h':
+                                params = [deviceNum, null, null, value];
+                                break;
+                            case 't':
+                                params = [deviceNum, null, value, null];
+                                break;
+                            default:
+                                console.log('invalid type', type);
                         }
 
                         executeQuery_withParams_NoRespond(params, queryString, success_msg);
                     }else{
-                        if(type == "g"){
-                            queryString = `UPDATE recent_value SET geiger = ${value} WHERE deviceNum = "${deviceNum}"`
-                        }else if(type == "t"){
-                            queryString = `UPDATE recent_value SET temperature = ${value} WHERE deviceNum = "${deviceNum}"`
-                        }else if(type == 'h'){
-                            queryString = `UPDATE recent_value SET humidity = ${value} WHERE deviceNum = "${deviceNum}"`
+                        switch (type) {
+                            case 'g':
+                                queryString = `UPDATE recent_value SET geiger = ${value} WHERE deviceNum = "${deviceNum}"`
+                                break;
+                            case 'h':
+                                queryString = `UPDATE recent_value SET humidity = ${value} WHERE deviceNum = "${deviceNum}"`
+                                break;
+                            case 't':
+                                queryString = `UPDATE recent_value SET temperature = ${value} WHERE deviceNum = "${deviceNum}"`
+                                break;
+                            default:
+                                console.log('invalid type', type);
                         }
 
-                        executeQuery_withParams_NoRespond(null, queryString, success_msg);
+                        executeQuery_noRespond(res, queryString);
                     }
                 }
             });
@@ -171,9 +183,9 @@ exports.addDevice = function(email, deviceNum) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
-exports.getUuid = function(res, email) {
-    var queryString = `SELECT * from device_owner WHERE email = "${email}"`;
-    executeQuery(res, queryString);
+exports.getUserProfile = (res, email) => {
+    var querString = `SELECT device_owner.email, device_owner.deviceNum, recent_value.geiger, recent_value.temperature, recent_value.humidity FROM device_owner JOIN recent_value ON device_owner.deviceNum = recent_value.deviceNum WHERE device_owner.email = '${email}'`;
+    executeQuery(res, querString);
 }
 
 //TODO: 각 테이블에 유저 정보 다 없애기
@@ -230,6 +242,24 @@ var executeQuery = (res, queryString) => {
                     res.send(err);
                 } else {
                     res.send(result);
+                }
+            });
+
+            conn.release();
+        }
+    });
+}
+
+var executeQuery_noRespond = (res, queryString) => {
+    pool.getConnection(function (err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(queryString, function (err, result, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    console.log(err);
                 }
             });
 

@@ -13,7 +13,7 @@ router.get('/graphInfo', (req, res) => {
 });
 
 router.get('/mainUuid', (req, res) => {
-    dbcon.getUuid(res, req.query.email);
+    dbcon.getUserProfile(res, req.query.email);
 });
 
 router.get('/dateLimit', (req, res) => {
