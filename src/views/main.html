@@ -175,6 +175,14 @@
                 var t_data = [];
                 var h_data = [];
 
+                var highest_g;
+                var highest_t;
+                var highest_h;
+
+                var lowest_g;
+                var lowest_t;
+                var lowest_h;
+
                 for (key in datas) {
                     // console.log(datas[key].type)
                     type = datas[key].type;
@@ -186,29 +194,61 @@
                             x: CDate,
                             y: value
                         })
+
+                        if (!highest_g){
+                            highest_g = value;
+                        } else if (!lowest_g){
+                            lowest_g = value;
+                        } else if (value > highest_g){
+                            highest_g = value;
+                        } else if (value < lowest_g){
+                            lowest_g = value;
+                        }
                     }
                     if (type == 't') {
                         t_data.push({
                             x: CDate,
                             y: value
                         })
+
+                        if (!highest_t){
+                            higehest_t = value;
+                        } else if (!lowest_t){
+                            lowest_t = value;
+                        } else if (value > highest_t){
+                            highest_t = value;
+                        } else if (value < lowest_t){
+                            lowest_t = value;
+                        }
                     }
                     if (type == 'h') {
                         h_data.push({
                             x: CDate,
                             y: value
                         })
+
+                        if (!highest_h){
+                            highest_h = value;
+                        } else if (!lowest_h){
+                            lowest_h = value;
+                        } else if (value > highest_h){
+                            highest_h = value;
+                        } else if (value < lowest_h){
+                            lowest_h = value;
+                        }
                     }
                     if (!labels.includes(new Date(datas[key].time))) {
                         labels.push(CDate)
                     }
                 }
-                // console.log(g_data)
+                document.getElementById("g_highestVal").innerHTML = highest_g;
+                document.getElementById("g_lowestVal").innerHTML = lowest_g;
+                document.getElementById("g_currentVal").innerHTML = g_data[g_data.length - 1].y;
+                console.log(g_data[g_data.length - 1])
                 drawGraph(c_val, labels, g_data, t_data, h_data);
             }
 
             function drawGraph(c_val, labels, g_data, t_data, h_data) {
-                // console.log(g_data)
                 const DATASET_G = {
                     label: 'geiger count',
                     data: g_data,
