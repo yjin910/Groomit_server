@@ -34,12 +34,11 @@
             <label for="168">1주일</label>
         <input type="radio" name="date" value="720" onclick="changeDate()"/>
             <label for="720">1달</label>
-        <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
-        <input type="date" id="end_date" onchange="chanegMaxStartD()">
-        <!-- <input type="text" id="sDate" class="form-control form-control-sm"/>
-        <input type="text" id="eDate" class="form-control form-control-sm"/> -->
+        <!-- <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
+        <input type="date" id="end_date" onchange="chanegMaxStartD()"> -->
+        <input type="text" id="sDate" class="form-control form-control-sm"/> ~
+        <input type="text" id="eDate" class="form-control form-control-sm"/>
 
-        <!-- <img type="submit" src='download_0.png' onclick="json2csv()"> -->
         <input type="image" class="download" src="download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
     </div>
 
@@ -91,20 +90,20 @@
             var c_val = 'gth';
             var gChart, tChart, hChart;
 
-            // var picker = new Lightpick({
-            //     field: document.getElementById('sDate'),
-            //     secondField: document.getElementById('eDate'),
-            //     singleDate: false,
-            //     numberOfMonths: 2,
-            //     hoveringTooltip: true,
-            //     repick: true,
-            //     onSelect: function(start, end){
-            //         var str = '';
-            //         str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
-            //         str += end ? end.format('Do MMMM YYYY') : '...';
-            //         document.getElementById('result-2').innerHTML = str;
-            //     }
-            // });
+            var picker = new Lightpick({
+                field: document.getElementById('sDate'),
+                secondField: document.getElementById('eDate'),
+                singleDate: false,
+                numberOfMonths: 2,
+                hoveringTooltip: true,
+                repick: true,
+                onSelect: function(start, end){
+                    var str = '';
+                    str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
+                    str += end ? end.format('Do MMMM YYYY') : '...';
+                    document.getElementById('result-2').innerHTML = str;
+                }
+            });
 
             var data = {
                 UserPoolId: _config.cognito.userPoolId,
@@ -583,7 +582,7 @@
             function changeFormat(date){
                 var newFormat;
                 var newDate = new Date(date);
-                
+
                 if(newDate.toString() == "Invalid Date"){
                     var newFormat = undefined;
                 }else{
