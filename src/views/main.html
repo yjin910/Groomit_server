@@ -18,8 +18,8 @@
     <div class="info">
         <img class="logo_groomit" src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'">
         무선 방사능 및 온습도 측정시스템
-        <button type="button" class="member_info" onclick="logOut()">Log out</button>
-        <button type="button" class="member_info" onclick="window.location.href='profile.html' ;">Profile</button>
+        <input type="image" class="member_info" src='signout_0.png' style="width: 90px;" onclick="logOut()"/>
+        <input type="image" class="member_info" src='profile_0.png' style="width: 90px;" onclick="window.location.href='profile.html';"/>
     </div>
 
 
@@ -34,10 +34,13 @@
             <label for="168">1주일</label>
         <input type="radio" name="date" value="720" onclick="changeDate()"/>
             <label for="720">1달</label>
-        <input type="text" id="sDate" class="form-control form-control-sm"/>
-        <input type="text" id="eDate" class="form-control form-control-sm"/>
+        <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
+        <input type="date" id="end_date" onchange="chanegMaxStartD()">
+        <!-- <input type="text" id="sDate" class="form-control form-control-sm"/>
+        <input type="text" id="eDate" class="form-control form-control-sm"/> -->
 
-        <button type="submit" onclick="json2csv()">Download!</button>
+        <!-- <img type="submit" src='download_0.png' onclick="json2csv()"> -->
+        <input type="image" class="download" src="download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
     </div>
 
     <!-- buttons for logout or see profile -->
@@ -88,20 +91,20 @@
             var c_val = 'gth';
             var gChart, tChart, hChart;
 
-            var picker = new Lightpick({
-                field: document.getElementById('sDate'),
-                secondField: document.getElementById('eDate'),
-                singleDate: false,
-                numberOfMonths: 2,
-                hoveringTooltip: true,
-                repick: true,
-                onSelect: function(start, end){
-                    var str = '';
-                    str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
-                    str += end ? end.format('Do MMMM YYYY') : '...';
-                    document.getElementById('result-2').innerHTML = str;
-                }
-            });
+            // var picker = new Lightpick({
+            //     field: document.getElementById('sDate'),
+            //     secondField: document.getElementById('eDate'),
+            //     singleDate: false,
+            //     numberOfMonths: 2,
+            //     hoveringTooltip: true,
+            //     repick: true,
+            //     onSelect: function(start, end){
+            //         var str = '';
+            //         str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
+            //         str += end ? end.format('Do MMMM YYYY') : '...';
+            //         document.getElementById('result-2').innerHTML = str;
+            //     }
+            // });
 
             var data = {
                 UserPoolId: _config.cognito.userPoolId,
@@ -132,6 +135,7 @@
             }
 
             function logOut() {
+                alert("TRUE")
                 if (cognitoUser != null) {
                     cognitoUser.signOut();
                     window.location.href = 'login.html';
@@ -153,7 +157,6 @@
                                 uuid = uuids[0].deviceNum;
                                 addSelection(uuids);
                                 getGraphData();
-                                getDateLimit();
                             }
                         } else {
                             console.error(xhr.responseText);
@@ -174,6 +177,7 @@
                             // console.log(JSON.parse(xhr.responseText));
                             // console.log(startD)
                             datas = JSON.parse(xhr.responseText);
+                            getDateLimit();
                             sortdata();
                         } else {
                             console.error(xhr.responseText);
@@ -257,17 +261,28 @@
                 }
                 document.getElementById("g_highestVal").innerHTML = highest_g;
                 document.getElementById("g_lowestVal").innerHTML = lowest_g;
-                document.getElementById("g_currentVal").innerHTML = g_data[g_data.length - 1].y;
+                if(g_data.length != 0){
+                    document.getElementById("g_currentVal").innerHTML = g_data[g_data.length - 1].y;
+                } else {
+                    document.getElementById("g_currentVal").innerHTML = undefined;
+                }
 
                 document.getElementById("t_highestVal").innerHTML = highest_t + "°C";
                 document.getElementById("t_lowestVal").innerHTML = lowest_t + "°C";
-                document.getElementById("t_currentVal").innerHTML = t_data[t_data.length - 1].y + "°C";
+                if(t_data.length != 0){
+                    document.getElementById("t_currentVal").innerHTML = t_data[t_data.length - 1].y + "°C";
+                } else {
+                    document.getElementById("t_currentVal").innerHTML = undefined;
+                }
 
                 document.getElementById("h_highestVal").innerHTML = highest_h + "%";
                 document.getElementById("h_lowestVal").innerHTML = lowest_h + "%";
-                document.getElementById("h_currentVal").innerHTML = h_data[h_data.length - 1].y + "%";
+                if (h_data.length != 0){
+                    document.getElementById("h_currentVal").innerHTML = h_data[h_data.length - 1].y + "%";
+                } else {
+                    document.getElementById("h_currentVal").innerHTML = undefined;
+                }
 
-                console.log(g_data[g_data.length - 1])
                 drawGraph(c_val, labels, g_data, t_data, h_data);
             }
 
@@ -566,16 +581,22 @@
 
             //TODO: 가이거과 온습도 시간의 차이에 따라 따로 해야함.
             function changeFormat(date){
-                newDate = new Date(date);
-                // var seconds = date.getSeconds();
-                var minute = newDate.getMinutes();
-                var hour = newDate.getHours();
-                var day = newDate.getDate();
-                var month = newDate.getMonth();
-                var year = newDate.getFullYear();
+                var newFormat;
+                var newDate = new Date(date);
+                
+                if(newDate.toString() == "Invalid Date"){
+                    var newFormat = undefined;
+                }else{
+                    // var seconds = date.getSeconds();
+                    var minute = newDate.getMinutes();
+                    var hour = newDate.getHours();
+                    var day = newDate.getDate();
+                    var month = newDate.getMonth();
+                    var year = newDate.getFullYear();
 
-                var newFormat = year + "년 " + month + "월 " + day + "일 " + hour + ":" + minute;
-
+                    newFormat = year + "년 " + month + "월 " + day + "일 " + hour + ":" + minute;
+                }
+                
                 return newFormat;
             }
         </script>

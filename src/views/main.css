@@ -23,13 +23,14 @@ body{
     margin-bottom: 10px
 }
 
-button {
+.download  {
     float: right;
     margin: 0 10px 0 0;
 }
 
 .member_info{
-    margin: 60px 10px 0 0;
+    float: right;
+    margin: 50px 10px 0 0;
 }
 
 select{
@@ -49,6 +50,11 @@ canvas {
 
 #changeDate {
     margin-left: 20px;
+}
+
+#g_val, #th_val {
+    margin: auto;
+    font-size: 80%
 }
 
 button:hover{
