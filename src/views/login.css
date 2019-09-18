@@ -78,3 +78,19 @@ body, .login-page {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;    
   }
+
+  #inputUsername {
+    background-image: url("email.png");
+    background-repeat: no-repeat;
+    text-indent: 25px;
+    background-position: 5px 50%;
+    background-size: 30px;
+}
+
+  #inputPassword {
+    background-image: url("password.png");
+    background-repeat: no-repeat;
+    text-indent: 25px;
+    background-position: 5px 50%;
+    background-size: 30px;
+}

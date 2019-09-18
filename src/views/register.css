@@ -96,3 +96,27 @@ body, .register-page {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;    
   }
+
+  #signup_name {
+    background-image: url("name.png");
+    background-repeat: no-repeat;
+    text-indent: 25px;
+    background-position: 5px 50%;
+    background-size: 30px;
+}
+
+#signup_email {
+    background-image: url("email.png");
+    background-repeat: no-repeat;
+    text-indent: 25px;
+    background-position: 5px 50%;
+    background-size: 30px;
+}
+
+#signup_pwd {
+    background-image: url("password.png");
+    background-repeat: no-repeat;
+    text-indent: 25px;
+    background-position: 5px 50%;
+    background-size: 30px;
+}
