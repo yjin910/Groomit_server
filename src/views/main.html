@@ -137,7 +137,6 @@
             function logOut() {
                 if (cognitoUser != null) {
                     cognitoUser.signOut();
-                    //TODO delete cookit -> username
                     deleteCookie('username');
                     window.location.href = '/login';
                 }
@@ -256,6 +255,7 @@
                             lowest_h = value;
                         }
                     }
+
                     if (!labels.includes(new Date(datas[key].time))) {
                         labels.push(CDate)
                     }
