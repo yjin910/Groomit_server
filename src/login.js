@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   var username = req.query.username;
-  res.cookie('9room@username', username, {
+  res.cookie('username', username, {
     maxAge: 86400000 //maxAge = 24hours
   });
 
