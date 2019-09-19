@@ -62,8 +62,8 @@
                 onSuccess: function(result) {
                     var accessToken = result.getAccessToken().getJwtToken();
                     console.log(accessToken);
-                    //TODO send request to log in
-                    sendRequestForLogin(username, password);
+                    //send http request to server to use cookie
+                    sendRequestForLogin(username);
                 },
                 onFailure: function(err) {
                     console.log(err);
@@ -72,7 +72,7 @@
             });
         }
 
-        function sendRequestForLogin(username, password) {
+        function sendRequestForLogin(username) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === xhr.DONE) {
