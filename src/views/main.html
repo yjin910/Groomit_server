@@ -137,7 +137,7 @@
             function logOut() {
                 if (cognitoUser != null) {
                     cognitoUser.signOut();
-                    deleteCookie('9room@username');
+                    deleteCookie('username');
                     window.location.href = '/login';
                 }
             }
