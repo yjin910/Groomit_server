@@ -4,7 +4,13 @@ var router = express.Router();
 var dbcon = require('./dbConnection');
 
 router.get('/', (req, res) => {
-  res.render('profile.html');
+  var username = req.cookies.username;
+
+  if (username) {
+    res.render('profile.html');
+  } else {
+    res.redirect('/login');
+  }
 });
 
 router.post('/userInfo', (req, res) => {

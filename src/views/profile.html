@@ -3,14 +3,15 @@
   <head>
     <meta charset="utf-8">
 	 <!--Cognito JavaScript-->
-	<script src="js/amazon-cognito-identity.min.js"></script>  
-	<script src="js/config.js"></script>
+	<script src="../public/js/amazon-cognito-identity.min.js"></script>  
+	<script src="../public/js/config.js"></script>
+	<script src="../public/js/cookieProcess.js"></script>
 	<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>  
-	<link rel="stylesheet" type="text/css" href="profile.css">
+	<link rel="stylesheet" type="text/css" href="../public/css/profile.css">
   </head>
 
   <body>
-	<img class="logo_groomit" src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'">
+	<img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/main'">
 		<div class="user-profile">
 			<div class="data">
 				<span> Personal Information</span>
@@ -38,7 +39,7 @@
 				<button type="button" id="changePw" onclick="changePw()">Save</button>
 			</div>
 			<message id="message_pw"></message>
-			<button type="button" id="main" onclick="window.location.href='main.html';">Main</button>
+			<button type="button" id="main" onclick="window.location.href='/main';">Main</button>
 		</div>
 		<button type="button" id="signout" onclick="signout()">Sign out</button>
     <script>
@@ -91,7 +92,7 @@
 					document.getElementById('oldPassword').innerText = '';
 					document.getElementById('newPassword').innerText = '';
 					alert("Successfully changed password");
-					// window.location.href = 'login.html';
+					// window.location.href = '/login';
 				}
 			});
 		}
@@ -122,7 +123,8 @@
 					// xhr.send();
 
 					console.log('call result: ' + result);
-					window.location.href = 'login.html';
+					deleteCookie('username');
+					window.location.href = '/login';
 				}
 			});
 		}

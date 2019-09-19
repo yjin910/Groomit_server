@@ -5,7 +5,13 @@ var dbcon = require('./dbConnection');
 var fs = require('fs');
 
 router.get('/', (req, res) => {
-    res.render('main.html');
+    var username = req.cookies.username;
+
+    if (username) {
+        res.render('main.html');
+    } else {
+        res.redirect('/login');
+    }
 });
 
 router.get('/graphInfo', (req, res) => {
