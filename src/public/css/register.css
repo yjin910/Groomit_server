@@ -98,7 +98,7 @@ body, .register-page {
   }
 
   #signup_name {
-    background-image: url("name.png");
+    background-image: url("../images/name.png");
     background-repeat: no-repeat;
     text-indent: 25px;
     background-position: 5px 50%;
@@ -106,7 +106,7 @@ body, .register-page {
 }
 
 #signup_email {
-    background-image: url("email.png");
+    background-image: url("../images/email.png");
     background-repeat: no-repeat;
     text-indent: 25px;
     background-position: 5px 50%;
@@ -114,7 +114,7 @@ body, .register-page {
 }
 
 #signup_pwd {
-    background-image: url("password.png");
+    background-image: url("../images/password.png");
     background-repeat: no-repeat;
     text-indent: 25px;
     background-position: 5px 50%;

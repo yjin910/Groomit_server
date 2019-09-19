@@ -5,21 +5,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
     <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
-    <script src="js/amazon-cognito-identity.min.js"></script>
-    <script src="js/config.js"></script>
+    <script src="../public/js/amazon-cognito-identity.min.js"></script>
+    <script src="../public/js/config.js"></script>
+    <script src="../public/js/cookieProcess.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="lightpick.js"></script>  
+    <script src="../public/js/lightpick.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="lightpick.css">  
-    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="../public/css/lightpick.css">  
+    <link rel="stylesheet" type="text/css" href="../public/css/main.css">
 </head>
 
 <body>
     <div class="info">
-        <img class="logo_groomit" src="groomit_logo.png" alt="Groomit logo" onclick="window.location.href='login.html'">
+        <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">
         무선 방사능 및 온습도 측정시스템
-        <input type="image" class="member_info" src='signout_0.png' style="width: 90px;" onclick="logOut()"/>
-        <input type="image" class="member_info" src='profile_0.png' style="width: 90px;" onclick="window.location.href='profile.html';"/>
+        <input type="image" class="member_info" src='../public/images/signout_0.png' style="width: 90px;" onclick="logOut()"/>
+        <input type="image" class="member_info" src='../public/images/profile_0.png' style="width: 90px;" onclick="window.location.href='/profile';"/>
     </div>
 
 
@@ -39,7 +40,7 @@
         <input type="text" id="sDate" class="form-control form-control-sm"/> ~
         <input type="text" id="eDate" class="form-control form-control-sm"/>
 
-        <input type="image" class="download" src="download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
+        <input type="image" class="download" src="../public/images/download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
     </div>
 
     <!-- buttons for logout or see profile -->
@@ -136,7 +137,8 @@
             function logOut() {
                 if (cognitoUser != null) {
                     cognitoUser.signOut();
-                    window.location.href = 'login.html';
+                    deleteCookie('username');
+                    window.location.href = '/login';
                 }
             }
 
@@ -253,6 +255,7 @@
                             lowest_h = value;
                         }
                     }
+
                     if (!labels.includes(new Date(datas[key].time))) {
                         labels.push(CDate)
                     }
