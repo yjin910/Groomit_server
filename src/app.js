@@ -31,6 +31,9 @@ app.get('/', (req, res) => {
     res.redirect('/main');
 });
 
+app.get('/successRegister', (req, res) => {
+    res.render('successRegister.html');
+})
 
 // add routers
 app.use('/login', require('./login'));
