@@ -34,7 +34,11 @@ body{
 }
 
 select{
-    margin: 0 10px 30px 30px;
+    margin: 0 10px 30px 15px;
+    border: 1px solid #D9D8DD;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background-color: #FFFFFF
 }
 
 canvas {
