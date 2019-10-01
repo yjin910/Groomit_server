@@ -4,13 +4,17 @@
     <head>
         <title>9room::SuccessRegister</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="successRegister.css">
+        <link rel="stylesheet" type="text/css" href="../public/css/successRegister.css">
     </head>
     <body>
-        <img src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/main'" width="180" height="90">
+        <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">
         <h2>Welcome to Groomit!</h2>
         <div class="counter">Redirecting to login page after <count class="counter" id="counter">3</count> seconds</div>
 
+        <footer>
+            <div class="copyright">&copy 2015 - Technonia</div>
+            <a href="http://technonia.cafe24.com/" class="about">About Us</a>
+        </footer>
         <script>
             setInterval(function() {
                 var div = document.querySelector("#counter");
