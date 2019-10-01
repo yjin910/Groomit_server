@@ -64,13 +64,3 @@ canvas {
 button:hover{
     background: #e3eeee;
 }
-
-footer{ 
-    /* position:fixed;  */
-    left:0px; 
-    bottom:0px; 
-    height:80px; 
-    width:100%; 
-    background:grey; 
-    color: white; 
-}
