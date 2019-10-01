@@ -2,24 +2,19 @@
 
 .logo_groomit {
     cursor: pointer;
-    width: 200px;
-    height: 105px;
-    margin-left: 30px;
+    width: 240px;
+    height: 89px;
+    margin: 30px 0 30px 0;
 }
-
-/* .logo_technonia {
-    cursor: pointer;
-    width: 160px;
-    height: 20px;
-    float: right;
-    margin-top: 40px;
-    margin-right: 80px;
-} */
 
 body, .register-page {
     font-family: 'Roboto Mono', monospace;
+    margin: auto;
 }
 
+body {
+    width: 90%;
+}
 .register-page {
     width: 360px;
     /* padding: 0 0 10% 0; */
@@ -120,3 +115,29 @@ body, .register-page {
     background-position: 5px 50%;
     background-size: 30px;
 }
+
+footer{ 
+    width: 90%;
+    height:70px; 
+    position:fixed;
+      bottom:0;
+    background:grey; 
+    color: white; 
+  }
+  .copyright {
+    width: 50%;
+    float: left;
+    padding-left: 20px;
+    font-size: 12px;
+    line-height: 70px;
+    letter-spacing: 1px;
+  }
+  
+  .about {
+    float: right;
+    padding-right: 3%;
+    color: white;
+    font-size: 12px;
+    line-height: 70px;
+    letter-spacing: 1px;
+  }

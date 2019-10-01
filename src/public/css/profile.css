@@ -2,17 +2,24 @@
 
 body, .user-profile {
   font-family: 'Roboto Mono', monospace;
+  margin: auto;
+}
+
+body {
+  width: 90%;
+  
 }
 
 .logo_groomit {
   cursor: pointer;
-  width: 200px;
-  height: 105px;
-  margin-left: 30px;
+  width: 240px;
+    height: 89px;
+    vertical-align: -15px;
+    margin-top: 20px;
 }
 
 .user-profile {
-  margin: auto;
+  /* margin: auto; */
   width: 25em;
   background: #fff;
   border-radius: .3em;
@@ -32,19 +39,18 @@ body, .user-profile {
 
 #username {
   margin: auto;
-  color: #658585;
+  color: #294646;
   font-size: 15px;
 }
 
 #email {
   margin: auto;
   width: 14em;
-  color: #658585;
+  color: #294646;
   font-size: 15px;
 }
 
 #uuid, #oldPassword, #newPassword{
-  background: #f2f2f2;
   margin: 0 0 10px;
   box-sizing: border-box;
   font-size: 14px;
@@ -59,7 +65,7 @@ body, .user-profile {
 #adddevice, #changePw, #main{
   background-color: white;
   color: black;
-  border: 2px solid #5F9EA0;
+  border-radius: 0.3em;
   font-family: 'Roboto Mono', monospace;
 }
 
@@ -86,4 +92,30 @@ span {
   white-space: nowrap;
   font-size: 25px;
   font-weight: bold;
+}
+
+footer{ 
+  width: 90%;
+  height:70px; 
+  position:fixed;
+	bottom:0;
+  background:grey; 
+  color: white; 
+}
+.copyright {
+  width: 50%;
+  float: left;
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 70px;
+  letter-spacing: 1px;
+}
+
+.about {
+  float: right;
+  padding-right: 3%;
+  color: white;
+  font-size: 12px;
+  line-height: 70px;
+  letter-spacing: 1px;
 }

@@ -33,6 +33,11 @@ body{
     margin: 50px 10px 0 0;
 }
 
+.container:after {
+    content: "";
+    display: block;
+  }
+
 select{
     margin: 0 10px 30px 15px;
     border: 1px solid #D9D8DD;
@@ -64,3 +69,27 @@ canvas {
 button:hover{
     background: #e3eeee;
 }
+
+footer{ 
+    height:70px; 
+    background:grey; 
+    color: white; 
+}
+  .copyright {
+    width: 50%;
+    float: left;
+    padding-left: 20px;
+    font-size: 12px;
+    line-height: 70px;
+    letter-spacing: 1px;
+  }
+
+
+  .about {
+    float: right;
+    padding-right: 3%;
+    color: white;
+    font-size: 12px;
+    line-height: 70px;
+    letter-spacing: 1px;
+  }
