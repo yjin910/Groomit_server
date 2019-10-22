@@ -6,13 +6,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
     <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="../public/js/amazon-cognito-identity.min.js"></script>
     <script src="../public/js/config.js"></script>
-    <script src="../public/js/cookieProcess.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="../public/js/lightpick.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../public/css/lightpick.css">  
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" type="text/css" href="../public/css/main.css">
 </head>
 
@@ -36,10 +35,11 @@
             <label for="168">1주일</label>
         <input type="radio" name="date" value="720" onclick="changeDate()"/>
             <label for="720">1달</label>
-        <!-- <input type="date" id="start_date" onchange="chanegMinEndD()"> ~
-        <input type="date" id="end_date" onchange="chanegMaxStartD()"> -->
-        <input type="text" id="sDate" class="form-control form-control-sm"/> ~
-        <input type="text" id="eDate" class="form-control form-control-sm"/>
+        <!-- DAYTIME PICKER -->
+        <div id="date_range" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+            <i class="fa fa-calendar"></i>&nbsp;
+            <span></span> <i class="fa fa-caret-down"></i>
+        </div>
 
         <input type="image" class="download" src="../public/images/download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
     </div>
@@ -91,25 +91,34 @@
     </footer>
     
     <script>
-            var uuid;
-            var email;
-            var datas;
+            var uuid, email, datas;
             var c_val = 'gth';
             var gChart, tChart, hChart;
+            var start, end;
 
-            var picker = new Lightpick({
-                field: document.getElementById('sDate'),
-                secondField: document.getElementById('eDate'),
-                singleDate: false,
-                numberOfMonths: 2,
-                hoveringTooltip: true,
-                repick: true,
-                onSelect: function(start, end){
-                    var str = '';
-                    str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
-                    str += end ? end.format('Do MMMM YYYY') : '...';
-                    document.getElementById('result-2').innerHTML = str;
+            // date time picker
+            $(function() {
+                start = moment().subtract(29, 'days');
+                end = moment();
+
+                function cb(start, end) {
+                    $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                 }
+
+                $('#date_range').daterangepicker({
+                    startDate: start,
+                    endDate: end,
+                    ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    }
+                }, cb);
+
+                cb(start, end);
             });
 
             var data = {
@@ -132,9 +141,9 @@
                             console.log(err);
                             return;
                         }
-                        console.log(result);
+                        // console.log(result);
                         email = result[3].getValue();
-                        console.log(email)
+                        // console.log(email)
                         getGraph();
                     });
                 });
@@ -182,8 +191,9 @@
                         if (xhr.status === 200 || xhr.status === 201) {
                             // console.log(JSON.parse(xhr.responseText));
                             // console.log(startD)
+                            //TODO: 데이터 처리 방법 확인 및 LIMIT 제대로 표시
                             datas = JSON.parse(xhr.responseText);
-                            getDateLimit();
+                            getDateLimit(datas);
                             sortdata();
                         } else {
                             console.error(xhr.responseText);
@@ -208,7 +218,6 @@
                 var lowest_h;
 
                 for (key in datas) {
-                    // console.log(datas[key].type)
                     type = datas[key].type;
                     CDate = new Date(datas[key].time);
                     value = datas[key].val;
@@ -488,18 +497,14 @@
 
             function addSelection(uuids) {
                 var selection = document.getElementById("devices");
-                console.log(selection.length)
-                if (selection.length == 0) {
-                    for (i in uuids) {
-                        var option = document.createElement("option");
 
-                        option.text = uuids[i].deviceNum;
-                        option.value = uuids[i].deviceNum;
-                        selection.add(option)
-                        console.log(uuids[i])
-                    }
-                } else if (uuids.length > selection.length) {
-                    // TODO:: 추가시 어떻게 할지 확인
+                for (i in uuids) {
+                    var option = document.createElement("option");
+
+                    option.text = uuids[i].deviceNum;
+                    option.value = uuids[i].deviceNum;
+                    selection.add(option)
+                    console.log(uuids[i])
                 }
             }
 
@@ -561,13 +566,16 @@
                 // window.open("data:text/csv;charset=utf-8," + escape(str));
             }
 
-            function getDateLimit(){
+            //TODO: 첫 시작에서 Datelimit 표시 오류
+            function getDateLimit(datas){
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/main/dateLimit?u=' + uuid); // 메소드와 주소 설정
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
                             var dates = JSON.parse(xhr.responseText);
+                            console.log("TEST");
+                            console.log(dates);
                             var sDate = dates[0].mintime;
                             var eDate = dates[0].maxtime;
 
