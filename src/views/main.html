@@ -36,7 +36,7 @@
         <input type="radio" name="date" value="720" onclick="changeDate()"/>
             <label for="720">1달</label>
         <!-- DAYTIME PICKER -->
-        <div id="date_range" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 40%">
             <i class="fa fa-calendar"></i>&nbsp;
             <span></span> <i class="fa fa-caret-down"></i>
         </div>
@@ -96,31 +96,6 @@
             var gChart, tChart, hChart;
             var start, end;
 
-            // date time picker
-            $(function() {
-                start = moment().subtract(29, 'days');
-                end = moment();
-
-                function cb(start, end) {
-                    $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                }
-
-                $('#date_range').daterangepicker({
-                    startDate: start,
-                    endDate: end,
-                    ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    }
-                }, cb);
-
-                cb(start, end);
-            });
-
             var data = {
                 UserPoolId: _config.cognito.userPoolId,
                 ClientId: _config.cognito.clientId
@@ -148,6 +123,33 @@
                     });
                 });
             }
+
+            // date time picker
+            $(function() {
+                start = moment().subtract(15, 'hours');
+                end = moment();
+
+                function cb(start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                    //TODO: 시작 끝 값 주어졌을 때 데이터 받을 수 있게 변경하기
+                    // getGraphData(start, end);
+                }
+
+                $('#reportrange').daterangepicker({
+                    startDate: start,
+                    endDate: end,
+                    ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    }
+                }, cb);
+
+                cb(start, end);
+            });
 
             function logOut() {
                 if (cognitoUser != null) {
@@ -189,11 +191,8 @@
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
-                            // console.log(JSON.parse(xhr.responseText));
-                            // console.log(startD)
-                            //TODO: 데이터 처리 방법 확인 및 LIMIT 제대로 표시
                             datas = JSON.parse(xhr.responseText);
-                            getDateLimit(datas);
+                            getDateLimit(term);
                             sortdata();
                         } else {
                             console.error(xhr.responseText);
@@ -566,10 +565,11 @@
                 // window.open("data:text/csv;charset=utf-8," + escape(str));
             }
 
-            //TODO: 첫 시작에서 Datelimit 표시 오류
-            function getDateLimit(datas){
+            function getDateLimit(term){
+                let tempURL = '/main/dateLimit?u=' + uuid;
+                if (term) tempURL += ('&term=' + term); 
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/main/dateLimit?u=' + uuid); // 메소드와 주소 설정
+                xhr.open('POST', tempURL); // 메소드와 주소 설정
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
