@@ -214,8 +214,13 @@ exports.delUser = function(res, email){
     });
 }
 
-exports.getDateLimit = function(res, uuid) {
-    var queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}"`;
+exports.getDateLimit = function(res, uuid, term) {
+    var queryString;
+    if(term){
+        queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}" and time > DATE_SUB(NOW(), INTERVAL ${term} HOUR);`;
+    }else {
+        queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}" and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
+    }
     executeQuery(res, queryString);
 }
 

@@ -23,7 +23,7 @@ router.get('/mainUuid', (req, res) => {
 });
 
 router.post('/dateLimit', (req, res) => {
-    dbcon.getDateLimit(res, req.query.u);
+    dbcon.getDateLimit(res, req.query.u, req.query.term);
 });
 
 router.get('/representative', (req, res) => {
