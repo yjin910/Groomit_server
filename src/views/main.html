@@ -36,7 +36,7 @@
         <input type="radio" name="date" value="720" onclick="changeDate()"/>
             <label for="720">1달</label>
         <!-- DAYTIME PICKER -->
-        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 40%">
+        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 40%" onchange="alert('TRUE')">
             <i class="fa fa-calendar"></i>&nbsp;
             <span></span> <i class="fa fa-caret-down"></i>
         </div>
@@ -52,7 +52,7 @@
         <div id="g_val">
             시작 : <sDate id='g_sdate'></sDate>
         </br>
-            종료: <eDate id='g_edate'></eDate>
+            종료 : <eDate id='g_edate'></eDate>
         </br>
             현재 방사능 값: <currentVal id='g_currentVal'></currentVal>
         </br>
@@ -71,7 +71,7 @@
         <div id="th_val">
             시작 : <sDate id='th_sdate'></sDate>
         </br>
-            종료: <eDate id='th_edate'></eDate>
+            종료 : <eDate id='th_edate'></eDate>
         </br>
             현재 온도: <currentVal id='t_currentVal'></currentVal>
             현재 습도: <currentVal id='h_currentVal'></currentVal>
@@ -116,9 +116,7 @@
                             console.log(err);
                             return;
                         }
-                        // console.log(result);
                         email = result[3].getValue();
-                        // console.log(email)
                         getGraph();
                     });
                 });
@@ -132,7 +130,17 @@
                 function cb(start, end) {
                     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                     //TODO: 시작 끝 값 주어졌을 때 데이터 받을 수 있게 변경하기
-                    // getGraphData(start, end);
+                    start = start.format('YYYY-MM-DD HH:mm:ss');
+                    end = end.format('YYYY-MM-DD HH:mm:ss');
+
+                    setTimeout(function repeatTimeout() {
+                        // console.log(i);
+                        if(uuid !== undefined){
+                            getGraphData(undefined, start, end);
+                        } else {
+                            setTimeout(repeatTimeout, 1000);
+                        }
+                    }, 1000);
                 }
 
                 $('#reportrange').daterangepicker({
@@ -173,7 +181,7 @@
                             } else {
                                 uuid = uuids[0].deviceNum;
                                 addSelection(uuids);
-                                getGraphData();
+                                // getGraphData();
                             }
                         } else {
                             console.error(xhr.responseText);
@@ -183,16 +191,17 @@
                 xhr.send();
             }
 
-            function getGraphData(term) {
+            function getGraphData(term, start, end) {
                 let tempURL = '/main/graphInfo?u=' + uuid + '&type=' + c_val;
                 if (term) tempURL += ('&term=' + term);
+                else if (start && end) tempURL += ('&start=' + start +'&end=' + end);
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', tempURL); // 메소드와 주소 설정
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
                             datas = JSON.parse(xhr.responseText);
-                            getDateLimit(term);
+                            getDateLimit(term, start, end);
                             sortdata();
                         } else {
                             console.error(xhr.responseText);
@@ -565,9 +574,10 @@
                 // window.open("data:text/csv;charset=utf-8," + escape(str));
             }
 
-            function getDateLimit(term){
+            function getDateLimit(term, start, end){
                 let tempURL = '/main/dateLimit?u=' + uuid;
-                if (term) tempURL += ('&term=' + term); 
+                if (term) tempURL += ('&term=' + term);
+                else if (start && end) tempURL += ('&start=' + start +'&end=' + end);
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', tempURL); // 메소드와 주소 설정
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
@@ -578,9 +588,10 @@
                             console.log(dates);
                             var sDate = dates[0].mintime;
                             var eDate = dates[0].maxtime;
-
+                             
                             sDate = changeFormat(sDate);
                             eDate = changeFormat(eDate);
+                            alert(sDate);
 
                             document.getElementById("g_sdate").innerHTML = sDate;
                             document.getElementById("th_sdate").innerHTML = sDate;
@@ -608,6 +619,11 @@
                     var day = newDate.getDate();
                     var month = newDate.getMonth() + 1;
                     var year = newDate.getFullYear();
+
+                    minute = (minute < 10 ? '0' : '') + minute.toString();
+                    hour = (hour < 10 ? '0' : '') + hour.toString();
+                    day = (day < 10 ? '0' : '') + day.toString();
+                    month = (month < 10 ? '0' : '') + month.toString();
 
                     newFormat = year + "년 " + month + "월 " + day + "일 " + hour + ":" + minute;
                 }
