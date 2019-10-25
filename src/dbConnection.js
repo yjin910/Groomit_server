@@ -135,17 +135,18 @@ exports.sendGraphPage = (res, deviceNum, type) => {
     });
 }
 
-exports.getData = (res, deviceNum, type, term) => {
+exports.getData = (res, deviceNum, type, term, start, end) => {
     var queryString;
 
     if (term) {
-        console.log(term)
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL "${term}" HOUR)`;
-    } else {
+    }else if (start && end) {
+        queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time BETWEEN "${start}" AND "${end}"`;
+    }else {
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     }
     // var params = [deviceNum, type, value, time];
-
+    console.log(queryString);
     if (type) {
         if (type.length == 2) {
             if (!type.includes('t')) {
@@ -214,21 +215,25 @@ exports.delUser = function(res, email){
     });
 }
 
-exports.getDateLimit = function(res, uuid, term) {
+exports.getDateLimit = function(res, uuid, term, start, end) {
     var queryString;
     if(term){
         queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}" and time > DATE_SUB(NOW(), INTERVAL ${term} HOUR);`;
+    }else if (start && end) {
+        queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum = "${uuid}" AND time BETWEEN "${start}" AND "${end}"`;
     }else {
-        queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum= "${uuid}" and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
+        queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum = "${uuid}" and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
     }
     executeQuery(res, queryString);
 }
 
-exports.getDataOfRepresentiveDevice = (res, email, term) => {
+exports.getDataOfRepresentiveDevice = (res, email, term, start, end) => {
     var queryString;
 
     if (term) {
         queryString = `select * from measurement where deviceNum = (select deviceNum from device_owner where email = '${email}' limit 1) and time > DATE_SUB(NOW(), INTERVAL ${term} HOUR);`;
+    }else if (start && end) {
+        queryString = `SELECT * from measurement WHERE deviceNum = (select deviceNum from device_owner where email = '${email}' limit 1) and time BETWEEN "${start}" AND "${end}"`;
     } else {
         queryString = `select * from measurement where deviceNum = (select deviceNum from device_owner where email = '${email}' limit 1) and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
     }
