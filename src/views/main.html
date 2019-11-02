@@ -19,7 +19,7 @@
     <div class="info">
         <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">
         무선 방사능 및 온습도 측정시스템
-        <input type="image" class="member_info" src='../public/images/signout_0.png' style="width: 90px;" onclick="logOut()"/>
+        <input type="image" class="member_info" src='../public/images/logout_0.png' style="width: 90px;" onclick="logOut()"/>
         <input type="image" class="member_info" src='../public/images/profile_0.png' style="width: 90px;" onclick="window.location.href='/profile';"/>
     </div>
 
@@ -519,7 +519,9 @@
 
             function changeGraph(device) {
                 uuid = device;
-                getGraphData()
+                alert(start);
+                alert(end);
+                getGraphData(undefined, start, end);
             }
 
 
@@ -529,7 +531,7 @@
                 for( i=0; i<date.length; i++ ) {
                     if(date[i].checked) {
                         var checked_value = date[i].value;
-                        getGraphData(checked_value);
+                        getGraphData(checked_value, undefined, undefined);
                     }
                 }
             }
@@ -585,19 +587,26 @@
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
                             var dates = JSON.parse(xhr.responseText);
-                            console.log("TEST");
+
                             console.log(dates);
+
                             var sDate = dates[0].mintime;
                             var eDate = dates[0].maxtime;
-                             
+
+                            //기간 내의 자료가 없는 경우
+                            if(sDate == null && eDate == null){
+                                sDate = start;
+                                eDate = end;   
+                            }
+
                             sDate = changeFormat(sDate);
                             eDate = changeFormat(eDate);
-                            alert(sDate);
 
                             document.getElementById("g_sdate").innerHTML = sDate;
                             document.getElementById("th_sdate").innerHTML = sDate;
                             document.getElementById("g_edate").innerHTML = eDate;
                             document.getElementById("th_edate").innerHTML = eDate;
+
                         } else {
                             console.error(xhr.responseText);
                         }
