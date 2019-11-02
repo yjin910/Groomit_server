@@ -1,37 +1,44 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Didact+Gothic&display=swap');
 
 .logo_groomit {
     cursor: pointer;
     width: 240px;
     height: 89px;
-    margin: 30px 0 30px 0;
+    margin: 30px 0 30px 30px;
 }
 
 body, .register-page {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Didact Gothic', sans-serif;
     margin: auto;
 }
 
 body {
     width: 90%;
 }
+
 .register-page {
     width: 360px;
-    /* padding: 0 0 10% 0; */
-    margin: auto;
+}
+
+.register {
+    font-size: 35px;
+    color: #606060;
+    margin-bottom: 35px;
+    margin-top: 30px
 }
 
 .form input, button{
-    font-family: 'Roboto Mono', monospace;
-    font-size: 14px;
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 17px;
     outline: 0;
     width: 100%;
     border: 0;
-    padding: 15px;
+    padding: 13px;
+    border-radius: 8px;
 }
 
 .form input {
-    background: #f2f2f2;
+    border: 2px solid #DBDBDF;
     margin: 0 0 15px;
     box-sizing: border-box;
 }
@@ -42,9 +49,8 @@ body {
 }
 
 .form button {
-    font-weight: bold;
-    letter-spacing: .1em;
-    background: #17a589;
+    /* letter-spacing: .1em; */
+    background: #4B7CE8;
     margin: 0px 0px 8px;
     color: #FFFFFF;
     -webkit-transition: all 0.3 ease;
@@ -52,11 +58,14 @@ body {
     cursor: pointer;
 }
 
+.form button:hover,.form button:active,.form button:focus {
+    background: #355bc5;
+}
+
 #confirmemail, #reconfirmemail{
-    width: 26%;
-    float: right;
-    font-size: 8px;
-    /* font-weight: bold; */
+    width: 28%;
+    font-size: 14px;
+    padding: 17px 0 17px 0;
 }
 
 #message {
@@ -65,28 +74,17 @@ body {
     color: #9B1C31;
 }
 
-.form button:hover,.form button:active,.form button:focus {
-    background: #148f77;
-}
-
 .form {
     position: relative;
     z-index: 1;
-    background: #48c9b0;
     max-width: 360px;
     margin: 0 auto 100px;
     padding: 45px;
     text-align: center;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-    
+    border: 1px solid #DBDBDF;
   }
 
   body {
-    /* background: #76b852; fallback for old browsers
-    background: -webkit-linear-gradient(right, #76b852, #8DC26F);
-    background: -moz-linear-gradient(right, #76b852, #8DC26F);
-    background: -o-linear-gradient(right, #76b852, #8DC26F);
-    background: linear-gradient(to left, #76b852, #8DC26F); */
     font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;    
@@ -95,7 +93,7 @@ body {
   #signup_name {
     background-image: url("../images/name.png");
     background-repeat: no-repeat;
-    text-indent: 25px;
+    text-indent: 35px;
     background-position: 5px 50%;
     background-size: 30px;
 }
@@ -103,7 +101,7 @@ body {
 #signup_email {
     background-image: url("../images/email.png");
     background-repeat: no-repeat;
-    text-indent: 25px;
+    text-indent: 35px;
     background-position: 5px 50%;
     background-size: 30px;
 }
@@ -111,7 +109,7 @@ body {
 #signup_pwd {
     background-image: url("../images/password.png");
     background-repeat: no-repeat;
-    text-indent: 25px;
+    text-indent: 35px;
     background-position: 5px 50%;
     background-size: 30px;
 }
