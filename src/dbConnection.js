@@ -189,6 +189,11 @@ exports.getUserProfile = (res, email) => {
     executeQuery(res, querString);
 }
 
+exports.getUsersInfo = function(res){
+    var querString = `SELECT * FROM device_owner`;
+    executeQuery(res, querString);
+}
+
 //TODO: 각 테이블에 유저 정보 다 없애기
 exports.delUser = function(res, email){
     var uuidQueryString = `SELECT * from device_owner WHERE email = "${email}"`;

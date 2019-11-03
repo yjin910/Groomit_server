@@ -45,6 +45,7 @@ app.use('/getdata', require('./getdata'));
 app.use('/profile', require('./profile'));
 app.use('/main', require('./main'));
 app.use('/register', require('./register'));
+app.use('/admin', require('./admin'));
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

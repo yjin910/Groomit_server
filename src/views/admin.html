@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>9room::Admin</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
+        <!-- <link rel="stylesheet" type="text/css" href="../public/css/admin.css"> -->
+    </head>
+    <body>
+        <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">
+        <h2>관리자 회원 관리</h2>
+        <div class="counter">Redirecting to login page after <count class="counter" id="counter">3</count> seconds</div>
+
+        <footer>
+            <div class="copyright">&copy 2015 - Technonia</div>
+            <a href="http://technonia.cafe24.com/" class="about">About Us</a>
+        </footer>
+        <script>
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/admin/getUsers'); // 메소드와 주소 설정
+            xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                    if (xhr.status === 200 || xhr.status === 201) {
+                        var users = JSON.parse(xhr.responseText);
+                        
+                        create_table(users)
+                    } else {
+                        console.error(xhr.responseText);
+                    }
+                }
+            };
+            xhr.send();
+            
+            function create_table(users){
+                for (x in users){
+                    console.log(x);
+                }
+                // var x = document.createElement("TABLE");
+                // x.setAttribute("id", "myTable");
+                // document.body.appendChild(x);
+
+                // var y = document.createElement("TR");
+                // y.setAttribute("id", "myTr");
+                // document.getElementById("myTable").appendChild(y);
+
+                // var z = document.createElement("TD");
+                // var t = document.createTextNode("cell");
+                // z.appendChild(t);
+                // document.getElementById("myTr").appendChild(z);
+            }
+        </script>
+    </body>
+</html>
