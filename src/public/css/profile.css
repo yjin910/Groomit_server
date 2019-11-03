@@ -7,109 +7,68 @@ body, .user-profile {
 
 body {
   width: 90%;
-  
 }
 
 .logo_groomit {
   cursor: pointer;
-  width: 360px;
-  /* height: 89px; */
-  vertical-align: -15px;
-  margin-top: 20px;
+  width: 240px;
+  height: 89px;
+  margin: 30px 0 30px 30px;
 }
 
 .user-profile {
-  width: 25em;
-  border-style: solid;
+  width: 580px;
   border-radius: .3em;
 }
 
 .left {
   float: left;
-  text-indent: 25px;
-  padding: 0 15px 10px;
-  width: 25%;
-  border-style: solid;
+  margin-left: 35px;
+  margin-bottom: 30px;
+  width: 15%;
   color: #606060;
 }
 
 .right {
-  text-indent: 20px;
-  padding: 0 0 10px 10px;
-  width: 90%;
+  float:left;
+  margin-bottom: 30px;
+  width: 70%;
   color: #b1b1b1;
 }
 
-#username {
-  margin: auto;
+#adddevice, #changePw {
   font-size: 15px;
-}
-
-#email {
-  margin: auto;
-  width: 14em;
-  font-size: 15px;
-}
-
-/* button{
-  font-size: 14px;
-  outline: 0;
-  width: 20%;
-  border: 0;
-  padding: 13px;
-  border-radius: 8px;
-} */
-
-/* input {
-  font-size: 14px;
-  outline: 0;
-  width: 40%;
-  border: 0;
-  padding: 13px;
-  border-radius: 8px;
-  border: 2px solid #DBDBDF;
-  margin: 0 0 10px;
-  box-sizing: border-box;
-} */
-
-#changePw {
   float: right;
-  margin: 0 10px 0 0;
+  margin: -7px 20px 0 0;
 }
 
 #uuid, #oldPassword, #newPassword{
   font-size: 15px;
   color: #b1b1b1;
-  outline: 0;
-  width: 40%;
-  border: 0;
+  width: 60%;
   padding: 13px;
   border-radius: 8px;
   border: 1px solid #DBDBDF;
-  margin: 0 0 10px;
-  box-sizing: border-box;
-
-  /* margin: 0 0 10px;
-  box-sizing: border-box;
-  font-size: 14px;
-  font-family: 'Roboto Mono', monospace; */
 }
 
-/* #uuid {
-  width: 40%;
-  margin-right: 10px
-} */
+#oldPassword {
+  margin-bottom: 10px;
+}
 
-
-.data {
-  margin: 2em auto 1em;
+.personal, .edit {
+  margin: 0px auto 30px;
+  /* margin: 2em auto 1em; */
   background-image: url("../images/bar.png");
   background-repeat: no-repeat;
   text-indent: 35px;
-  background-position: 0px 50%;
+  background-position: 0 50%;
   background-size: 35px;
   color: #606060;
-  font-size: 25px;
+  font-size: 30px;
+}
+
+.edit{
+  margin: 80px auto 30px;
 }
 
 footer{ 
@@ -120,6 +79,7 @@ footer{
   background:grey; 
   color: white; 
 }
+
 .copyright {
   width: 50%;
   float: left;

@@ -14,7 +14,7 @@
   <body>
 	<img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/main'">
 		<div class="user-profile">
-			<div class="data">Personal Information</div>
+			<div class="personal">Personal Information</div>
 			<div class="left">Username</div>
 			<div class="right" id="username"></div>
 		</br>
@@ -22,18 +22,18 @@
 			<div class="right" id="email"></div>
 			<br/>
 
-			<div class="data">Edit Information</div>
+			<div class="edit">Edit Information</div>
 			<div class="left" >Add device</div>
 			<div class="right">
-				<input id="uuid" placeholder="Device ID" required>    
-				<input type="image" id="adddevice" src="../public/images/adddevice_0.png" alt="Submit" style="width: 90px;" onclick="addDevice()"/>
+				<input type="text" id="uuid" placeholder="Device ID" required>    
+				<input type="image" id="adddevice" src="../public/images/adddevice_0.png" alt="Submit" style="width: 110px; height: 55px;" onclick="addDevice()"/>
 			</div>
 		</br>
-			<div class="left">Change Password</div>
+			<div class="left">Change<br/>Password</div>
 			<div class="right">
 				<input type="text" id="oldPassword"  placeholder="Current password" name="oldPassword" required autofocus>
 				<input type="password" id="newPassword"  placeholder="New Password" name="newPassword" required>
-				<input type="image" id="changePw" src="../public/images/save_0.png" alt="Submit" style="width: 90px;" onclick="changePw()"/>
+				<input type="image" id="changePw" src="../public/images/save_0.png" alt="Submit" style="width: 110px; height: 55px;" onclick="changePw()"/>
 			</div>
 			<message id="message_pw"></message>
 			<button type="button" id="main" onclick="window.location.href='/main';">Main</button>
@@ -45,7 +45,6 @@
 			<a href="http://technonia.cafe24.com/" class="about">About Us</a>
 		</footer>
     <script>
-		// var dbcon = require('../dbConnection');
 		var email;
 
 		var data = { 
