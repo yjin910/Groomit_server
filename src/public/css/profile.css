@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Lexend+Exa|Source+Code+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Didact+Gothic&display=swap');
 
 body, .user-profile {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Didact Gothic', sans-serif;
   margin: auto;
 }
 
@@ -12,86 +12,104 @@ body {
 
 .logo_groomit {
   cursor: pointer;
-  width: 240px;
-    height: 89px;
-    vertical-align: -15px;
-    margin-top: 20px;
+  width: 360px;
+  /* height: 89px; */
+  vertical-align: -15px;
+  margin-top: 20px;
 }
 
 .user-profile {
-  /* margin: auto; */
   width: 25em;
-  background: #fff;
+  border-style: solid;
   border-radius: .3em;
 }
 
 .left {
   float: left;
+  text-indent: 25px;
   padding: 0 15px 10px;
-  width: 20%;
-  font-weight: bold;
+  width: 25%;
+  border-style: solid;
+  color: #606060;
 }
 
 .right {
+  text-indent: 20px;
   padding: 0 0 10px 10px;
   width: 90%;
+  color: #b1b1b1;
 }
 
 #username {
   margin: auto;
-  color: #294646;
   font-size: 15px;
 }
 
 #email {
   margin: auto;
   width: 14em;
-  color: #294646;
   font-size: 15px;
+}
+
+/* button{
+  font-size: 14px;
+  outline: 0;
+  width: 20%;
+  border: 0;
+  padding: 13px;
+  border-radius: 8px;
+} */
+
+/* input {
+  font-size: 14px;
+  outline: 0;
+  width: 40%;
+  border: 0;
+  padding: 13px;
+  border-radius: 8px;
+  border: 2px solid #DBDBDF;
+  margin: 0 0 10px;
+  box-sizing: border-box;
+} */
+
+#changePw {
+  float: right;
+  margin: 0 10px 0 0;
 }
 
 #uuid, #oldPassword, #newPassword{
+  font-size: 15px;
+  color: #b1b1b1;
+  outline: 0;
+  width: 40%;
+  border: 0;
+  padding: 13px;
+  border-radius: 8px;
+  border: 1px solid #DBDBDF;
   margin: 0 0 10px;
   box-sizing: border-box;
+
+  /* margin: 0 0 10px;
+  box-sizing: border-box;
   font-size: 14px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Roboto Mono', monospace; */
 }
 
-#uuid {
+/* #uuid {
   width: 40%;
   margin-right: 10px
-}
+} */
 
-#adddevice, #changePw, #main{
-  background-color: white;
-  color: black;
-  border-radius: 0.3em;
-  font-family: 'Roboto Mono', monospace;
-}
-
-#main {
-  margin: 10px 0;
-  float: right;
-  width: 15%;
-  font-size: 15px;
-}
-
-#adddevice:hover, #changePw:hover, #main:hover{
-  background: #e3eeee;
-}
 
 .data {
   margin: 2em auto 1em;
-  background: #4eb6b6;
-  text-align: center;
-  border-radius: 0 0 .3em .3em;
-}
-span {
-  font-family: 'Lexend Exa', sans-serif;
-  color: #e3eeee;
-  white-space: nowrap;
+  background-image: url("../images/bar.png");
+  background-repeat: no-repeat;
+  text-indent: 35px;
+  background-position: 0px 50%;
+  background-size: 35px;
+  color: #606060;
   font-size: 25px;
-  font-weight: bold;
 }
 
 footer{ 
