@@ -9,7 +9,7 @@
     <body>
         <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">
         <h2>관리자 회원 관리</h2>
-        <div class="counter">Redirecting to login page after <count class="counter" id="counter">3</count> seconds</div>
+        <table id='user_table'></table>
 
         <footer>
             <div class="copyright">&copy 2015 - Technonia</div>
@@ -32,21 +32,28 @@
             xhr.send();
             
             function create_table(users){
-                for (x in users){
-                    console.log(x);
+                var user_table = document.getElementById('user_table');
+                for (i in users){
+                    var email = users[i].email;
+                    addRow(user_table, Number(i)+1, email);
                 }
-                // var x = document.createElement("TABLE");
-                // x.setAttribute("id", "myTable");
-                // document.body.appendChild(x);
+            }
 
-                // var y = document.createElement("TR");
-                // y.setAttribute("id", "myTr");
-                // document.getElementById("myTable").appendChild(y);
+            function addCell(tr, val) {
+                var td = document.createElement('td');
 
-                // var z = document.createElement("TD");
-                // var t = document.createTextNode("cell");
-                // z.appendChild(t);
-                // document.getElementById("myTr").appendChild(z);
+                td.innerHTML = val;
+                tr.appendChild(td)
+            }
+
+
+            function addRow(user_table, num, email) {
+                var tr = document.createElement('tr');
+
+                addCell(tr, num);
+                addCell(tr, email);
+
+                user_table.appendChild(tr)
             }
         </script>
     </body>
