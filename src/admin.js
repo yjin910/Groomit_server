@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var fs = require("fs");
+var dbcon = require('./dbConnection');
 
 router.get('/', (req, res) => {
     var username = req.cookies.username;
@@ -14,8 +14,8 @@ router.get('/', (req, res) => {
     }
 });
 
-router.post('/', (req, res) => {
-    dbcon.getUsersInfo();
+router.post('/getUsers', (req, res) => {
+    dbcon.getUsersInfo(res);
 });
 
 
