@@ -122,8 +122,17 @@
                     });
                 });
             }
-
+            //TODO: Remove options
             // date time picker
+            $('input[name="daterange"]').daterangepicker({
+                "startDate": "11/01/2019",
+                "endDate": "11/07/2019",
+                "minDate": "11/01/2019",
+                "maxDate": "11/01/2019"
+            }, function(start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
+            
             $(function() {
                 start = moment().subtract(15, 'hours');
                 end = moment();
