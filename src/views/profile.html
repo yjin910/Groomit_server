@@ -99,7 +99,7 @@
 		}
 
 		function addDevice(){
-			var uuid_reg = /^[a-zA-Z0-9_.-]*$/i;
+			var uuid_reg = /^[a-zA-Z0-9_.-]+$/i;
 			var uuid = document.getElementById('uuid').value;
 
 			if (!uuid_reg.test(uuid)){
