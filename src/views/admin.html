@@ -4,11 +4,13 @@
     <head>
         <title>9room::Admin</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
-        <!-- <link rel="stylesheet" type="text/css" href="../public/css/admin.css"> -->
+        <link rel="stylesheet" type="text/css" href="../public/css/admin.css">
     </head>
     <body>
-        <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">
-        <h2>관리자 회원 관리</h2>
+        <div class="info">
+            <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">&nbsp
+            관리자 회원 관리
+        </div>
         <table id='user_table'></table>
 
         <footer>
@@ -33,25 +35,32 @@
             
             function create_table(users){
                 var user_table = document.getElementById('user_table');
+                addRow(user_table, true, "번호", "이메일", "관리권한", "상태");
+
                 for (i in users){
                     var email = users[i].email;
-                    addRow(user_table, Number(i)+1, email);
+                    addRow(user_table, false, Number(i)+1, email, " ", "사용");
                 }
             }
 
-            function addCell(tr, val) {
-                var td = document.createElement('td');
+            function addCell(tr, head, val) {
+                var cell = document.createElement('td');
+                if (head){
+                    cell = document.createElement('th');
+                }
 
-                td.innerHTML = val;
-                tr.appendChild(td)
+                cell.innerHTML = val;
+                tr.appendChild(cell)
             }
 
 
-            function addRow(user_table, num, email) {
+            function addRow(user_table, head, num, email, permission, condition) {
                 var tr = document.createElement('tr');
 
-                addCell(tr, num);
-                addCell(tr, email);
+                addCell(tr, head, num);
+                addCell(tr, head, email);
+                addCell(tr, head, permission);
+                addCell(tr, head, condition);
 
                 user_table.appendChild(tr)
             }
