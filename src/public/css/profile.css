@@ -36,6 +36,9 @@ body {
   color: #b1b1b1;
 }
 
+#signout {
+  float: right;
+}
 #adddevice, #changePw {
   font-size: 15px;
   float: right;
