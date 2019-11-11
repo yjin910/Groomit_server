@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css?family=Didact+Gothic&display=swap');
+
+body{
+  width: 90%;
+  margin: auto;
+}
+
+.logo_groomit {
+  cursor: pointer;
+  width: 240px;
+  height: 89px;
+  vertical-align: -15px;
+  margin-top: 20px;
+}
+
+.info {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 50px;
+  }
+  
+th, td {
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+th {
+    background-color: #d4d4d4;
+    color: white;
+  }
+
+  footer{ 
+    width: 90%;
+    height:70px; 
+    position:fixed;
+    bottom:0;
+    background:grey; 
+    color: white; 
+  }
+  
+  .copyright {
+    width: 50%;
+    float: left;
+    padding-left: 20px;
+    font-size: 12px;
+    line-height: 70px;
+    letter-spacing: 1px;
+  }
+  
+  .about {
+    float: right;
+    padding-right: 3%;
+    color: white;
+    font-size: 12px;
+    line-height: 70px;
+    letter-spacing: 1px;
+  }
