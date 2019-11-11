@@ -7,6 +7,7 @@
     <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/7a7224d655.js"></script>
     <script src="../public/js/amazon-cognito-identity.min.js"></script>
     <script src="../public/js/cookieProcess.js"></script>
     <script src="../public/js/config.js"></script>
@@ -37,9 +38,9 @@
         <input type="radio" name="date" value="720" onclick="changeDate()"/>
             <label for="720">1달</label>
         <!-- DAYTIME PICKER -->
-        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 40%" onchange="alert('TRUE')">
-            <i class="fa fa-calendar"></i>&nbsp;
-            <span></span> <i class="fa fa-caret-down"></i>
+        <div id="reportrange" style="cursor: pointer; margin-left: 20px; padding: 5px 10px; border: 1px solid #ccc; width: 420px; display:inline-block;">
+            <i class="fas fa-calendar"></i>&nbsp;
+            <span></span> <i class="fas fa-caret-down"></i>
         </div>
 
         <input type="image" class="download" src="../public/images/download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
@@ -122,17 +123,8 @@
                     });
                 });
             }
-            //TODO: Remove options
+
             // date time picker
-            $('input[name="daterange"]').daterangepicker({
-                "startDate": "11/01/2019",
-                "endDate": "11/07/2019",
-                "minDate": "11/01/2019",
-                "maxDate": "11/01/2019"
-            }, function(start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-            });
-            
             $(function() {
                 start = moment().subtract(15, 'hours');
                 end = moment();
@@ -156,14 +148,8 @@
                 $('#reportrange').daterangepicker({
                     startDate: start,
                     endDate: end,
-                    ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    }
+                    minDate: null,
+                    maxDate: moment()
                 }, cb);
 
                 cb(start, end);
