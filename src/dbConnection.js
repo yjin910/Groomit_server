@@ -32,9 +32,28 @@ exports.addData = function(deviceNum, type, value, time, res) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
-exports.addCurrentData = function(deviceNum, type, value, res){
+exports.addCurrentData = (deviceNum, type, value, res, bool) => {
     var queryString = `SELECT * from recent_value WHERE deviceNum = "${deviceNum}"`
     var success_msg = "Successfully updated latest data";
+
+    if (!bool) {
+        switch (type) {
+            case 'g':
+                queryString = `UPDATE recent_value SET geiger = ${value} WHERE deviceNum = "${deviceNum}"`
+                break;
+            case 'h':
+                queryString = `UPDATE recent_value SET humidity = ${value} WHERE deviceNum = "${deviceNum}"`
+                break;
+            case 't':
+                queryString = `UPDATE recent_value SET temperature = ${value} WHERE deviceNum = "${deviceNum}"`
+                break;
+            default:
+                console.log('invalid type', type);
+        }
+
+        executeQuery_withParams_NoRespond(params, queryString, success_msg);
+        return;
+    }
 
     pool.getConnection(function (err, conn) {
         if (err) {
