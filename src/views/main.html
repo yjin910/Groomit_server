@@ -126,7 +126,7 @@
 
             // date time picker
             $(function() {
-                start = moment().subtract(15, 'hours');
+                start = moment().subtract(24, 'hours');
                 end = moment();
 
                 function cb(start, end) {
@@ -515,7 +515,7 @@
 
             function changeGraph(device) {
                 uuid = device;
-                getGraphData(undefined, start, end);
+                getGraphData(24, undefined, undefined);
             }
 
 
