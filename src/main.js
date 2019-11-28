@@ -31,7 +31,7 @@ router.get('/representative', (req, res) => {
     if (req.query.term) {
         dbcon.getDataOfRepresentiveDevice(res, req.query.email, req.query.term, undefined, undefined);
     } else if(req.query.start && req.query.end){
-        dbcon.getDataOfRepresentiveDevice(res, req.query.email, undefined, req.query.start && req.query.end);
+        dbcon.getDataOfRepresentiveDevice(res, req.query.email, undefined, req.query.start, req.query.end);
     } else {
         dbcon.getDataOfRepresentiveDevice(res, req.query.email, undefined);
     }
