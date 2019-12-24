@@ -226,15 +226,17 @@
                     CDate = new Date(datas[key].time);
                     value = datas[key].val;
 
+                    console.log(value);
                     if (type == 'g') {
                         g_data.push({
                             x: CDate,
                             y: value
                         })
 
-                        if (!highest_g){
+                        if (highest_g == undefined){
                             highest_g = value;
-                        } else if (!lowest_g){
+                        }
+                        if (lowest_g == undefined){
                             lowest_g = value;
                         } else if (value > highest_g){
                             highest_g = value;
@@ -248,9 +250,10 @@
                             y: value
                         })
 
-                        if (!highest_t){
+                        if (highest_t == undefined){
                             highest_t = value;
-                        } else if (!lowest_t){
+                        } 
+                        if (lowest_t == undefined){
                             lowest_t = value;
                         } else if (value > highest_t){
                             highest_t = value;
@@ -264,9 +267,10 @@
                             y: value
                         })
 
-                        if (!highest_h){
+                        if (highest_h == undefined){
                             highest_h = value;
-                        } else if (!lowest_h){
+                        } 
+                        if (lowest_h == undefined){
                             lowest_h = value;
                         } else if (value > highest_h){
                             highest_h = value;
