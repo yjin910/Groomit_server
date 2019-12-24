@@ -195,6 +195,12 @@ exports.getData = (res, deviceNum, type, term, start, end) => {
     executeQuery(res, queryString);
 }
 
+exports.checkDevice = function(res, email, deviceNum) {
+    var queryString = `SELECT * FROM device_owner WHERE email = "${email}" AND deviceNum = '${deviceNum}'`;
+
+    executeQuery(res, queryString);
+}
+
 exports.addDevice = function(email, deviceNum) {
     var queryString = "INSERT INTO device_owner (deviceNum, email) VALUES(?, ?)";
     var params = [deviceNum, email];

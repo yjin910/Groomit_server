@@ -13,7 +13,12 @@ router.get('/', (req, res) => {
   }
 });
 
-router.post('/userInfo', (req, res) => {
+router.post('/checkDevice', (req, res) => {
+  //   console.log(req.query);  
+    dbcon.checkDevice(res, req.query.email, req.query.u);
+  });
+
+router.post('/addDevice', (req, res) => {
 //   console.log(req.query);  
   dbcon.addDevice(req.query.email, req.query.u);
   res.send("hi");
