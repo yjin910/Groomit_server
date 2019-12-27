@@ -38,14 +38,14 @@
         <input type="radio" name="date" value="720" onclick="changeDate()"/>
             <label for="720">1달</label> -->
         <!-- DAYTIME PICKER -->
-        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+        <!-- <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
             <i class="fa fa-calendar"></i>&nbsp;
             <span></span> <i class="fa fa-caret-down"></i>
-        </div>
-        <!-- <div id="reportrange" style="cursor: pointer; margin-left: 20px; padding: 5px 10px; border: 1px solid #ccc; width: 420px; display:inline-block;">
+        </div> -->
+        <div id="reportrange" style="cursor: pointer; margin-left: 20px; padding: 5px 10px; border: 1px solid #ccc; width: 420px; display:inline-block;">
             <i class="fas fa-calendar"></i>&nbsp;
             <span></span> <i class="fas fa-caret-down"></i>
-        </div> -->
+        </div>
 
         <input type="image" class="download" src="../public/images/download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
     </div>
@@ -129,71 +129,41 @@
             }
 
 
-            //TODO: datetimerange 바탕으로 만든 새 코드.. 처음에 list 띄울 수 있게 하기
-            // 이상하게 start date에 'days' 안쓰면 list가 안나온다
-            $(function() {
-
-            var start = moment().subtract(24, 'hours');
-            var end = moment();
-
-            function cb(start, end) {
-                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-            }
-
-            $('#reportrange').daterangepicker({
-                startDate: start,
-                endDate: end,
-                ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
-
-            cb(start, end);
-
-            });
             // date time picker
-            // $(function() {
-            //     start = moment().subtract(24, 'hours');
-            //     end = moment();
+            $(function() {
+                start = moment().subtract(24, 'hours');
+                end = moment();
 
-            //     function cb(start, end) {
-            //         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-            //         //TODO: 시작 끝 값 주어졌을 때 데이터 받을 수 있게 변경하기
-            //         start = start.format('YYYY-MM-DD HH:mm:ss');
-            //         end = end.format('YYYY-MM-DD HH:mm:ss');
+                function cb(start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                    //TODO: 시작 끝 값 주어졌을 때 데이터 받을 수 있게 변경하기
+                    start = start.format('YYYY-MM-DD HH:mm:ss');
+                    end = end.format('YYYY-MM-DD HH:mm:ss');
 
-            //         setTimeout(function repeatTimeout() {
-            //             // console.log(i);
-            //             if(uuid !== undefined){
-            //                 getGraphData(undefined, start, end);
-            //             } else {
-            //                 setTimeout(repeatTimeout, 1000);
-            //             }
-            //         }, 1000);
-            //     }
+                    setTimeout(function repeatTimeout() {
+                        // console.log(i);
+                        if(uuid !== undefined){
+                            getGraphData(undefined, start, end);
+                        } else {
+                            setTimeout(repeatTimeout, 1000);
+                        }
+                    }, 1000);
+                }
 
-            //     $('#reportrange').daterangepicker({
-            //         // minDate: null,
-            //         // maxDate: moment(),
-            //         startDate: start,
-            //         endDate: end,
-            //         ranges: {
-            //         'Today': [moment(), moment()],
-            //         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            //         'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            //         'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            //         'This Month': [moment().startOf('month'), moment().endOf('month')],
-            //         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            //         }
-            //     }, cb);
+                $('#reportrange').daterangepicker({
+                    // minDate: null,
+                    // maxDate: moment(),
+                    startDate: start,
+                    endDate: end,
+                    ranges: {
+                    'Last 24 hours': [moment().subtract(24, 'hours'), moment()],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()]
+                    }
+                }, cb);
 
-            //     cb(start, end);
-            // });
+                cb(start, end);
+            });
 
             function logOut() {
                 if (cognitoUser != null) {
@@ -237,6 +207,7 @@
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
                             datas = JSON.parse(xhr.responseText);
+                            console.log(datas);
                             getDateLimit(term, start, end);
                             sortdata();
                         } else {
