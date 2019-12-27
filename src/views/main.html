@@ -121,12 +121,13 @@
             $(function() {
                 start = moment().subtract(24, 'hours');
                 end = moment();
+                console.log("one");
 
-                function cb(start, end) {
+                function cb(start_d, end_d) {
                     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                    start = start.format('YYYY-MM-DD HH:mm:ss');
-                    end = end.format('YYYY-MM-DD HH:mm:ss');
-
+                    start = start_d;
+                    end = end_d;
+                    
                     setTimeout(function repeatTimeout() {
                         if(uuid !== undefined){
                             getGraphData(start, end);
@@ -167,7 +168,6 @@
                         if (xhr.status === 200 || xhr.status === 201) {
                             // 메인 uuid설정란 db에 만들기?
                             var uuids = JSON.parse(xhr.responseText);
-                            console.log(uuids.length)
                             if (uuids.length == 0) {
                                 uuid = null;
                             } else {
@@ -183,15 +183,17 @@
             }
 
             function getGraphData(start, end) {
-                let tempURL = '/main/graphInfo?u=' + uuid + '&type=' + c_val + '&start=' + start +'&end=' + end;
+                var formed_start = start.format('YYYY-MM-DD HH:mm:ss');
+                var formed_end = end.format('YYYY-MM-DD HH:mm:ss');
+
+                let tempURL = '/main/graphInfo?u=' + uuid + '&type=' + c_val + '&start=' + formed_start +'&end=' + formed_end;
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', tempURL); // 메소드와 주소 설정
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
                             datas = JSON.parse(xhr.responseText);
-                            console.log(datas);
-                            getDateLimit(start, end);
+                            getDateLimit(formed_start, formed_end);
                             sortdata();
                         } else {
                             console.error(xhr.responseText);
@@ -220,7 +222,6 @@
                     CDate = new Date(datas[key].time);
                     value = datas[key].val;
 
-                    console.log(value);
                     if (type == 'g') {
                         g_data.push({
                             x: CDate,
@@ -507,14 +508,13 @@
                     option.text = uuids[i].deviceNum;
                     option.value = uuids[i].deviceNum;
                     selection.add(option)
-                    console.log(uuids[i])
                 }
             }
 
+
             function changeGraph(device) {
+                var regex_date = /^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})$/g;
                 uuid = device;
-                start = start.format('YYYY-MM-DD HH:mm:ss');
-                end = end.format('YYYY-MM-DD HH:mm:ss');
                 getGraphData(start, end);
             }
 
@@ -567,9 +567,6 @@
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
                             var dates = JSON.parse(xhr.responseText);
-
-                            console.log(dates);
-
                             var sDate = dates[0].mintime;
                             var eDate = dates[0].maxtime;
 
