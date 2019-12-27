@@ -30,18 +30,6 @@
     <div class="data_info">
         <select id="devices" onchange="changeGraph(this.value)"></select>
 
-        <!-- select term -->
-        <!-- <input type="radio" name="date" value="24" onclick="changeDate()"/>
-            <label for="24">1일</label>
-        <input type="radio" name="date" value="168" onclick="changeDate()"/>
-            <label for="168">1주일</label>
-        <input type="radio" name="date" value="720" onclick="changeDate()"/>
-            <label for="720">1달</label> -->
-        <!-- DAYTIME PICKER -->
-        <!-- <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-            <i class="fa fa-calendar"></i>&nbsp;
-            <span></span> <i class="fa fa-caret-down"></i>
-        </div> -->
         <div id="reportrange" style="cursor: pointer; margin-left: 20px; padding: 5px 10px; border: 1px solid #ccc; width: 420px; display:inline-block;">
             <i class="fas fa-calendar"></i>&nbsp;
             <span></span> <i class="fas fa-caret-down"></i>
@@ -136,12 +124,10 @@
 
                 function cb(start, end) {
                     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                    //TODO: 시작 끝 값 주어졌을 때 데이터 받을 수 있게 변경하기
                     start = start.format('YYYY-MM-DD HH:mm:ss');
                     end = end.format('YYYY-MM-DD HH:mm:ss');
 
                     setTimeout(function repeatTimeout() {
-                        // console.log(i);
                         if(uuid !== undefined){
                             getGraphData(start, end);
                         } else {
@@ -531,18 +517,6 @@
                 end = end.format('YYYY-MM-DD HH:mm:ss');
                 getGraphData(start, end);
             }
-
-
-            // function changeDate() {
-            //     var date = document.getElementsByName('date');
-
-            //     for( i=0; i<date.length; i++ ) {
-            //         if(date[i].checked) {
-            //             var checked_value = date[i].value;
-            //             getGraphData(checked_value, undefined, undefined);
-            //         }
-            //     }
-            // }
 
             function json2csv() {
                 var array = typeof datas != 'object' ? JSON.parse(datas) : datas;
