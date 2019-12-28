@@ -16,18 +16,26 @@ router.get('/', (req, res) => {
         var h_value =  req.query.h;
         var time_val = s2;
         var seq = req.query.s;
+
         if(t_value && h_value){
-            dbcon.addData(device_uid, "t", t_value, time_val, res);
-            dbcon.addData(device_uid, "h", h_value, time_val, res);
-
-            dbcon.addCurrentData(device_uid, "t", t_value, res, true);
-            dbcon.addCurrentData(device_uid, "h", h_value, res, false);
-
-            console.log(s1);
-            res.send(time_val);
-        } else {
+            dbcon.updateData(res, device_uid, "t", t_value, true);
+            dbcon.updateData(res, device_uid, "h", h_value, false);
+        }else {
             res.send('Please provide suitable parameters');
         }
+
+        // if(t_value && h_value){
+        //     dbcon.addData(device_uid, "t", t_value, time_val, res);
+        //     dbcon.addData(device_uid, "h", h_value, time_val, res);
+
+        //     dbcon.addCurrentData(device_uid, "t", t_value, res, true);
+        //     dbcon.addCurrentData(device_uid, "h", h_value, res, false);
+
+        //     console.log(s1);
+        //     res.send(time_val);
+        // } else {
+        //     res.send('Please provide suitable parameters');
+        // }
     } catch (e){
         console.error('catch error: ', e.stack);
         res.status(404);
