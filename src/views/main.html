@@ -371,8 +371,6 @@
                         spanGaps: false
                     },
                     "rotateValues": "1",
-                        // "connectNullData": "0",
-                        // "spanGaps": false,
                     options: {
                         legend:{
                             display:false
@@ -393,16 +391,13 @@
                                 ticks: {
                                     maxRotation: 0
                                 },
-                                // distribution: 'series',
                                 display: true,
-                                // spanGaps: false
                             }],
                             yAxes: [{
                                 type: 'linear',
                                 display: true,
                             }]
-                        },
-                        spanGaps:false,
+                        }
                     }
                 };
 
@@ -419,8 +414,10 @@
                     type: 'line',
                     data: {
                         labels: labels,
-                        datasets: dataset_arr_t
+                        datasets: dataset_arr_t,
+                        spanGaps: false
                     },
+                    "rotateValues": "1",
                     options: {
                         legend:{
                             display:false
@@ -441,7 +438,6 @@
                                 ticks: {
                                     maxRotation: 0
                                 },
-                                distribution: 'series',
                                 display: true,
                             }],
                             yAxes: [{
@@ -465,8 +461,10 @@
                     type: 'line',
                     data: {
                         labels: labels,
-                        datasets: dataset_arr_h
+                        datasets: dataset_arr_h,
+                        spanGaps:false,
                     },
+                    "rotateValues": "1",
                     options: {
                         legend:{
                             display:false
@@ -487,7 +485,6 @@
                                 ticks: {
                                     maxRotation: 0
                                 },
-                                distribution: 'series',
                                 display: true,
                             }],
                             yAxes: [{
