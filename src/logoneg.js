@@ -15,12 +15,19 @@ router.get('/', (req, res) => {
         var seq = req.query.s;
 
         if(g_value){
-            dbcon.addData(device_uid, "g", g_value, time_val, res);
-            dbcon.addCurrentData(device_uid, "g", g_value, res);
-            res.send("success");
-        } else {
+            dbcon.updateData(res, device_uid, "g", g_value);
+        }else{
             res.send('Please provide suitable parameters');
         }
+
+        // console.log(num_of_device);
+        // if(g_value){
+        //     dbcon.addData(device_uid, "g", g_value, time_val, res);
+        //     dbcon.addCurrentData(device_uid, "g", g_value, res);
+        //     res.send("success");
+        // } else {
+        //     res.send('Please provide suitable parameters');
+        // }
     } catch (e){
         console.error('catch error: ', e.stack);
         res.status(404);

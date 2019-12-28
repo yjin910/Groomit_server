@@ -24,7 +24,7 @@ exports.addOwner = function(email, deviceNum) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
-exports.addData = function(deviceNum, type, value, time, res) {
+var addData = function(deviceNum, type, value, time, res) {
     var queryString = "INSERT INTO measurement (deviceNum, type, val, time) VALUES(?, ?, ?, ?)";
     var params = [deviceNum, type, value, time];
     var success_msg = "Successfully added new data"
@@ -32,7 +32,9 @@ exports.addData = function(deviceNum, type, value, time, res) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
-exports.addCurrentData = (deviceNum, type, value, res, bool) => {
+exports.addData = addData;
+
+var addCurrentData = (deviceNum, type, value, res, bool) => {
     var queryString = `SELECT * from recent_value WHERE deviceNum = "${deviceNum}"`
     var success_msg = "Successfully updated latest data";
 
@@ -51,7 +53,8 @@ exports.addCurrentData = (deviceNum, type, value, res, bool) => {
                 console.log('invalid type', type);
         }
 
-        executeQuery_withParams_NoRespond(params, queryString, success_msg);
+        executeQuery_noRespond(res, queryString, success_msg);
+        // executeQuery_withParams_NoRespond(params, queryString, success_msg);
         return;
     }
 
@@ -105,6 +108,7 @@ exports.addCurrentData = (deviceNum, type, value, res, bool) => {
         }
     });
 }
+exports.addCurrentData = addCurrentData;
 
 exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
@@ -191,6 +195,33 @@ exports.getData = (res, deviceNum, type, start, end) => {
     }
 
     executeQuery(res, queryString);
+}
+
+exports.updateData = function(res, deviceNum, type, val, time_val, bool) {
+    var queryString = `SELECT * FROM device_owner WHERE deviceNum = '${deviceNum}'`;
+
+    pool.getConnection(function (err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(queryString, function (err, result, fields) {
+                if (err) {
+                    return err;
+                } else {
+                    if(result.length != 0){
+                        // console.log(result);
+                        addData(deviceNum, type, val, time_val, res);
+                        addCurrentData(deviceNum, type, val, res, bool);
+                    }else{
+                        res.send("Undefined device");
+                    }
+                }
+            });
+
+            conn.release();
+        }
+    });
+    // executeQuery(res, queryString);
 }
 
 exports.checkDevice = function(res, email, deviceNum) {
