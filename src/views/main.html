@@ -21,8 +21,8 @@
     <div class="info">
         <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">
         무선 방사능 및 온습도 측정시스템
-        <input type="image" class="member_info" src='../public/images/logout_0.png' style="width: 90px;" onclick="logOut()"/>
-        <input type="image" class="member_info" src='../public/images/profile_0.png' style="width: 90px;" onclick="window.location.href='/profile';"/>
+        <input type="image" class="member_info" src='../public/images/logout_icon.svg' onclick="logOut()"/>
+        <input type="image" class="member_info" src='../public/images/user.svg' onclick="window.location.href='/profile';"/>
     </div>
 
 
@@ -30,12 +30,12 @@
     <div class="data_info">
         <select id="devices" onchange="changeGraph(this.value)"></select>
 
-        <div id="reportrange" style="cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 420px; display:inline-block;">
+        <div id="reportrange">
             <i class="fas fa-calendar"></i>&nbsp;
             <span></span> <i class="fas fa-caret-down"></i>
         </div>
 
-        <input type="image" class="download" src="../public/images/download_0.png" alt="Submit" style="width: 90px;" onclick="json2csv()"/>
+        <input type="image" class="download" src="../public/images/download_icon.svg" alt="Submit" onclick="json2csv()"/>
     </div>
 
     <!-- buttons for logout or see profile -->
