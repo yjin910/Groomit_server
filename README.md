@@ -27,3 +27,7 @@ insertTemperature(deviceNum (VARCHAR(20)) , type (CHAR(1)) , value (FLOAT) , dat
 #### 1. validate_deviceNum
 
 meauserment 테이블로 데이터를 추가할 때, 등록 되지 않은 데이터의 경우에는 insert를 허용하지 않는다. 이를 통해서 사용자가 올바르지 않은 값을 데이터베이스에 추가하려는 시도를 막을 수 있다.
+
+#### 2. validate_deviceOwner
+
+device_owner 테이블 안에 중복 데이터가 생기지 않도록 확인하는 기능을 수행한다. 만약, 사용자가 이미 등록된 기기를 다시 등록하려고 한다면, "Device already registered!" 라는 에러 메세지를 출력한다.
