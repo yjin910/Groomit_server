@@ -78,9 +78,10 @@ exports.getData = (res, deviceNum, type, start, end) => {
 
     if (start && end) {
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time BETWEEN "${start}" AND "${end}"`;
-    }else {
+    } else {
         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     }
+
     // var params = [deviceNum, type, value, time];
     console.log(queryString);
     if (type) {
