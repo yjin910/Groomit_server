@@ -6,7 +6,9 @@ var router = express.Router();
 var moment = require('moment');
 
 router.get('/', (req, res) => {
-    try{
+    try {
+        // server: 'MM/DD/YYYY, hh:mm:ss', local: 'DD/MM/YYYY, hh:mm:ss'
+        // If not, moment.invalid error would be occurred
         var s1 = moment(new Date().toLocaleString('en-GB', { timeZone: 'Asia/Seoul', hour12: false }), 'MM/DD/YYYY, hh:mm:ss');
         var s2 = s1.format('YYYY-MM-DDTHH:mm:ssZ')
 
@@ -18,24 +20,11 @@ router.get('/', (req, res) => {
         var seq = req.query.s;
 
         if(t_value && h_value){
-            dbcon.updateData(res, device_uid, "t", t_value, time_val, true);
-            dbcon.updateData(res, device_uid, "h", h_value, time_val, false);
+            dbcon.updateData(res, device_uid, "t", t_value, time_val);
+            dbcon.updateData(res, device_uid, "h", h_value, time_val);
         }else {
             res.send('Please provide suitable parameters');
         }
-
-        // if(t_value && h_value){
-        //     dbcon.addData(device_uid, "t", t_value, time_val, res);
-        //     dbcon.addData(device_uid, "h", h_value, time_val, res);
-
-        //     dbcon.addCurrentData(device_uid, "t", t_value, res, true);
-        //     dbcon.addCurrentData(device_uid, "h", h_value, res, false);
-
-        //     console.log(s1);
-        //     res.send(time_val);
-        // } else {
-        //     res.send('Please provide suitable parameters');
-        // }
     } catch (e){
         console.error('catch error: ', e.stack);
         res.status(404);

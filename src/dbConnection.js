@@ -24,91 +24,6 @@ exports.addOwner = function(email, deviceNum) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
-var addData = function(deviceNum, type, value, time, res) {
-    var queryString = "INSERT INTO measurement (deviceNum, type, val, time) VALUES(?, ?, ?, ?)";
-    var params = [deviceNum, type, value, time];
-    var success_msg = "Successfully added new data"
-
-    executeQuery_withParams_NoRespond(params, queryString, success_msg);
-}
-
-exports.addData = addData;
-
-var addCurrentData = (deviceNum, type, value, res, bool) => {
-    var queryString = `SELECT * from recent_value WHERE deviceNum = "${deviceNum}"`
-    var success_msg = "Successfully updated latest data";
-
-    if (!bool) {
-        switch (type) {
-            case 'g':
-                queryString = `UPDATE recent_value SET geiger = ${value} WHERE deviceNum = "${deviceNum}"`
-                break;
-            case 'h':
-                queryString = `UPDATE recent_value SET humidity = ${value} WHERE deviceNum = "${deviceNum}"`
-                break;
-            case 't':
-                queryString = `UPDATE recent_value SET temperature = ${value} WHERE deviceNum = "${deviceNum}"`
-                break;
-            default:
-                console.log('invalid type', type);
-        }
-
-        executeQuery_noRespond(res, queryString, success_msg);
-        // executeQuery_withParams_NoRespond(params, queryString, success_msg);
-        return;
-    }
-
-    pool.getConnection(function (err, conn) {
-        if (err) {
-            console.log(err);
-        } else {
-            conn.query(queryString, function (err, result, fields) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    if(result.length == 0){
-                        var params;
-                        queryString = "INSERT INTO recent_value (deviceNum, geiger, temperature, humidity) VALUES(?, ?, ?, ?)";
-                        switch (type) {
-                            case 'g':
-                                params = [deviceNum, value, null, null];
-                                break;
-                            case 'h':
-                                params = [deviceNum, null, null, value];
-                                break;
-                            case 't':
-                                params = [deviceNum, null, value, null];
-                                break;
-                            default:
-                                console.log('invalid type', type);
-                        }
-
-                        executeQuery_withParams_NoRespond(params, queryString, success_msg);
-                    }else{
-                        switch (type) {
-                            case 'g':
-                                queryString = `UPDATE recent_value SET geiger = ${value} WHERE deviceNum = "${deviceNum}"`
-                                break;
-                            case 'h':
-                                queryString = `UPDATE recent_value SET humidity = ${value} WHERE deviceNum = "${deviceNum}"`
-                                break;
-                            case 't':
-                                queryString = `UPDATE recent_value SET temperature = ${value} WHERE deviceNum = "${deviceNum}"`
-                                break;
-                            default:
-                                console.log('invalid type', type);
-                        }
-
-                        executeQuery_noRespond(res, queryString, success_msg);
-                    }
-                }
-            });
-
-            conn.release();
-        }
-    });
-}
-exports.addCurrentData = addCurrentData;
 
 exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
@@ -197,31 +112,25 @@ exports.getData = (res, deviceNum, type, start, end) => {
     executeQuery(res, queryString);
 }
 
-exports.updateData = function(res, deviceNum, type, val, time_val, bool) {
-    var queryString = `SELECT * FROM device_owner WHERE deviceNum = '${deviceNum}'`;
+exports.updateData = function(res, deviceNum, type, value, time) {
+    var queryString = "";
+    var success_msg = "Successfully added new data"
 
-    pool.getConnection(function (err, conn) {
-        if (err) {
-            res.send(err);
-        } else {
-            conn.query(queryString, function (err, result, fields) {
-                if (err) {
-                    return err;
-                } else {
-                    if(result.length != 0){
-                        // console.log(result);
-                        addData(deviceNum, type, val, time_val, res);
-                        addCurrentData(deviceNum, type, val, res, bool);
-                    }else{
-                        res.send("Undefined device");
-                    }
-                }
-            });
+    switch (type) {
+        case 'g':
+            queryString = `call insertGeiger('${deviceNum}', '${type}', ${value}, '${time}')`
+            break;
+        case 't':
+            queryString = `call insertTemperature('${deviceNum}', '${type}', ${value}, '${time}')`
+            break;
+        case 'h':
+            queryString = `call insertHumidity('${deviceNum}', '${type}', ${value}, '${time}')`
+            break;
+        default:
+            queryString = null
+    }
 
-            conn.release();
-        }
-    });
-    // executeQuery(res, queryString);
+    if (queryString) executeQuery_noRespond(res, queryString, success_msg);
 }
 
 exports.checkDevice = function(res, email, deviceNum) {
@@ -304,6 +213,7 @@ var executeQuery = (res, queryString) => {
         } else {
             conn.query(queryString, function (err, result, fields) {
                 if (err) {
+                    console.log(err);
                     res.send(err);
                 } else {
                     res.send(result);
@@ -322,7 +232,7 @@ var executeQuery_noRespond = (res, queryString, success_msg) => {
         } else {
             conn.query(queryString, function (err, result, fields) {
                 if (err) {
-                    res.send(err);
+                    res.send('error');
                 } else {
                     console.log(success_msg);
                 }
