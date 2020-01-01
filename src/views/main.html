@@ -362,7 +362,6 @@
 
             //TODO: graph 오류 고치기
             function getGgraph(labels, dataset_arr_g) {
-                console.log(labels);
                 var config_g = {
                     type: 'line',
                     data: {
@@ -579,7 +578,7 @@
                             var sDate = dates[0].mintime;
                             var eDate = dates[0].maxtime;
 
-                            //기간 내의 자료가 없는 경우
+                            //기간 내의 자료가 없는 경우 일단은 전체 범위로 보여줌
                             if(sDate == null && eDate == null){
                                 sDate = start;
                                 eDate = end;   
