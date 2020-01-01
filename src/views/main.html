@@ -385,7 +385,9 @@
                             xAxes: [{
                                 type: "time",
                                 time: {
-                                    parser: "MM/DD/YYYY HH:mm",
+                                    displayFormats: {
+                                        hour: 'MMM D, HH:mm'
+                                    },
                                     tooltipFormat: "ll HH:mm"
                                 },
                                 ticks: {
@@ -432,7 +434,9 @@
                             xAxes: [{
                                 type: "time",
                                 time: {
-                                    parser: "MM/DD/YYYY HH:mm",
+                                    displayFormats: {
+                                        hour: 'MMM D, HH:mm'
+                                    },
                                     tooltipFormat: "ll HH:mm"
                                 },
                                 ticks: {
@@ -462,7 +466,6 @@
                     data: {
                         labels: labels,
                         datasets: dataset_arr_h,
-                        spanGaps:false,
                     },
                     "rotateValues": "1",
                     options: {
@@ -479,7 +482,9 @@
                             xAxes: [{
                                 type: "time",
                                 time: {
-                                    parser: "MM/DD/YYYY HH:mm",
+                                    displayFormats: {
+                                        hour: 'MMM D, HH:mm'
+                                    },
                                     tooltipFormat: "ll HH:mm"
                                 },
                                 ticks: {
