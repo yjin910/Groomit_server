@@ -138,14 +138,16 @@
                 }
 
                 $('#reportrange').daterangepicker({
-                    minDate: null,
+                    //TODO: 날짜 제한 필요
+                    // minDate: null,
                     maxDate: moment(),
                     startDate: start,
                     endDate: end,
+                    //TODO: 영어버전 한글버전 따로(설정에 따라)
                     ranges: {
                     'Last 24 hours': [moment().subtract(24, 'hours'), moment()],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()]
+                    'Last 7 days': [moment().subtract(6, 'days'), moment()],
+                    'Last 1 month': [moment().subtract(1, 'months'), moment()]
                     }
                 }, cb);
 
