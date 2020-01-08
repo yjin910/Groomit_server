@@ -206,7 +206,9 @@
             }
 
             function sortdata() {
-                var labels = [];
+                var g_labels = [];
+                var t_labels = [];
+                var h_labels = [];
                 var g_data = [];
                 var t_data = [];
                 var h_data = [];
@@ -240,6 +242,10 @@
                         } else if (value < lowest_g){
                             lowest_g = value;
                         }
+
+                        if (!g_labels.includes(CDate)) {
+                            g_labels.push(CDate)
+                        }
                     }
                     if (type == 't') {
                         t_data.push({
@@ -256,6 +262,10 @@
                             highest_t = value;
                         } else if (value < lowest_t){
                             lowest_t = value;
+                        }
+
+                        if (!t_labels.includes(CDate)) {
+                            t_labels.push(CDate)
                         }
                     }
                     if (type == 'h') {
@@ -274,10 +284,10 @@
                         } else if (value < lowest_h){
                             lowest_h = value;
                         }
-                    }
 
-                    if (!labels.includes(new Date(datas[key].time))) {
-                        labels.push(CDate)
+                        if (!h_labels.includes(CDate)) {
+                            h_labels.push(CDate)
+                        }
                     }
                 }
                 document.getElementById("g_highestVal").innerHTML = highest_g;
@@ -304,10 +314,10 @@
                     document.getElementById("h_currentVal").innerHTML = undefined;
                 }
 
-                drawGraph(c_val, labels, g_data, t_data, h_data);
+                drawGraph(c_val, g_labels, t_labels, h_labels, g_data, t_data, h_data);
             }
 
-            function drawGraph(c_val, labels, g_data, t_data, h_data) {
+            function drawGraph(c_val, g_labels, t_labels, h_labels, g_data, t_data, h_data) {
                 const DATASET_G = {
                     label: 'geiger count',
                     data: g_data,
@@ -350,28 +360,30 @@
 
                 if (c_val.includes("g")) {
                     dataset_arr_g.push(DATASET_G);
-                    getGgraph(labels, dataset_arr_g);
+                    createGraph("Geiger", g_labels, dataset_arr_g);
                 }
                 if (c_val.includes("t")) {
                     dataset_arr_t.push(DATASET_T);
-                    getTgraph(labels, dataset_arr_t);
+                    createGraph("Temperature", t_labels, dataset_arr_t);
                 }
                 if (c_val.includes("h")) {
                     dataset_arr_h.push(DATASET_H);
-                    getHgraph(labels, dataset_arr_h)
+                    createGraph("Humidity", h_labels, dataset_arr_h)
                 }        
             }
 
             //TODO: graph 오류 고치기
-            function getGgraph(labels, dataset_arr_g) {
-                var config_g = {
+            function createGraph(type_val, labels, dataset_arr_g) {
+                console.log(type_val);
+                console.log(labels);
+                var config = {
                     type: 'line',
                     data: {
                         labels: labels,
                         datasets: dataset_arr_g,
                         spanGaps: false
                     },
-                    "rotateValues": "1",
+                    rotateValues: 1,
                     options: {
                         legend:{
                             display:false
@@ -379,7 +391,7 @@
                         responsive: true,
                         title: {
                             display: true,
-                            text: 'Geiger',
+                            text: type_val,
                             fontSize: 20
                         },
                         scales: {
@@ -404,110 +416,30 @@
                     }
                 };
 
-                if (gChart){
-                    gChart.destroy();
-                }
-                var ctx_g = document.getElementById('canvasG').getContext('2d');
-                gChart = new Chart(ctx_g, config_g);
-                gChart.update();
-            }
-
-            function getTgraph(labels, dataset_arr_t) {
-                var config_t = {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: dataset_arr_t,
-                        spanGaps: false
-                    },
-                    "rotateValues": "1",
-                    options: {
-                        legend:{
-                            display:false
-                        },
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: 'Temperature',
-                            fontSize: 20
-                        },
-                        scales: {
-                            xAxes: [{
-                                type: "time",
-                                time: {
-                                    displayFormats: {
-                                        hour: 'MMM D, HH:mm'
-                                    },
-                                    tooltipFormat: "ll HH:mm"
-                                },
-                                ticks: {
-                                    maxRotation: 0
-                                },
-                                display: true,
-                            }],
-                            yAxes: [{
-                                type: 'linear',
-                                display: true,
-                            }]
-                        }
+                if (type_val = "Geiger"){
+                    if(gChart){
+                        gChart.destroy();
                     }
-                };
-
-                if (tChart){
-                    tChart.destroy();
-                }
-                var ctx_t = document.getElementById('canvasT').getContext('2d');
-                tChart = new Chart(ctx_t, config_t);
-                tChart.update();
-            }
-
-            function getHgraph(labels, dataset_arr_h) {
-                var config_h = {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: dataset_arr_h,
-                    },
-                    "rotateValues": "1",
-                    options: {
-                        legend:{
-                            display:false
-                        },
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: 'Humidity',
-                            fontSize: 20
-                        },
-                        scales: {
-                            xAxes: [{
-                                type: "time",
-                                time: {
-                                    displayFormats: {
-                                        hour: 'MMM D, HH:mm'
-                                    },
-                                    tooltipFormat: "ll HH:mm"
-                                },
-                                ticks: {
-                                    maxRotation: 0
-                                },
-                                display: true,
-                            }],
-                            yAxes: [{
-                                type: 'linear',
-                                display: true,
-                            }]
-                        }
+                    var ctx = document.getElementById('canvasG').getContext('2d');
+                    gChart = new Chart(ctx, config);
+                    gChart.update();
+                }else if(type_val = "Geiger"){
+                    if(tChart){
+                        tChart.destroy();
                     }
-                };
-
-                if (hChart){
-                    hChart.destroy();
+                    var ctx = document.getElementById('canvasT').getContext('2d');
+                    tChart = new Chart(ctx, config);
+                    tChart.update();
+                }else if(type_val = "Humedity"){
+                    if(tChart){
+                        tChart.destroy();
+                    }
+                    var ctx = document.getElementById('canvasH').getContext('2d');
+                    hChart = new Chart(ctx, config);
+                    hChart.update();
                 }
-                var ctx_h = document.getElementById('canvasH').getContext('2d');
-                hChart = new Chart(ctx_h, config_h);
-                hChart.update();
             }
+
 
             function addSelection(uuids) {
                 var selection = document.getElementById("devices");
