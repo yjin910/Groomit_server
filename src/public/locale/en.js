@@ -1,2 +1,3 @@
 export default {
+    "Start": "Start",
 };
