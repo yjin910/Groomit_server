@@ -154,7 +154,7 @@ exports.getUserProfile = (res, email) => {
 }
 
 exports.getUsersInfo = function(res){
-    var querString = `SELECT * FROM device_owner`;
+    var querString = `SELECT DISTINCT email FROM device_owner`;
     executeQuery(res, querString);
 }
 
