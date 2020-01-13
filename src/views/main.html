@@ -11,7 +11,6 @@
     <script src="../public/js/amazon-cognito-identity.min.js"></script>
     <script src="../public/js/cookieProcess.js"></script>
     <script src="../public/js/config.js"></script>
-    <script src="../public/locale/i18n"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -30,6 +29,9 @@
     <!-- select device -->
     <div class="data_info">
         <select id="devices" onchange="changeGraph(this.value)"></select>
+        <input type="checkbox" id="geiger" value="geiger" onchange="hideGraph('g')" checked>Geiger
+        <input type="checkbox" id="temperature" value="temperature" onchange="hideGraph('t')" checked>Temperature
+        <input type="checkbox" id="humidity" value="humidity" onchange="hideGraph('h')" checked>Humedity
 
         <div id="reportrange">
             <i class="fas fa-calendar"></i>&nbsp;
@@ -45,7 +47,7 @@
             <canvas id="canvasG"></canvas>
         </div>
         <div id="g_val">
-            <start data-i18n="start">시작</start> : <sDate id='g_sdate'></sDate>
+            시작 : <sDate id='g_sdate'></sDate>
         </br>
             종료 : <eDate id='g_edate'></eDate>
         </br>
@@ -54,8 +56,8 @@
             방사능 최고값: <highestVal id='g_highestVal'></highestVal>
         </br>
             방사능 최저값: <lowestVal id='g_lowestVal'></lowestVal>
+        </br>
         </div>
-    </br>
         <div id="graph">
             <canvas id="canvasT"></canvas>
         </div>
@@ -207,9 +209,7 @@
             }
 
             function sortdata() {
-                var g_labels = [];
-                var t_labels = [];
-                var h_labels = [];
+                var labels = [];
                 var g_data = [];
                 var t_data = [];
                 var h_data = [];
@@ -243,10 +243,6 @@
                         } else if (value < lowest_g){
                             lowest_g = value;
                         }
-
-                        if (!g_labels.includes(CDate)) {
-                            g_labels.push(CDate)
-                        }
                     }
                     if (type == 't') {
                         t_data.push({
@@ -263,10 +259,6 @@
                             highest_t = value;
                         } else if (value < lowest_t){
                             lowest_t = value;
-                        }
-
-                        if (!t_labels.includes(CDate)) {
-                            t_labels.push(CDate)
                         }
                     }
                     if (type == 'h') {
@@ -285,10 +277,10 @@
                         } else if (value < lowest_h){
                             lowest_h = value;
                         }
+                    }
 
-                        if (!h_labels.includes(CDate)) {
-                            h_labels.push(CDate)
-                        }
+                    if (!labels.includes(new Date(datas[key].time))) {
+                        labels.push(CDate)
                     }
                 }
                 document.getElementById("g_highestVal").innerHTML = highest_g;
@@ -315,10 +307,10 @@
                     document.getElementById("h_currentVal").innerHTML = undefined;
                 }
 
-                drawGraph(c_val, g_labels, t_labels, h_labels, g_data, t_data, h_data);
+                drawGraph(c_val, labels, g_data, t_data, h_data);
             }
 
-            function drawGraph(c_val, g_labels, t_labels, h_labels, g_data, t_data, h_data) {
+            function drawGraph(c_val, labels, g_data, t_data, h_data) {
                 const DATASET_G = {
                     label: 'geiger count',
                     data: g_data,
@@ -361,30 +353,28 @@
 
                 if (c_val.includes("g")) {
                     dataset_arr_g.push(DATASET_G);
-                    createGraph("Geiger", g_labels, dataset_arr_g);
+                    getGgraph(labels, dataset_arr_g);
                 }
                 if (c_val.includes("t")) {
                     dataset_arr_t.push(DATASET_T);
-                    createGraph("Temperature", t_labels, dataset_arr_t);
+                    getTgraph(labels, dataset_arr_t);
                 }
                 if (c_val.includes("h")) {
                     dataset_arr_h.push(DATASET_H);
-                    createGraph("Humidity", h_labels, dataset_arr_h)
+                    getHgraph(labels, dataset_arr_h)
                 }        
             }
 
             //TODO: graph 오류 고치기
-            function createGraph(type_val, labels, dataset_arr_g) {
-                console.log(type_val);
-                console.log(labels);
-                var config = {
+            function getGgraph(labels, dataset_arr_g) {
+                var config_g = {
                     type: 'line',
                     data: {
                         labels: labels,
                         datasets: dataset_arr_g,
                         spanGaps: false
                     },
-                    rotateValues: 1,
+                    "rotateValues": "1",
                     options: {
                         legend:{
                             display:false
@@ -392,7 +382,7 @@
                         responsive: true,
                         title: {
                             display: true,
-                            text: type_val,
+                            text: 'Geiger',
                             fontSize: 20
                         },
                         scales: {
@@ -417,30 +407,110 @@
                     }
                 };
 
-                if (type_val = "Geiger"){
-                    if(gChart){
-                        gChart.destroy();
-                    }
-                    var ctx = document.getElementById('canvasG').getContext('2d');
-                    gChart = new Chart(ctx, config);
-                    gChart.update();
-                }else if(type_val = "Geiger"){
-                    if(tChart){
-                        tChart.destroy();
-                    }
-                    var ctx = document.getElementById('canvasT').getContext('2d');
-                    tChart = new Chart(ctx, config);
-                    tChart.update();
-                }else if(type_val = "Humedity"){
-                    if(tChart){
-                        tChart.destroy();
-                    }
-                    var ctx = document.getElementById('canvasH').getContext('2d');
-                    hChart = new Chart(ctx, config);
-                    hChart.update();
+                if (gChart){
+                    gChart.destroy();
                 }
+                var ctx_g = document.getElementById('canvasG').getContext('2d');
+                gChart = new Chart(ctx_g, config_g);
+                gChart.update();
             }
 
+            function getTgraph(labels, dataset_arr_t) {
+                var config_t = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: dataset_arr_t,
+                        spanGaps: false
+                    },
+                    "rotateValues": "1",
+                    options: {
+                        legend:{
+                            display:false
+                        },
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Temperature',
+                            fontSize: 20
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: "time",
+                                time: {
+                                    displayFormats: {
+                                        hour: 'MMM D, HH:mm'
+                                    },
+                                    tooltipFormat: "ll HH:mm"
+                                },
+                                ticks: {
+                                    maxRotation: 0
+                                },
+                                display: true,
+                            }],
+                            yAxes: [{
+                                type: 'linear',
+                                display: true,
+                            }]
+                        }
+                    }
+                };
+
+                if (tChart){
+                    tChart.destroy();
+                }
+                var ctx_t = document.getElementById('canvasT').getContext('2d');
+                tChart = new Chart(ctx_t, config_t);
+                tChart.update();
+            }
+
+            function getHgraph(labels, dataset_arr_h) {
+                var config_h = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: dataset_arr_h,
+                    },
+                    "rotateValues": "1",
+                    options: {
+                        legend:{
+                            display:false
+                        },
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Humidity',
+                            fontSize: 20
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: "time",
+                                time: {
+                                    displayFormats: {
+                                        hour: 'MMM D, HH:mm'
+                                    },
+                                    tooltipFormat: "ll HH:mm"
+                                },
+                                ticks: {
+                                    maxRotation: 0
+                                },
+                                display: true,
+                            }],
+                            yAxes: [{
+                                type: 'linear',
+                                display: true,
+                            }]
+                        }
+                    }
+                };
+
+                if (hChart){
+                    hChart.destroy();
+                }
+                var ctx_h = document.getElementById('canvasH').getContext('2d');
+                hChart = new Chart(ctx_h, config_h);
+                hChart.update();
+            }
 
             function addSelection(uuids) {
                 var selection = document.getElementById("devices");
@@ -459,6 +529,32 @@
                 var regex_date = /^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})$/g;
                 uuid = device;
                 getGraphData(start, end);
+            }
+
+            //TODO: 온습도 부분 분리 필요
+            function hideGraph(type){
+                var chart_to_hide, data_to_hide, checked;
+                if(type == "g"){
+                    chart_to_hide = "canvasG";
+                    data_to_hide = "g_val";
+                    checked = document.getElementById("geiger").checked;
+                }else if(type == "t"){
+                    chart_to_hide = "canvasT";
+                    data_to_hide = "th_val";
+                    checked = document.getElementById("temperature").checked;
+                }else if(type == "h"){
+                    chart_to_hide = "canvasH";
+                    data_to_hide = "th_val";
+                    checked = document.getElementById("humidity").checked;
+                }
+
+                if(checked){
+                    document.getElementById(chart_to_hide).style.display = "block";
+                    document.getElementById(data_to_hide).style.display = "block";
+                }else{
+                    document.getElementById(chart_to_hide).style.display = "none";
+                    document.getElementById(data_to_hide).style.display = "none";
+                }
             }
 
             function json2csv() {
