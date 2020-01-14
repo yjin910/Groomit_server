@@ -11,6 +11,8 @@
             <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">&nbsp
             관리자 회원 관리
         </div>
+        <!-- <button type="button" onclick="addDevice()">Add Device</button>
+        <button type="button">Delete Device</button> -->
         <table id='user_table'></table>
 
         <footer>
@@ -56,6 +58,7 @@
 
             function addRow(user_table, head, num, email, permission, condition) {
                 var tr = document.createElement('tr');
+                tr.addEventListener("click", getUserDevicesInfo);
 
                 addCell(tr, head, num);
                 addCell(tr, head, email);
@@ -63,6 +66,24 @@
                 addCell(tr, head, condition);
 
                 user_table.appendChild(tr)
+            }
+
+            //TODO: 새 페이지 불러오기(주어진 이메일의 기기들)
+            function getUserDevicesInfo(){
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/admin/getUserDevices'); // 메소드와 주소 설정
+                xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            var users = JSON.parse(xhr.responseText);
+                            
+                            create_table(users)
+                        } else {
+                            console.error(xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send();
             }
         </script>
     </body>
