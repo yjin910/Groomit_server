@@ -24,15 +24,15 @@ body{
 }
 
 .download  {
-    width: 22px;
+    width: 85px;
     /* margin: auto; */
     vertical-align: middle;
 }
 
 .member_info{
     float: right;
-    margin: 50px 17px 0 0;
-    width: 28px;
+    margin: 50px 20px 0 0;
+    width: 40px;
 }
 
 .container:after {
