@@ -7,7 +7,8 @@
     <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
     <script src="https://www.chartjs.org/samples/latest/utils.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+    <!-- <script src="multiple-select.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script> -->
     <script src="https://kit.fontawesome.com/7a7224d655.js"></script>
     
     <script src="../public/js/amazon-cognito-identity.min.js"></script>
@@ -15,14 +16,15 @@
     <script src="../public/js/config.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="multiple-select.min.css"> -->
     <!-- <link href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css"> -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" type="text/css" href="../public/css/main.css">
 
 
     
-<script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+<!-- <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script> -->
 
 
 </head>
@@ -54,9 +56,9 @@
     <!-- buttons for logout or see profile -->
     <div class="container">
         <div id="graph">
-            <canvas id="canvasG"></canvas>
+            <canvas id="canvasG" hidden></canvas>
         </div>
-        <div id="g_val">
+        <div id="g_val" hidden>
             시작 : <sDate id='g_sdate'></sDate>
         </br>
             종료 : <eDate id='g_edate'></eDate>
@@ -69,13 +71,28 @@
         </br>
         </div>
         <div id="graph">
-            <canvas id="canvasT"></canvas>
+            <canvas id="canvasC" hidden></canvas>
+        </div>
+        <div id="c_val" hidden>
+            시작 : <sDate id='c_sdate'></sDate>
+        </br>
+            종료 : <eDate id='c_edate'></eDate>
+        </br>
+            현재 이산화탄소 값: <currentVal id='c_currentVal'></currentVal>
+        </br>
+            이산화탄소 최고값: <highestVal id='c_highestVal'></highestVal>
+        </br>
+            이산화탄소 최저값: <lowestVal id='c_lowestVal'></lowestVal>
+        </br>
+        </div>
+        <div id="graph">
+            <canvas id="canvasT" hidden></canvas>
         </div>
     </br>
         <div id="graph">
-            <canvas id="canvasH"></canvas>
+            <canvas id="canvasH" hidden></canvas>
         </div>
-        <div id="th_val">
+        <div id="th_val" hidden>
             시작 : <sDate id='th_sdate'></sDate>
         </br>
             종료 : <eDate id='th_edate'></eDate>
@@ -99,8 +116,8 @@
     
     <script>
             var uuid, email, datas;
-            var c_val = 'gth';
-            var gChart, tChart, hChart;
+            var c_val = 'cth';
+            var gChart, cChart, tChart, hChart;
             var start, end;
 
             var data = {
@@ -128,6 +145,8 @@
                     });
                 });
             }
+
+            // $('select').multipleSelect()
 
             // date time picker
             $(function() {
@@ -166,12 +185,12 @@
                 cb(start, end);
             });
 
-            $(function() {
-                $('devices').multipleSelect({
-                multiple: true,
-                multipleWidth: 60
-                })
-            });
+            // $(function() {
+            //     $('devices').multipleSelect({
+            //     multiple: true,
+            //     multipleWidth: 60
+            //     })
+            // });
 
             function logOut() {
                 if (cognitoUser != null) {
@@ -227,16 +246,12 @@
             function sortdata() {
                 var labels = [];
                 var g_data = [];
+                var c_data = [];
                 var t_data = [];
                 var h_data = [];
 
-                var highest_g;
-                var highest_t;
-                var highest_h;
-
-                var lowest_g;
-                var lowest_t;
-                var lowest_h;
+                var highest_g, highest_c, highest_t, highest_h;
+                var lowest_g, lowest_c, lowest_t, lowest_h;
 
                 for (key in datas) {
                     type = datas[key].type;
@@ -258,6 +273,23 @@
                             highest_g = value;
                         } else if (value < lowest_g){
                             lowest_g = value;
+                        }
+                    }
+                    if (type == 'c') {
+                        c_data.push({
+                            x: CDate,
+                            y: value
+                        })
+
+                        if (highest_c == undefined){
+                            highest_c = value;
+                        }
+                        if (lowest_c == undefined){
+                            lowest_c = value;
+                        } else if (value > highest_c){
+                            highest_c = value;
+                        } else if (value < lowest_c){
+                            lowest_c = value;
                         }
                     }
                     if (type == 't') {
@@ -307,29 +339,53 @@
                     document.getElementById("g_currentVal").innerHTML = undefined;
                 }
 
-                document.getElementById("t_highestVal").innerHTML = highest_t + "°C";
-                document.getElementById("t_lowestVal").innerHTML = lowest_t + "°C";
+                document.getElementById("c_highestVal").innerHTML = highest_c;
+                document.getElementById("c_lowestVal").innerHTML = lowest_c;
+                if(c_data.length != 0){
+                    document.getElementById("c_currentVal").innerHTML = c_data[c_data.length - 1].y;
+                } else {
+                    document.getElementById("c_currentVal").innerHTML = undefined;
+                }
+
                 if(t_data.length != 0){
+                    document.getElementById("t_highestVal").innerHTML = highest_t + "°C";
+                    document.getElementById("t_lowestVal").innerHTML = lowest_t + "°C";
                     document.getElementById("t_currentVal").innerHTML = t_data[t_data.length - 1].y + "°C";
                 } else {
+                    document.getElementById("t_highestVal").innerHTML = undefined;
+                    document.getElementById("t_lowestVal").innerHTML = undefined;
                     document.getElementById("t_currentVal").innerHTML = undefined;
                 }
 
-                document.getElementById("h_highestVal").innerHTML = highest_h + "%";
-                document.getElementById("h_lowestVal").innerHTML = lowest_h + "%";
                 if (h_data.length != 0){
+                    document.getElementById("h_highestVal").innerHTML = highest_h + "%";
+                    document.getElementById("h_lowestVal").innerHTML = lowest_h + "%";
                     document.getElementById("h_currentVal").innerHTML = h_data[h_data.length - 1].y + "%";
                 } else {
+                    document.getElementById("h_highestVal").innerHTML = undefined;
+                    document.getElementById("h_lowestVal").innerHTML = undefined;
                     document.getElementById("h_currentVal").innerHTML = undefined;
                 }
 
-                drawGraph(c_val, labels, g_data, t_data, h_data);
+                drawGraph(c_val, labels, g_data, c_data, t_data, h_data);
             }
 
-            function drawGraph(c_val, labels, g_data, t_data, h_data) {
+            function drawGraph(c_val, labels, c_data, g_data, t_data, h_data) {
                 const DATASET_G = {
                     label: 'geiger count',
                     data: g_data,
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    type: 'line',
+                    pointRadius: 0,
+                    fill: false,
+                    lineTension: 0,
+                    borderWidth: 1,
+                }
+
+                const DATASET_C = {
+                    label: 'CO2',
+                    data: c_data,
                     backgroundColor: window.chartColors.red,
                     borderColor: window.chartColors.red,
                     type: 'line',
@@ -363,19 +419,31 @@
                     borderWidth: 1,
                 }
 
-                let dataset_arr_g = [];
-                let dataset_arr_t = [];
-                let dataset_arr_h = [];
-
                 if (c_val.includes("g")) {
+                    document.getElementById("canvasG").style.display = "block";
+                    document.getElementById("g_val").style.display = "block";
+                    let dataset_arr_g = [];
                     dataset_arr_g.push(DATASET_G);
                     getGgraph(labels, dataset_arr_g);
                 }
+                if (c_val.includes("c")) {
+                    document.getElementById("canvasC").style.display = "block";
+                    document.getElementById("c_val").style.display = "block";
+                    let dataset_arr_c = [];
+                    dataset_arr_c.push(DATASET_C);
+                    getCgraph(labels, dataset_arr_c);
+                }
                 if (c_val.includes("t")) {
+                    document.getElementById("canvasT").style.display = "block";
+                    document.getElementById("th_val").style.display = "block";
+                    let dataset_arr_t = [];
                     dataset_arr_t.push(DATASET_T);
                     getTgraph(labels, dataset_arr_t);
                 }
                 if (c_val.includes("h")) {
+                    document.getElementById("canvasH").style.display = "block";
+                    document.getElementById("th_val").style.display = "block";
+                    let dataset_arr_h = [];
                     dataset_arr_h.push(DATASET_H);
                     getHgraph(labels, dataset_arr_h)
                 }        
@@ -429,6 +497,55 @@
                 var ctx_g = document.getElementById('canvasG').getContext('2d');
                 gChart = new Chart(ctx_g, config_g);
                 gChart.update();
+            }
+
+            function getCgraph(labels, dataset_arr_c) {
+                var config_c = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: dataset_arr_c,
+                        spanGaps: false
+                    },
+                    "rotateValues": "1",
+                    options: {
+                        legend:{
+                            display:false
+                        },
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'CO2',
+                            fontSize: 20
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: "time",
+                                time: {
+                                    displayFormats: {
+                                        hour: 'MMM D, HH:mm'
+                                    },
+                                    tooltipFormat: "ll HH:mm"
+                                },
+                                ticks: {
+                                    maxRotation: 0
+                                },
+                                display: true,
+                            }],
+                            yAxes: [{
+                                type: 'linear',
+                                display: true,
+                            }]
+                        }
+                    }
+                };
+
+                if (cChart){
+                    cChart.destroy();
+                }
+                var ctx_c = document.getElementById('canvasG').getContext('2d');
+                cChart = new Chart(ctx_c, config_c);
+                cChart.update();
             }
 
             function getTgraph(labels, dataset_arr_t) {
