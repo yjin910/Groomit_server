@@ -72,7 +72,7 @@ canvas {
     margin-left: 20px;
 }
 
-#g_val, #th_val {
+#g_val, #c_val, #th_val {
     margin: auto;
     font-size: 80%
 }
