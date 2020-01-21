@@ -152,7 +152,6 @@
             $(function() {
                 start = moment().subtract(24, 'hours');
                 end = moment();
-                console.log("one");
 
                 function cb(start_d, end_d) {
                     $('#reportrange span').html(start_d.format('MMMM D, YYYY') + ' - ' + end_d.format('MMMM D, YYYY'));
@@ -233,7 +232,6 @@
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
                             datas = JSON.parse(xhr.responseText);
-                            console.log(datas);
                             getDateLimit(formed_start, formed_end);
                             sortdata();
                         } else {
@@ -422,7 +420,6 @@
                 }
 
                 if (type_val.includes("g")) {
-                    console.log("IS TECH003?");
                     document.getElementById("canvasG").style.display = "block";
                     document.getElementById("g_val").style.display = "block";
                     let dataset_arr_g = [];
@@ -434,7 +431,6 @@
                 }
 
                 if (type_val.includes("c")) {
-                    console.log("FALSE");
                     document.getElementById("canvasC").style.display = "block";
                     document.getElementById("c_val").style.display = "block";
                     let dataset_arr_c = [];
