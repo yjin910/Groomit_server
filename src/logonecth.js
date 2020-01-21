@@ -20,9 +20,9 @@ router.get('/', (req, res) => {
 
         if (c_value && t_value && h_value) {
             dbcon.updateData(res, device_uid, "c", c_value, time_val);
-            dbcon.updateData(res, device_uid, "t", t_value, time_val);
+            dbcon.updateData(res, device_uid, "t", c_value, time_val);
             dbcon.updateData(res, device_uid, "h", h_value, time_val);
-            // res.send("success");
+            res.send("success");
         } else {
             res.send('Please provide suitable parameters');
         }
