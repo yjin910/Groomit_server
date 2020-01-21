@@ -38,6 +38,8 @@ exports.sendGraphPage = (res, deviceNum, type) => {
                 queryString += ` AND type != 'h'`
             } else if (!type.includes('g')) {
                 queryString += ` AND type != 'g'`
+            } else if (!type.includes('c')) {
+                queryString += ` AND type != 'c'`
             }
         } else if (type.length == 1) {
             switch (type) {
@@ -49,6 +51,9 @@ exports.sendGraphPage = (res, deviceNum, type) => {
                     break;
                 case 'g':
                     queryString += ` AND type = 'g'`
+                    break;
+                case 'c':
+                    queryString += ` AND type = 'c'`
                     break;
                 default:
                     console.log('Invalid type: ', type);
@@ -92,11 +97,16 @@ exports.getData = (res, deviceNum, type, start, end) => {
                 queryString += ` AND type != 'h'`
             } else if (!type.includes('g')) {
                 queryString += ` AND type != 'g'`
+            }else if (!type.includes('c')) {
+                queryString += ` AND type != 'c'`
             }
         } else if (type.length == 1) {
             switch (type) {
                 case 't':
                     queryString += ` AND type = 't'`
+                    break;
+                case 'c':
+                    queryString += ` AND type = 'c'`
                     break;
                 case 'h':
                     queryString += ` AND type = 'h'`
@@ -120,6 +130,9 @@ exports.updateData = function(res, deviceNum, type, value, time) {
     switch (type) {
         case 'g':
             queryString = `call insertGeiger('${deviceNum}', '${type}', ${value}, '${time}')`
+            break;
+        case 'c':
+            queryString = `call insertCO2('${deviceNum}', '${type}', ${value}, '${time}')`
             break;
         case 't':
             queryString = `call insertTemperature('${deviceNum}', '${type}', ${value}, '${time}')`
