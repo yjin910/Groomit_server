@@ -41,6 +41,7 @@ app.use('/graph', require('./graph'));
 app.use('/logoneg', require('./logoneg'));
 app.use('/logonec', require('./logonec'));
 app.use('/logoneth', require('./logoneth'));
+app.use('/logonecth', require('./logoneth'));
 app.use('/time', require('./time'));
 app.use('/getdata', require('./getdata'));
 app.use('/profile', require('./profile'));
