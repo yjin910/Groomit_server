@@ -25,9 +25,8 @@
             xhr.onreadystatechange = function() { // 요청에 대한 콜백
                 if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                     if (xhr.status === 200 || xhr.status === 201) {
-                        var users = JSON.parse(xhr.responseText);
-                        
-                        create_table(users)
+                        var users = (JSON.parse(xhr.responseText))[0];
+                        create_table(users);
                     } else {
                         console.error(xhr.responseText);
                     }
@@ -37,11 +36,17 @@
             
             function create_table(users){
                 var user_table = document.getElementById('user_table');
-                addRow(user_table, true, "번호", "이메일", "관리권한", "상태");
+                addRow(user_table, true, "선택", "이메일", "기기명", "방사능", "온도", "습도", "이산화탄소");
 
                 for (i in users){
                     var email = users[i].email;
-                    addRow(user_table, false, Number(i)+1, email, " ", "사용");
+                    var uuid = users[i].deviceNum;
+                    var g_val = users[i].geiger;
+                    var t_val = users[i].temperature;
+                    var h_val = users[i].humidity;
+                    var c_val = users[i].co2;
+
+                    addRow(user_table, false, null, email, uuid, g_val, t_val, h_val, c_val);
                 }
             }
 
@@ -52,7 +57,6 @@
                 }
 
                 cell.innerHTML = val;
-                // tr.addEventListener('click', false);
                 tr.appendChild(cell)
             }
 
@@ -66,40 +70,22 @@
                 return tdTag;
             }
 
-            function addRow(user_table, head, num, email, permission, condition) {
+            function addRow(user_table, head, select, email, uuid, g_val, t_val, h_val, c_val) {
                 var tr = document.createElement('tr');
-                if(!head){
-                    //tr.addEventListener("click", function () {getUserDevicesInfo(email)});
+                if (!head) {
+                    tr.appendChild(generateCheckBox(email));
+                }else{
+                    addCell(tr, head, select);
                 }
 
-                if (!head) tr.appendChild(generateCheckBox(email));
-
-                addCell(tr, head, num);
                 addCell(tr, head, email);
-                addCell(tr, head, permission);
-                addCell(tr, head, condition);
+                addCell(tr, head, uuid);
+                addCell(tr, head, g_val);
+                addCell(tr, head, t_val);
+                addCell(tr, head, h_val);
+                addCell(tr, head, c_val);
 
                 user_table.appendChild(tr)
-            }
-
-            //TODO: 새 페이지 불러오기(주어진 이메일의 기기들)
-            function getUserDevicesInfo(email){
-                // var xhr = new XMLHttpRequest();
-                // xhr.open('GET', '/memberList/ownProfile?email=' + email); // 메소드와 주소 설정
-                // xhr.onreadystatechange = function() { // 요청에 대한 콜백
-                //     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                //         if (xhr.status === 200 || xhr.status === 201) {
-                //             var users = JSON.parse(xhr.responseText);
-                            
-                //             create_table(users)
-                //         } else {
-                //             console.error(xhr.responseText);
-                //         }
-                //     }
-                // };
-                // xhr.send();
-
-                window.location.href = './memberProfile?email=' + email;
             }
         </script>
     </body>
