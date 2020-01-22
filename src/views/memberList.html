@@ -56,12 +56,23 @@
                 tr.appendChild(cell)
             }
 
+            function generateCheckBox(email) {
+                var tdTag = document.createElement('td');
+                var inputTag = document.createElement('input');
+                inputTag.type = 'checkbox';
+                inputTag.name = 'cb_' + email;
+                tdTag.appendChild(inputTag);
+
+                return tdTag;
+            }
 
             function addRow(user_table, head, num, email, permission, condition) {
                 var tr = document.createElement('tr');
                 if(!head){
-                    tr.addEventListener("click", function () {getUserDevicesInfo(email)});
+                    //tr.addEventListener("click", function () {getUserDevicesInfo(email)});
                 }
+
+                if (!head) tr.appendChild(generateCheckBox(email));
 
                 addCell(tr, head, num);
                 addCell(tr, head, email);
