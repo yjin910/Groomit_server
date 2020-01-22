@@ -78,50 +78,61 @@ exports.sendGraphPage = (res, deviceNum, type) => {
     });
 }
 
-exports.getData = (res, deviceNum, type, start, end) => {
+exports.getData = (res, deviceNum, start, end) => {
     var queryString;
 
     if (start && end) {
-        queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time BETWEEN "${start}" AND "${end}"`;
+        queryString = `SELECT * from measurement NATURAL JOIN device_sensors WHERE deviceNum = "${deviceNum}" AND time BETWEEN "${start}" AND "${end}"`;
     } else {
-        queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
-    }
-
-    // var params = [deviceNum, type, value, time];
-    console.log(queryString);
-    if (type) {
-        if (type.length == 2) {
-            if (!type.includes('t')) {
-                queryString += ` AND type != 't'`
-            } else if (!type.includes('h')) {
-                queryString += ` AND type != 'h'`
-            } else if (!type.includes('g')) {
-                queryString += ` AND type != 'g'`
-            }else if (!type.includes('c')) {
-                queryString += ` AND type != 'c'`
-            }
-        } else if (type.length == 1) {
-            switch (type) {
-                case 't':
-                    queryString += ` AND type = 't'`
-                    break;
-                case 'c':
-                    queryString += ` AND type = 'c'`
-                    break;
-                case 'h':
-                    queryString += ` AND type = 'h'`
-                    break;
-                case 'g':
-                    queryString += ` AND type = 'g'`
-                    break;
-                default:
-                    console.log('Invalid type: ', type);
-            }
-        }
+        queryString = `SELECT * from measurement NATURAL JOIN device_sensors WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
     }
 
     executeQuery(res, queryString);
 }
+// exports.getData = (res, deviceNum, type, start, end) => {
+//     var queryString;
+
+//     if (start && end) {
+//         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time BETWEEN "${start}" AND "${end}"`;
+//     } else {
+//         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
+//     }
+
+//     // var params = [deviceNum, type, value, time];
+//     console.log(queryString);
+//     if (type) {
+//         if (type.length == 2) {
+//             if (!type.includes('t')) {
+//                 queryString += ` AND type != 't'`
+//             } else if (!type.includes('h')) {
+//                 queryString += ` AND type != 'h'`
+//             } else if (!type.includes('g')) {
+//                 queryString += ` AND type != 'g'`
+//             }else if (!type.includes('c')) {
+//                 queryString += ` AND type != 'c'`
+//             }
+//         } else if (type.length == 1) {
+//             switch (type) {
+//                 case 't':
+//                     queryString += ` AND type = 't'`
+//                     break;
+//                 case 'c':
+//                     queryString += ` AND type = 'c'`
+//                     break;
+//                 case 'h':
+//                     queryString += ` AND type = 'h'`
+//                     break;
+//                 case 'g':
+//                     queryString += ` AND type = 'g'`
+//                     break;
+//                 default:
+//                     console.log('Invalid type: ', type);
+//             }
+//         }
+//     }
+
+//     executeQuery(res, queryString);
+// }
 
 exports.updateData = function(res, deviceNum, type, value, time) {
     var queryString = "";
@@ -147,6 +158,11 @@ exports.updateData = function(res, deviceNum, type, value, time) {
     if (queryString) executeQuery_noRespond(res, queryString, success_msg);
 }
 
+exports.getDeviceType = function(res, uuid){
+    var queryString = `SELECT * FROM device_sensors WHERE deviceNum = "${uuid}"`;
+    executeQuery(res, queryString);
+}
+
 exports.checkDevice = function(res, email, deviceNum) {
     var queryString = `SELECT * FROM device_owner WHERE email = "${email}" AND deviceNum = '${deviceNum}'`;
 
@@ -162,12 +178,18 @@ exports.addDevice = function(email, deviceNum) {
 }
 
 exports.getUserProfile = (res, email) => {
-    var querString = `SELECT device_owner.email, device_owner.deviceNum, recent_value.geiger, recent_value.temperature, recent_value.humidity FROM device_owner JOIN recent_value ON device_owner.deviceNum = recent_value.deviceNum WHERE device_owner.email = '${email}'`;
+    // var querString = `SELECT device_owner.email, device_owner.deviceNum, recent_value.geiger, recent_value.temperature, recent_value.humidity FROM device_owner JOIN recent_value ON device_owner.deviceNum = recent_value.deviceNum WHERE device_owner.email = '${email}'`;
+    var querString = `call getUserProfile('${email}')`;
     executeQuery(res, querString);
 }
 
+// exports.getUsers() = function(res){
+//     var querString = `SELECT DISTINCT email FROM device_owner`;
+//     executeQuery(res, querString);
+// }
+
 exports.getUsersInfo = function(res){
-    var querString = `SELECT DISTINCT email FROM device_owner`;
+    var querString = `call getUserDataForAdmin()`;
     executeQuery(res, querString);
 }
 
