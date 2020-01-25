@@ -3,6 +3,7 @@
 
     <head>
         <title>9room::Admin</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../public/css/admin.css">
     </head>
@@ -145,6 +146,7 @@
                 xhr.send();
             }
 
+            // TODO: 추가시 바로 테이블에도 추가시키기
             function addRelation(){
                 var emails = document.getElementById("emails");
                 var selected_email = emails.options[emails.selectedIndex].value;
@@ -170,6 +172,11 @@
                         alert("Successfully inserted");
                         document.getElementById("emails").selectedIndex = "0";
                         document.getElementById("devices").selectedIndex = "0";
+
+                        var option = document.createElement("option");
+                        option.text = device;
+                        option.value = device;
+                        document.getElementById("devices").add(option)
                     }
                 }else{
                     alert("Select email and device correctly!");
@@ -196,20 +203,24 @@
                 xhr.open('POST', '/memberList/deleteDevice?u=' + device );
                 xhr.send();
 
-                document.getElementById("devices").remove(document.getElementById("device"));
+                $("#devices option[value="+ device +"]").remove();
                 alert("successfully deleted device");
             }
 
+            //TODO: 값 제대로 받기
             function addDevice(){
-                var device = prompt("Please enter device number to insert:");
+                var device = prompt("Please enter device number to insert:");)
                 var type = prompt("Please enter device type:");
 
-                if(device != undefined && type != undefined){
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/memberList/addDevice?u=' + device + '&type=' + type);
-                    xhr.send();
-                    alert("successfully added new device");
-                }
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/memberList/addDevice?u=' + device + '&type=' + type);
+                xhr.send();
+
+                var option = document.createElement("option");
+                option.text = device;
+                option.value = device;
+                document.getElementById("devices").add(option);
+                alert("successfully added new device");
             }
         </script>
     </body>
