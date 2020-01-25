@@ -9,10 +9,18 @@
     <body>
         <div class="info">
             <img class="logo_groomit" src="../public/images/groomit_logo.png" alt="Groomit logo" onclick="window.location.href='/login'">&nbsp
-            관리자 회원 관리
+            회원 기기 관리
         </div>
-        <!-- <button type="button" onclick="addDevice()">Add Device</button>
-        <button type="button">Delete Device</button> -->
+        <select id="emails">
+            <option value = undefined>------- select email -------</option>
+        </select>
+        <select id="devices">
+            <option value = undefined>-- select device --</option>
+        </select>
+        <button type="button" onclick="addRelation()">Insert</button>
+        <button type="button" id="delete" onclick= "removeRelaiton()">Delete</button>
+        <button type="button" onclick="addDevice()">Add Device</button>
+        <button type="button" onclick="deleteDevice()">Delete Device</button>
         <table id='user_table'></table>
 
         <footer>
@@ -20,13 +28,16 @@
             <a href="http://technonia.cafe24.com/" class="about">About Us</a>
         </footer>
         <script>
+            var users;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/memberList/getUsers'); // 메소드와 주소 설정
             xhr.onreadystatechange = function() { // 요청에 대한 콜백
                 if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                     if (xhr.status === 200 || xhr.status === 201) {
-                        var users = (JSON.parse(xhr.responseText))[0];
+                        users = (JSON.parse(xhr.responseText))[0];
                         create_table(users);
+                        getEmails(users);
+                        getDevices();
                     } else {
                         console.error(xhr.responseText);
                     }
@@ -65,6 +76,7 @@
                 var inputTag = document.createElement('input');
                 inputTag.type = 'checkbox';
                 inputTag.name = 'cb_' + email;
+                // inputTag.onclick = showDelete();
                 tdTag.appendChild(inputTag);
 
                 return tdTag;
@@ -86,6 +98,118 @@
                 addCell(tr, head, c_val);
 
                 user_table.appendChild(tr)
+            }
+
+            function getEmails(users){
+                var selection = document.getElementById("emails");
+                var emails = [];
+                for(i in users){
+                    var email = users[i].email;
+                    if(!emails.includes(email)){
+                        emails.push(email);
+                        
+                        var option = document.createElement("option");
+                        option.text = email;
+                        option.value = email;
+                        selection.add(option);
+                    }
+                }
+            }
+
+            function getDevices(){
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/memberList/getDevices'); // 메소드와 주소 설정
+                xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            var devices = JSON.parse(xhr.responseText);
+
+                            var selection = document.getElementById("devices");
+                            var device_arr = [];
+                            for(i in devices){
+                                var device = devices[i].deviceNum;
+                                if(!device_arr.includes(device)){
+                                    device_arr.push(device);
+                                    
+                                    var option = document.createElement("option");
+                                    option.text = device;
+                                    option.value = device;
+                                    selection.add(option)
+                                }
+                            }
+                        } else {
+                            console.error(xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            function addRelation(){
+                var emails = document.getElementById("emails");
+                var selected_email = emails.options[emails.selectedIndex].value;
+
+                var devices = document.getElementById("devices");
+                var selected_device = devices.options[devices.selectedIndex].value;
+
+                if(selected_email != "undefined" && selected_device != "undefined"){
+                    var exists = false;
+                    for(i in users){
+                        if(users[i].email == selected_email && users[i].deviceNum == selected_device){
+                            alert("Already exists!!");
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if(!exists){
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', '/memberList/addRelation?email=' + selected_email + '&u=' + selected_device);
+                        xhr.send();
+                        
+                        alert("Successfully inserted");
+                        document.getElementById("emails").selectedIndex = "0";
+                        document.getElementById("devices").selectedIndex = "0";
+                    }
+                }else{
+                    alert("Select email and device correctly!");
+                }
+            }
+
+            // function showDelete(){
+            //     document.getElementById('delete').style.display = "block";
+            // }
+
+            // TODO: 테이블 체크된 모든 부분 확인
+            // function removeRelaiton(){
+            //     var selected = new Array();
+            //     $('#table input[type="checkbox"]:checked').each(function() {
+            //         selected.push($(this).attr('id'));
+            //     });
+            //     console.log(selected);
+            // }
+
+            //TODO: 기기의 데이터 모두 지우기 && 값 제대로 받기
+            function deleteDevice(){
+                var device = prompt("Please enter device number to remove");
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/memberList/deleteDevice?u=' + device );
+                xhr.send();
+
+                document.getElementById("devices").remove(document.getElementById("device"));
+                alert("successfully deleted device");
+            }
+
+            function addDevice(){
+                var device = prompt("Please enter device number to insert:");
+                var type = prompt("Please enter device type:");
+
+                if(device != undefined && type != undefined){
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/memberList/addDevice?u=' + device + '&type=' + type);
+                    xhr.send();
+                    alert("successfully added new device");
+                }
             }
         </script>
     </body>

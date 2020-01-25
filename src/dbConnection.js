@@ -177,6 +177,27 @@ exports.addDevice = function(email, deviceNum) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
+exports.addDeviceType = function(res, deviceNum, type){
+    var queryString = `INSERT INTO device_sensors (deviceNum, sensors) VALUES ("${deviceNum}", "${type}")`;
+    var success_msg = "Successfully added new device's device type";
+    
+    executeQuery_noRespond(res, queryString, success_msg);
+}
+
+exports.deleteDevice = function(res, deviceNum){
+    var querString = `DELETE FROM device_owner WHERE deviceNum = "${deviceNum}"`;
+    var success_msg = "Successfully deleted the device";
+    
+    executeQuery_noRespond(res, querString, success_msg);
+}
+
+exports.deleteDeviceType = function(res, deviceNum){
+    var querString = `DELETE FROM device_sensors WHERE deviceNum = "${deviceNum}"`;
+    var success_msg = "Successfully deleted device's device type";
+    
+    executeQuery_noRespond(res, querString, success_msg);
+}
+
 exports.getUserProfile = (res, email) => {
     // var querString = `SELECT device_owner.email, device_owner.deviceNum, recent_value.geiger, recent_value.temperature, recent_value.humidity FROM device_owner JOIN recent_value ON device_owner.deviceNum = recent_value.deviceNum WHERE device_owner.email = '${email}'`;
     var querString = `call getUserProfile('${email}')`;
@@ -190,6 +211,11 @@ exports.getUserProfile = (res, email) => {
 
 exports.getUsersInfo = function(res){
     var querString = `call getUserDataForAdmin()`;
+    executeQuery(res, querString);
+}
+
+exports.getDevices = function(res){
+    var querString = `SELECT deviceNum FROM device_sensors ORDER BY deviceNum`;
     executeQuery(res, querString);
 }
 
@@ -264,11 +290,13 @@ var executeQuery = (res, queryString) => {
 var executeQuery_noRespond = (res, queryString, success_msg) => {
     pool.getConnection(function (err, conn) {
         if (err) {
-            res.send(err);
+            console.log(err);
+            // res.send(err);
         } else {
             conn.query(queryString, function (err, result, fields) {
                 if (err) {
-                    res.send('error');
+                    console.log(err);
+                    // res.send('error');
                 } else {
                     console.log(success_msg);
                 }
