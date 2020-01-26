@@ -38,10 +38,11 @@ router.post('/addDevice', (req, res) => {
 
 router.post('/deleteDevice', (req, res) => {
     var u = req.query.u;
-    var type = req.query.type;
 
     dbcon.deleteDeviceType(res, u);
     dbcon.deleteDevice(res, u);
+    dbcon.deleteMeasurement(res, u);
+    dbcon.deleteRecentValue(res, u);
 })
 
 // router.get('/ownProfile', (req, res) =>{
