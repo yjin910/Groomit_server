@@ -185,14 +185,14 @@ exports.addDeviceType = function(res, deviceNum, type){
 }
 
 exports.deleteDevice = function(res, deviceNum){
-    var querString = `DELETE FROM device_owner WHERE deviceNum = "${deviceNum}"`;
+    var querString = `call deleteDeviceOwner('${deviceNum}')`;
     var success_msg = "Successfully deleted the device";
     
     executeQuery_noRespond(res, querString, success_msg);
 }
 
 exports.deleteDeviceType = function(res, deviceNum){
-    var querString = `DELETE FROM device_sensors WHERE deviceNum = "${deviceNum}"`;
+    var querString = `call deleteDeviceSensors('${deviceNum}')`
     var success_msg = "Successfully deleted device's device type";
     
     executeQuery_noRespond(res, querString, success_msg);
@@ -203,11 +203,6 @@ exports.getUserProfile = (res, email) => {
     var querString = `call getUserProfile('${email}')`;
     executeQuery(res, querString);
 }
-
-// exports.getUsers() = function(res){
-//     var querString = `SELECT DISTINCT email FROM device_owner`;
-//     executeQuery(res, querString);
-// }
 
 exports.getUsersInfo = function(res){
     var querString = `call getUserDataForAdmin()`;
@@ -253,6 +248,20 @@ exports.getDateLimit = function(res, uuid, start, end) {
         queryString = `SELECT MIN(time) as mintime, MAX(time) as maxtime FROM measurement WHERE deviceNum = "${uuid}" and time > DATE_SUB(NOW(), INTERVAL 14 HOUR);`;
     }
     executeQuery(res, queryString);
+}
+
+exports.deleteMeasurement = function(res, deviceNum){
+    var querString = `call deleteMeasurement('${deviceNum}')`;
+    var success_msg = "Successfully deleted device's measurement values";
+
+    executeQuery_noRespond(res, querString, success_msg);
+}
+
+exports.deleteRecentValue = function(res, deviceNum){
+    var querString = `call deleteRecentValue('${deviceNum}')`;
+    var success_msg = "Successfully deleted device's recent value";
+
+    executeQuery_noRespond(res, querString, success_msg);
 }
 
 exports.getDataOfRepresentiveDevice = (res, email, start, end) => {
