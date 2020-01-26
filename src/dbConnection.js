@@ -24,6 +24,12 @@ exports.addOwner = function(email, deviceNum) {
     executeQuery_withParams_NoRespond(params, queryString, success_msg);
 }
 
+exports.deleteOwner = function(res, email, deviceNum) {
+    var queryString = `call deleteDeviceFromOwner('${email}', '${deviceNum}')`;
+    var success_msg = "Successfully deleted the owner";
+
+    executeQuery_noRespond(res, queryString, success_msg);
+}
 
 exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
@@ -134,6 +140,12 @@ exports.getData = (res, deviceNum, start, end) => {
 //     executeQuery(res, queryString);
 // }
 
+// exports.getRecentData = function(res, deviceNum){
+//     var queryString = `SELECT * FROM recent_value WHERE deviceNum = '${deviceNum}'`;
+    
+//     executeQuery(res, queryString);
+// }
+
 exports.updateData = function(res, deviceNum, type, value, time) {
     var queryString = "";
     var success_msg = "Successfully added new data"
@@ -184,7 +196,7 @@ exports.addDeviceType = function(res, deviceNum, type){
     executeQuery_noRespond(res, queryString, success_msg);
 }
 
-exports.deleteDevice = function(res, deviceNum){
+exports.deleteDeviceRelation = function(res, deviceNum){
     var querString = `call deleteDeviceOwner('${deviceNum}')`;
     var success_msg = "Successfully deleted the device";
     
