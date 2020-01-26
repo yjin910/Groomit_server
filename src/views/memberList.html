@@ -134,7 +134,7 @@
                                     var option = document.createElement("option");
                                     option.text = device;
                                     option.value = device;
-                                    selection.add(option)
+                                    selection.add(option);
                                 }
                             }
                         } else {
@@ -154,16 +154,7 @@
                 var selected_device = devices.options[devices.selectedIndex].value;
 
                 if(selected_email != "undefined" && selected_device != "undefined"){
-                    var exists = false;
-                    for(i in users){
-                        if(users[i].email == selected_email && users[i].deviceNum == selected_device){
-                            alert("Already exists!!");
-                            exists = true;
-                            break;
-                        }
-                    }
-
-                    if(!exists){
+                    if(!relationExist(selected_email, selected_device)){
                         var xhr = new XMLHttpRequest();
                         xhr.open('POST', '/memberList/addRelation?email=' + selected_email + '&u=' + selected_device);
                         xhr.send();
@@ -173,9 +164,14 @@
                         document.getElementById("devices").selectedIndex = "0";
 
                         var option = document.createElement("option");
-                        option.text = device;
-                        option.value = device;
-                        document.getElementById("devices").add(option)
+                        option.text = selected_device;
+                        option.value = selected_device;
+                        document.getElementById("devices").add(option);
+
+                        // var user_table = document.getElementById('user_table');
+                        // addRow(user_table, false, null, selected_email, selected_device, g_val, t_val, h_val, c_val);
+                    }else{
+                        alert("Relation does not exist")
                     }
                 }else{
                     alert("Select email and device correctly!");
@@ -195,15 +191,19 @@
             //     console.log(selected);
             // }
 
-            //TODO: 기기의 데이터 모두 지우기 && 값 제대로 받기
             function deleteDevice(){
                 var device = prompt("Please enter device number to remove");
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/memberList/deleteDevice?u=' + device );
-                xhr.send();
 
-                $("#devices option[value="+ device +"]").remove();
-                alert("successfully deleted device");
+                if(deviceExist){
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/memberList/deleteDevice?u=' + device );
+                    xhr.send();
+
+                    $("#devices option[value="+ device +"]").remove();
+                    alert("successfully deleted device");
+                }else{
+                    alert("Device does not exist");
+                }
             }
 
             function addDevice(){
@@ -246,11 +246,21 @@
 
             function deviceExist(device){
                 for(i in devices ){
-                    // console.log(devices[i].deviceNum == device);
                     if(devices[i].deviceNum == device){
                         return true;
                     }
                 }
+
+                return false;
+            }
+
+            function relationExist(email, device){
+                for(i in users){
+                    if(users[i].email == email && users[i].deviceNum == device){
+                        return true;
+                    }
+                }
+
                 return false;
             }
         </script>
