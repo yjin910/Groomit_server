@@ -4,8 +4,7 @@
     <head>
         <title>9room::Admin</title>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700i&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="../public/css/admin.css">
+        <link rel="stylesheet" type="text/css" href="../public/css/memberList.css">
     </head>
     <body>
         <div class="info">
@@ -29,7 +28,7 @@
             <a href="http://technonia.cafe24.com/" class="about">About Us</a>
         </footer>
         <script>
-            var users;
+            var users, devices;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/memberList/getUsers'); // 메소드와 주소 설정
             xhr.onreadystatechange = function() { // 요청에 대한 콜백
@@ -123,7 +122,7 @@
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
-                            var devices = JSON.parse(xhr.responseText);
+                            devices = JSON.parse(xhr.responseText);
 
                             var selection = document.getElementById("devices");
                             var device_arr = [];
@@ -207,20 +206,52 @@
                 alert("successfully deleted device");
             }
 
-            //TODO: 값 제대로 받기
             function addDevice(){
-                var device = prompt("Please enter device number to insert:");)
-                var type = prompt("Please enter device type:");
+                var device_reg = /^[a-zA-Z0-9_.-]+$/i;
+                var device_type = /^[a-z{3}]+$/i;
 
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/memberList/addDevice?u=' + device + '&type=' + type);
-                xhr.send();
+                var device = prompt("Please enter device number to insert:");
+                if(device != undefined){
+                    if(!device_reg.test(device)){
+                    alert("Please check your device number again");
+                    }else{
+                        var type = prompt("Please enter device type:");
 
-                var option = document.createElement("option");
-                option.text = device;
-                option.value = device;
-                document.getElementById("devices").add(option);
-                alert("successfully added new device");
+                        if(type != undefined){
+                            if(!device_type.test(type)){
+                                alert("Please check your device type again");
+                            }else{
+                                if(!deviceExist(device)){
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.open('POST', '/memberList/addDevice?u=' + device + '&type=' + type);
+                                    xhr.send();
+
+                                    var option = document.createElement("option");
+                                    option.text = device;
+                                    option.value = device;
+                                    document.getElementById("devices").add(option);
+
+                                    var device_len = Object.keys(devices).length;
+                                    devices[device_len] = {"deviceNum": device};
+
+                                    alert("successfully added new device");
+                                }else{
+                                    alert("Device already exist!")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            function deviceExist(device){
+                for(i in devices ){
+                    // console.log(devices[i].deviceNum == device);
+                    if(devices[i].deviceNum == device){
+                        return true;
+                    }
+                }
+                return false;
             }
         </script>
     </body>
