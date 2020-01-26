@@ -29,6 +29,13 @@ router.post('/addRelation', (req, res) => {
     dbcon.addOwner(email, u);
 })
 
+router.post('/removeRelation', (req, res) => {
+    var u = req.query.u;
+    var email = req.query.email;
+
+    dbcon.deleteOwner(res, email, u);
+})
+
 router.post('/addDevice', (req, res) => {
     var u = req.query.u;
     var type = req.query.type;
@@ -40,17 +47,9 @@ router.post('/deleteDevice', (req, res) => {
     var u = req.query.u;
 
     dbcon.deleteDeviceType(res, u);
-    dbcon.deleteDevice(res, u);
+    dbcon.deleteDeviceRelation(res, u);
     dbcon.deleteMeasurement(res, u);
     dbcon.deleteRecentValue(res, u);
 })
-
-// router.get('/ownProfile', (req, res) =>{
-//     console.log(req.query.email);
-//     res.redirect('/memberProfile?email=' + req.query.email);
-//     // res.render('memberProfile.html');    
-//     // console.log("\nTRUE\n");
-// })
-
 
 module.exports = router;
