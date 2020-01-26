@@ -12,13 +12,13 @@
             회원 기기 관리
         </div>
         <select id="emails">
-            <option value = undefined>------- select email -------</option>
+            <option id="emails" value = undefined>------- select email -------</option>
         </select>
         <select id="devices">
-            <option value = undefined>-- select device --</option>
+            <option id="devices" value = undefined>-- select device --</option>
         </select>
         <button type="button" onclick="addRelation()">Insert</button>
-        <button type="button" id="delete" onclick= "removeRelaiton()">Delete</button>
+        <button type="button" id="delete" onclick= "removeRelation()">Delete</button>
         <button type="button" onclick="addDevice()">Add Device</button>
         <button type="button" onclick="deleteDevice()">Delete Device</button>
         <table id='user_table'></table>
@@ -28,7 +28,7 @@
             <a href="http://technonia.cafe24.com/" class="about">About Us</a>
         </footer>
         <script>
-            var users, devices;
+            var users, devices_arr;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/memberList/getUsers'); // 메소드와 주소 설정
             xhr.onreadystatechange = function() { // 요청에 대한 콜백
@@ -122,12 +122,12 @@
                 xhr.onreadystatechange = function() { // 요청에 대한 콜백
                     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                         if (xhr.status === 200 || xhr.status === 201) {
-                            devices = JSON.parse(xhr.responseText);
+                            devices_arr = JSON.parse(xhr.responseText);
 
                             var selection = document.getElementById("devices");
                             var device_arr = [];
-                            for(i in devices){
-                                var device = devices[i].deviceNum;
+                            for(i in devices_arr){
+                                var device = devices_arr[i].deviceNum;
                                 if(!device_arr.includes(device)){
                                     device_arr.push(device);
                                     
@@ -145,7 +145,7 @@
                 xhr.send();
             }
 
-            // TODO: 추가시 바로 테이블에도 추가시키기
+            // TODO: 추가시 바로 테이블에도 추가시키기?? 현재는 Reload
             function addRelation(){
                 var emails = document.getElementById("emails");
                 var selected_email = emails.options[emails.selectedIndex].value;
@@ -155,6 +155,7 @@
 
                 if(selected_email != "undefined" && selected_device != "undefined"){
                     if(!relationExist(selected_email, selected_device)){
+                        var recent_val;
                         var xhr = new XMLHttpRequest();
                         xhr.open('POST', '/memberList/addRelation?email=' + selected_email + '&u=' + selected_device);
                         xhr.send();
@@ -163,15 +164,9 @@
                         document.getElementById("emails").selectedIndex = "0";
                         document.getElementById("devices").selectedIndex = "0";
 
-                        var option = document.createElement("option");
-                        option.text = selected_device;
-                        option.value = selected_device;
-                        document.getElementById("devices").add(option);
-
-                        // var user_table = document.getElementById('user_table');
-                        // addRow(user_table, false, null, selected_email, selected_device, g_val, t_val, h_val, c_val);
+                        location.reload();
                     }else{
-                        alert("Relation does not exist")
+                        alert("Relation already exist");
                     }
                 }else{
                     alert("Select email and device correctly!");
@@ -182,24 +177,35 @@
             //     document.getElementById('delete').style.display = "block";
             // }
 
-            // TODO: 테이블 체크된 모든 부분 확인
-            // function removeRelaiton(){
-            //     var selected = new Array();
-            //     $('#table input[type="checkbox"]:checked').each(function() {
-            //         selected.push($(this).attr('id'));
-            //     });
-            //     console.log(selected);
-            // }
+            function removeRelation(){
+                $('#user_table input[type="checkbox"]:checked').each(function() {
+                    var row = $(this).closest("tr")[0];
+                    var selected_email = row.cells[1].innerHTML;
+                    var selected_device = row.cells[2].innerHTML;
+
+                    removeUsersFromArr(selected_email,selected_device);
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/memberList/removeRelation?email=' + selected_email + '&u=' + selected_device);
+                    xhr.send();
+                    
+                    row.remove();
+                });
+            }
 
             function deleteDevice(){
                 var device = prompt("Please enter device number to remove");
 
-                if(deviceExist){
+                if(deviceExist(device)){
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/memberList/deleteDevice?u=' + device );
                     xhr.send();
 
                     $("#devices option[value="+ device +"]").remove();
+                    $("tr:contains(" + device +")").remove();
+                    
+                    removeDeviceFromArr(device);
+
                     alert("successfully deleted device");
                 }else{
                     alert("Device does not exist");
@@ -231,8 +237,8 @@
                                     option.value = device;
                                     document.getElementById("devices").add(option);
 
-                                    var device_len = Object.keys(devices).length;
-                                    devices[device_len] = {"deviceNum": device};
+                                    var device_len = Object.keys(devices_arr).length;
+                                    devices_arr[device_len] = {"deviceNum": device};
 
                                     alert("successfully added new device");
                                 }else{
@@ -245,8 +251,8 @@
             }
 
             function deviceExist(device){
-                for(i in devices ){
-                    if(devices[i].deviceNum == device){
+                for(i in devices_arr){
+                    if(devices_arr[i].deviceNum == device){
                         return true;
                     }
                 }
@@ -262,6 +268,22 @@
                 }
 
                 return false;
+            }
+
+            function removeDeviceFromArr(device){
+                for(i in devices_arr){
+                    if(devices_arr[i].deviceNum == device){
+                        delete devices_arr[i]; 
+                    }
+                }
+            }
+
+            function removeUsersFromArr(email, device){
+                for(i in users){
+                    if(users[i].email == email && users[i].deviceNum == device){
+                        delete users[i]; 
+                    }
+                }
             }
         </script>
     </body>
