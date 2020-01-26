@@ -21,9 +21,11 @@ body{
 
 table {
     border-collapse: collapse;
-    margin-top: 50px;
+    margin-top: 10px;
+    /* height: 10px;    
+    overflow-y: auto;    */
   }
-  
+
 th, td {
     text-align: center;
     padding: 10px 20px;
