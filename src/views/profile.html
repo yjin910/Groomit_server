@@ -103,29 +103,29 @@
 
 			if (!uuid_reg.test(uuid)){
 				alert("Please check your device number again");
-			}
-
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', '/profile/checkDevice?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
-            xhr.onreadystatechange = function() { // 요청에 대한 콜백
-                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                    if (xhr.status === 200 || xhr.status === 201) {
-						overlapping_dev = JSON.parse(xhr.responseText);
-						if(overlapping_dev.length == 0){
-							var xhr2 = new XMLHttpRequest();
-							xhr2.open('POST', '/profile/addDevice?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
-							xhr2.send();
-							document.getElementById('uuid').innerText = '';
-							alert("Successfully added new device");
-						}else{
-							alert("Device already exist!");
+			}else{
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', '/profile/checkDevice?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
+				xhr.onreadystatechange = function() { // 요청에 대한 콜백
+					if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+						if (xhr.status === 200 || xhr.status === 201) {
+							overlapping_dev = JSON.parse(xhr.responseText);
+							if(overlapping_dev.length == 0){
+								var xhr2 = new XMLHttpRequest();
+								xhr2.open('POST', '/profile/addDevice?u=' + uuid + '&email=' + email); // 메소드와 주소 설정
+								xhr2.send();
+								document.getElementById('uuid').innerText = '';
+								alert("Successfully added new device");
+							}else{
+								alert("Device already exist!");
+							}
+						} else {
+							console.error(xhr.responseText);
 						}
-                    } else {
-                        console.error(xhr.responseText);
-                    }
-				}
-			};
-            xhr.send();
+					}
+				};
+				xhr.send();
+			}
 		}
 
 		function signout(){
