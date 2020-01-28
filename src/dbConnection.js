@@ -16,6 +16,30 @@ var pool = mysql.createPool({
     connectionLimit: 100
 });
 
+exports.isAdmin = function(res, username){
+    var queryString = `SELECT * FROM admin WHERE email = '${username}'`;
+
+    pool.getConnection(function (err, conn) {
+        if (err) {
+            res.send(err);
+        } else {
+            conn.query(queryString, function (err, result, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    if(result.length == 0){
+                        res.redirect('/main');
+                    }else{
+                        res.redirect('/memberList');
+                    }
+                }
+            });
+
+            conn.release();
+        }
+    });
+}
+
 exports.addOwner = function(email, deviceNum) {
     var queryString = "INSERT INTO device_owner (email, deviceNum) VALUES(?, ?)";
     var params = [email, deviceNum];
@@ -33,8 +57,6 @@ exports.deleteOwner = function(res, email, deviceNum) {
 
 exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
-    // TODO select * from measurement where deviceNum = 18 and time >= '2019-08-23 01:00:00';
-    // var params = [deviceNum, type, value, time];
 
     if (type) {
         if (type.length == 2) {
