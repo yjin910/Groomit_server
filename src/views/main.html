@@ -465,7 +465,6 @@
                 }        
             }
 
-            //TODO: graph 오류 고치기
             function getGgraph(labels, dataset_arr_g) {
                 var config_g = {
                     type: 'line',
@@ -675,12 +674,6 @@
 
 
             function changeGraph(device) {
-                //TODO: Temp!!
-                // if(device == "TechC000" || device == "TechC001"){
-                //     type_val = 'cth';
-                // }else{
-                //     type_val = 'gth';
-                // }
                 var regex_date = /^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})$/g;
                 uuid = device;
                 getGraphData(start, end);
