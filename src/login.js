@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   var username = req.cookies.username;
 
   if (username) {
-    res.redirect('/main');
+    dbcon.isAdmin(res, username);
   } else {
     res.render('login.html'); // (3)
   }
