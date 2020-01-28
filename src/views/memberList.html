@@ -4,6 +4,9 @@
     <head>
         <title>9room::Admin</title>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="../public/js/amazon-cognito-identity.min.js"></script>
+        <script src="../public/js/cookieProcess.js"></script>
+        <script src="../public/js/config.js"></script>
         <link rel="stylesheet" type="text/css" href="../public/css/memberList.css">
     </head>
     <body>
@@ -17,6 +20,7 @@
         <select id="devices">
             <option id="devices" value = undefined>-- select device --</option>
         </select>
+        <input type="image" class="member_info" src='../public/images/logout.png' onclick="logOut()"/>
         <button type="button" onclick="addRelation()">Insert</button>
         <button type="button" id="delete" onclick= "removeRelation()">Delete</button>
         <button type="button" onclick="addDevice()">Add Device</button>
@@ -28,7 +32,7 @@
             <a href="http://technonia.cafe24.com/" class="about">About Us</a>
         </footer>
         <script>
-            var users, devices_arr;
+            var users, devices_arr;         
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/memberList/getUsers'); // 메소드와 주소 설정
             xhr.onreadystatechange = function() { // 요청에 대한 콜백
@@ -44,6 +48,23 @@
                 }
             };
             xhr.send();
+
+            function logOut() {
+                var data = {
+                    UserPoolId: _config.cognito.userPoolId,
+                    ClientId: _config.cognito.clientId
+                };
+                var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+                var cognitoUser = userPool.getCurrentUser();
+                
+                console.log(userPool.getCurrentUser());
+                if (cognitoUser != null) {
+                    cognitoUser.signOut();
+                    deleteCookie('username');
+                    console.log("TRUE");
+                    window.location.href = '/login';
+                }
+            }
             
             function create_table(users){
                 var user_table = document.getElementById('user_table');
