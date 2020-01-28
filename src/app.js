@@ -46,6 +46,7 @@ app.use('/time', require('./time'));
 app.use('/getdata', require('./getdata'));
 app.use('/profile', require('./profile'));
 app.use('/main', require('./main'));
+app.use('/check', require('./check'));
 app.use('/register', require('./register'));
 app.use('/memberList', require('./memberList'));
 app.use('/memberProfile', require('./memberProfile'));
