@@ -82,7 +82,8 @@
                 if (xhr.readyState === xhr.DONE) {
                     if (xhr.status === 200 || xhr.status === 201) {
                         console.log(xhr.responseText);
-                        window.location.href = '/main';
+                        window.location.href = '/check?username='+username;
+                        // checkUser(username);
                     } else {
                         console.error(xhr.responseText);
                     }
@@ -91,6 +92,12 @@
             var str = '/login?username=' + username;
             xhr.open('POST', str);
             xhr.send();
+        }
+
+        function checkUser(username){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/check?username=' + username);
+            xhr.send();   
         }
 
         function resetPw() {
