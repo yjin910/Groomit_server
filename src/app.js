@@ -35,10 +35,6 @@ app.get('/successRegister', (req, res) => {
     res.render('successRegister.html');
 });
 
-// app.get('/upload', function(req, res){
-//     res.render('upload');
-// });
-
 // add routers
 app.use('/login', require('./login'));
 app.use('/graph', require('./graph'));
@@ -55,10 +51,8 @@ app.use('/register', require('./register'));
 app.use('/memberList', require('./memberList'));
 app.use('/memberProfile', require('./memberProfile'));
 app.use('/porest_leaf', require('./porest_leaf'));
-//app.use('/users', require('./users'));
 app.use('/upload', require('./upload'));
-app.use('/temp', require('./temp'));
-//app.use('/users', express.static('uploads'));
+
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
