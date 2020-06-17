@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+html
+  head 
+    style
+      include ../public/css/results.css
+    meta(charset='utf-8')
+    title Porest_leaf::results
+  body
+  path
+    ul
+      each topic in topics
+        if(path === undefined)
+          li
+            a(href="/results/" + topic)= topic
+        else
+          li
+            a(href="/results/" + path + "/" + topic)= topic
+      if(prev !== undefined)  
+        li
+          a(href="/results/" + prev)= "Go back"
+
+    article
+      h2= titlie
+      if(image !== undefined)
+        img(src=image)
+      else if (description !== undefined)
+        h4= description

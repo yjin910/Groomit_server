@@ -25,7 +25,6 @@ app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'views')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-
 // Redirect to main
 app.get('/', (req, res) => {
     res.redirect('/main');

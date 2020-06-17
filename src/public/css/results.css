@@ -1,0 +1,9 @@
+li {
+    padding: 10px 0px 10px 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #efefef;
+}
+
+li:last-child {
+    border-bottom: 0px;
+}
