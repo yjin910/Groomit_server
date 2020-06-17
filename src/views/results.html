@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Porest_leaf::results</title>
+    <meta charset="utf-8">
+
+    <!-- Javascript SDKs-->
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="../public/js/amazon-cognito-auth.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
+    <script src="../public/js/amazon-cognito-identity.min.js"></script>
+    <script src="../public/js/config.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Didact+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="public/css/login.css">
+
+</head>
+
+<body class="body">
+    <table style="width:100%">
+      <tr>
+        <td>Pic</td>
+        <td>Pic</td>
+        <td>Pic</td>
+      </tr>
+      <tr>
+        <td>name</td>
+        <td>name</td>
+        <td>name</td>
+      </tr>
+      <tr>
+        <td>Pic</td>
+        <td>Pic</td>
+        <td>Pic</td>
+      </tr>
+      <tr>
+        <td>name</td>
+        <td>name</td>
+        <td>name</td>
+      </tr>
+      <tr>
+        <td>Pic</td>
+        <td>Pic</td>
+        <td>Pic</td>
+      </tr>
+      <tr>
+        <td>name</td>
+        <td>name</td>
+        <td>name</td>
+      </tr>
+    </table>
+
+    <script>
+        function sendRequestForResults(camNum) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === xhr.DONE) {
+                    if (xhr.status === 200 || xhr.status === 201) {
+                        console.log(xhr.responseText);
+                        window.location.href = '/results/c?=' + camNum;
+                        // checkUser(username);
+                    } else {
+                        console.error(xhr.responseText);
+                    }
+                }
+            };
+            var str = '/login?username=' + username;
+            xhr.open('POST', str);
+            xhr.send();
+        }
+    </script>
+</body>
+
+</html>
