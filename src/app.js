@@ -52,6 +52,7 @@ app.use('/memberList', require('./memberList'));
 app.use('/memberProfile', require('./memberProfile'));
 app.use('/porest_leaf', require('./porest_leaf'));
 app.use('/upload', require('./upload'));
+app.use('/results', require('./results'));
 
 
 // Catch 404 and forward to error handler
