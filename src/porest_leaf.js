@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var fs = require("fs");
-var LOG_PATH = 'cap_data'
+var LOG_PATH = 'src/public/cap_data'
 
 router.get('/', (req, res) => {
     res.send("successfully got!");
