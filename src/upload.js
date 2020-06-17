@@ -30,11 +30,6 @@ let upload = multer({
     storage: storage
 })
 
-// 뷰 페이지 경로
-router.get('/show', function(req, res, next) {
-    res.render("board")
-});
-
 // 2. 파일 업로드 처리
 router.post('/create', upload.single("imgFile"), function(req, res, next) {
     // 3. 파일 객체
