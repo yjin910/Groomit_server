@@ -5,6 +5,10 @@ var router = express.Router();
 var fs = require("fs");
 var LOG_PATH = 'cap_data'
 
+router.get('/', (req, res) => {
+    res.send("successfully got!");
+});
+
 router.post('/', (req, res) => {
     try{
         var cam_no = req.body.c;
