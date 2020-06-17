@@ -7,6 +7,9 @@ html
     title Porest_leaf::results
   body
   path
+    image 
+      if(image !== undefined)
+        img(src=image)
     ul
       each topic in topics
         if(path === undefined)
@@ -20,8 +23,5 @@ html
           a(href="/results/" + prev)= "Go back"
 
     article
-      h2= titlie
-      if(image !== undefined)
-        img(src=image)
-      else if (description !== undefined)
+      if (description !== undefined)
         h4= description
