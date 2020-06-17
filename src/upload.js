@@ -1,10 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const multer = require("multer");
+var fs = require("fs");
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    var camNum = req.body.camNum;
+    var path = 'cap_data/' + camNum + '/jpeg/';
+      
+    if (!fs.existsSync("cap_data/")){
+        fs.mkdirSync(path);
+    }
+    if (!fs.existsSync("cap_data/" + camNum)){
+        fs.mkdirSync(path);
+    }
+    if (!fs.existsSync(path)){
+        fs.mkdirSync(path);
+    }
+    cb(null, path)
+  },
+  filename: function (req, file, cb) {
+      console.log(file);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.originalname)
+  }
+})
 
 // 1. multer 미들웨어 등록
 let upload = multer({
-    dest: "cap_data/jpeg/"
+    storage: storage
 })
 
 // 뷰 페이지 경로
@@ -15,7 +39,7 @@ router.get('/show', function(req, res, next) {
 // 2. 파일 업로드 처리
 router.post('/create', upload.single("imgFile"), function(req, res, next) {
     // 3. 파일 객체
-    let file = req.file
+    let file = req.file;
 
     // 4. 파일 정보
     let result = {

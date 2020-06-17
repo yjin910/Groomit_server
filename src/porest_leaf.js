@@ -5,13 +5,13 @@ var router = express.Router();
 var fs = require("fs");
 var LOG_PATH = 'cap_data'
 
-router.get('/', (req, res) => {
+router.post('/', (req, res) => {
     try{
-        var cam_no = req.query.c;
-        var time = req.query.t;
-        var info = req.query.i;
-        var file_name = req.query.fn;
-        var filepath = LOG_PATH + '/' + cam_no;
+        var cam_no = req.body.c;
+        var time = req.body.t;
+        var info = req.body.i;
+        var file_name = req.body.fn;
+        var filepath = LOG_PATH + '/' + cam_no + '/' + cam_no;
 
         var req_json_obj = {
             'date' : time,
@@ -21,11 +21,14 @@ router.get('/', (req, res) => {
         if (!fs.existsSync(LOG_PATH)){
             fs.mkdirSync(LOG_PATH);
         }
+        
+        if (!fs.existsSync(LOG_PATH + '/' + cam_no)){
+            fs.mkdirSync(LOG_PATH + '/' + cam_no);
+        }
+            
 
         //TODO: should check if undefined exist 
         fs.readFile(filepath , 'utf8', function(err, data){
-            console.log(req_json_obj);
-
             // if file does not exists
             if (err) {
                 var init_json = {};
