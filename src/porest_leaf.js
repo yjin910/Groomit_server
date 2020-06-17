@@ -35,8 +35,6 @@ router.post('/', (req, res) => {
                 init_json['num'] = '1';
                 init_json['data'] = [req_json_obj];
 
-                console.log(init_json);
-
                 fs.writeFile(filepath, JSON.stringify(init_json), function(err) {
                     if(err) throw err;
                     console.log("Created a new file");
