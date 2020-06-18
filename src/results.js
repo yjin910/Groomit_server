@@ -13,6 +13,8 @@ router.get('/', (req, res) => {
         if(err){
             console.log(err);
             res.send(err);
+
+            return;
         }else{
             res.render('results.pug', {topics: files});
         }
@@ -27,12 +29,16 @@ router.get('/:id', (req, res) => {
         if(err){
             console.log(err);
             res.send(err);
+
+            return;
         }
 
         fs.readdir(path.join(__dirname, cap_path, id), (err, newFiles) => {
             if(err){
                 console.log(err);
                 res.send(err);
+
+                return;
             }else{
                 res.render('results.pug', {topics: newFiles, prev: "", path: id});
             }
@@ -50,6 +56,8 @@ router.get('/:id/:id2', (req, res) => {
         if(err){
             console.log(err);
             res.send(err);
+
+            return;
         }
 
         var stats = fs.statSync(path.join(__dirname, cap_path, id2));
@@ -59,6 +67,8 @@ router.get('/:id/:id2', (req, res) => {
                 if(err){
                     console.log(err);
                     res.send(err);
+
+                    return;
                 }else{
                     res.render('results.pug', {topics: newFiles, prev: "", path: id + "/" + id2});
                 }
@@ -68,9 +78,10 @@ router.get('/:id/:id2', (req, res) => {
                 if(err){
                     console.log(err);
                     res.send(err);
+
+                    return;
                 }
-    
-                res.render('results.pug', {topics: files, titles: id, description: data, prev: id + "/", path: id + "/"});
+                res.render('results.pug', {topics: files, titles: id, description: data, prev: id , path: id});
             });
         }
     });
@@ -87,11 +98,15 @@ router.get('/:id/:id2/:cap', (req, res) => {
         if(err){
             console.log(err);
             res.send(err);
+
+            return;
         }
         fs.readFile(path.join(__dirname, cap_path, cap), (err, data) => {
                 if(err){
                     console.log(err);
                     res.send(err);
+
+                    return;
                 }
 
                 var image_path = '/' + cap_path + '/' + cap;

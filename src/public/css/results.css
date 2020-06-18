@@ -1,3 +1,8 @@
+body {
+    width: 80%;
+    margin: auto;
+}
+
 li {
     padding: 10px 0px 10px 5px;
     margin-bottom: 5px;
@@ -6,4 +11,9 @@ li {
 
 li:last-child {
     border-bottom: 0px;
+}
+
+#graph {
+    margin: auto;
+    display: none;
 }

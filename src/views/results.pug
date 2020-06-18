@@ -3,13 +3,16 @@ html
   head 
     style
       include ../public/css/results.css
+    
     meta(charset='utf-8')
     title Porest_leaf::results
+    script(src="https://www.chartjs.org/dist/2.8.0/Chart.min.js")
   body
   path
     image 
       if(image !== undefined)
         img(src=image)
+
     ul
       each topic in topics
         if(path === undefined)
@@ -22,6 +25,85 @@ html
         li
           a(href="/results/" + prev)= "Go back"
 
+    div(class="graph")        
+      canvas(id="graph")
+
     article
       if (description !== undefined)
         h4= description
+
+
+script. 
+    window.onload = function () {
+      var str_description = "#{description}"
+
+      if(str_description){
+        var json_description = JSON.parse(str_description.replace(/&quot;/g,'"'));
+        document.getElementById("graph").style.display = "block";
+        
+        sortData(json_description);
+      }        
+    };
+
+    function sortData(discription){
+      var data = discription.data
+      var time = [];
+      var info = [];
+
+      for (var i in data){
+        time.push(data[i].date);
+        info.push(data[i].info);
+      }
+      showResultGraph(time, info);
+    }
+    function showResultGraph(time, info){
+      var ctx = document.getElementById("graph").getContext('2d');
+        var chart = new Chart(ctx,  {
+            type: 'line',
+            data: {
+                labels: time,
+                datasets: [{
+                    label: 'Number of people',
+                    data: info,
+                    borderColor: "rgba(75, 192, 192)",
+                    pointRadius: 1,
+                    fill: false,
+                    lineTension: 0.1,
+                    borderWidth: 1
+                }],
+                spanGaps: false
+            },
+            "rotateValues": "1",
+            options: {
+                legend:{
+                    display:false
+                },
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'CAP_DATA',
+                    fontSize: 20
+                },
+                xAxes: [{
+                    type: "time",
+                    time: {
+                        displayFormats: {
+                            hour: 'MMM D, HH:mm'
+                        },
+                        tooltipFormat: "ll HH:mm"
+                    },
+                    ticks: {
+                        maxRotation: 0
+                    },
+                    display: true,
+                }],
+                yAxes: [{
+                    type: 'linear',
+                    display: true,
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        });
+    }
