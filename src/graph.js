@@ -10,12 +10,4 @@ router.get('/', (req, res) => {
   console.log("Successfully sent data");
 });
 
-// router.get('/data', (req, res) => {
-//   console.log(req.query)
-//   var rawdata = fs.readFileSync(__dirname + '/../log/' + req.query.u);
-//   var jsonData = JSON.parse(rawdata);
-//   var strJsonData = JSON.stringify(jsonData);
-//   res.send(strJsonData);
-// });
-
 module.exports = router;
