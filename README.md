@@ -31,3 +31,12 @@ meauserment 테이블로 데이터를 추가할 때, 등록 되지 않은 데이
 #### 2. validate_deviceOwner
 
 device_owner 테이블 안에 중복 데이터가 생기지 않도록 확인하는 기능을 수행한다. 만약, 사용자가 이미 등록된 기기를 다시 등록하려고 한다면, "Device already registered!" 라는 에러 메세지를 출력한다.
+
+## TODO
+
+1. sharing private files (mysql info & firebase key file)
+파이어베이스 키 파일 등을 private 디렉토리에 넣고 gitignore에 추가함. 이 파일들은 github에 올리지 않을 것이기 때문에, 다른 개발자들 역시 사본을 가지고 있거나, 혹은 공용 저장소 등에 올려두고 필요할 때 다운 받는 식으로 해야 할 듯 싶다.
+
+2. firebase subscribe
+현재는 무료 계정으로 사용을 하고 있기 때문에 허용된 리소스 사용 가능량이 제한되어 있다. 따라서, 실제로 앱을 publish하기 전에는 파이어베이스 서비스 구매를 해야 할 수도 있을 것이다.
+아니면, 테크노니아 계정이나 다른 공식 계정으로 서비스를 사용하는 것이 옳을 것 같다.
