@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
         if (!fs.existsSync(LOG_PATH + '/' + cam_no)){
             fs.mkdirSync(LOG_PATH + '/' + cam_no);
         }
-            
+
 
         //TODO: should check if undefined exist 
         fs.readFile(filepath , 'utf8', function(err, data){

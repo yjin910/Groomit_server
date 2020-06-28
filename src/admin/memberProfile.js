@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var dbcon = require('./dbConnection');
+var dbcon = require('../dbConnection');
 
 router.get('/', (req, res) => {
     console.log(req.query.email);
