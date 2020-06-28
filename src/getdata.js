@@ -7,8 +7,8 @@ var dbcon = require('./dbConnection');
 
 router.get('/', (req, res) => {
     try {
-        var device_cat = req.query.c;
-        var device_uid = req.query.u;
+        var device_cat = req.query.c;  // device category
+        var device_uid = req.query.u;  // device uuid
 
         dbcon.getData(res, device_uid, device_cat);
     } catch (e) {

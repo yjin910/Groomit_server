@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var dbcon = require('./dbConnection');
+var dbcon = require('../dbConnection');
 var moment = require('moment');
 
 router.get('/', (req, res) => {
@@ -12,12 +12,12 @@ router.get('/', (req, res) => {
 
         //get datas from req
         var device_uid = req.query.u;
-        var c_value = req.query.c;
+        var g_value = req.query.g;
         var time_val = s2;
         var seq = req.query.s;
 
-        if (c_value) {
-            dbcon.updateData(res, device_uid, "c", c_value, time_val);
+        if (g_value) {
+            dbcon.updateData(res, device_uid, "g", g_value, time_val);
             res.send("success");
         } else {
             res.send('Please provide suitable parameters');

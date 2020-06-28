@@ -7,14 +7,8 @@ const mysql = require('mysql');
  *
  * @type {Pool} the connection pool.
  */
-var pool = mysql.createPool({
-    host: 'groomdb57ywyj.c2rirrernrhc.ap-northeast-2.rds.amazonaws.com',
-    port: 3306,
-    user: 'admin',
-    password: 'sung0429',
-    database: 'groomdata',
-    connectionLimit: 100
-});
+var pool = mysql.createPool(require('../private/mysql_info.json'));
+
 
 exports.isAdmin = function(res, username){
     var queryString = `SELECT * FROM admin WHERE email = '${username}'`;
@@ -45,49 +39,45 @@ exports.addOwner = function(email, deviceNum) {
     var params = [email, deviceNum];
 
     var success_msg = "Successfully added new owner";
-    executeQuery_withParams_NoRespond(params, queryString, success_msg);
+    executeQuery_withParams_noResponse(params, queryString, success_msg);
 }
 
 exports.deleteOwner = function(res, email, deviceNum) {
     var queryString = `call deleteDeviceFromOwner('${email}', '${deviceNum}')`;
     var success_msg = "Successfully deleted the owner";
 
-    executeQuery_noRespond(res, queryString, success_msg);
+    executeQuery_noResponse(queryString, success_msg);
 }
 
 exports.sendGraphPage = (res, deviceNum, type) => {
     var queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
 
     if (type) {
-        if (type.length == 2) {
-            if (!type.includes('t')) {
-                queryString += ` AND type != 't'`
-            } else if (!type.includes('h')) {
-                queryString += ` AND type != 'h'`
-            } else if (!type.includes('g')) {
-                queryString += ` AND type != 'g'`
-            } else if (!type.includes('c')) {
-                queryString += ` AND type != 'c'`
-            }
+        if (type.length > 1) {
+            if (!type.includes('t')) queryString += ` AND type != 't'`
+            if (!type.includes('h')) queryString += ` AND type != 'h'`
+            if (!type.includes('g')) queryString += ` AND type != 'g'`
+            if (!type.includes('c')) queryString += ` AND type != 'c'`
+
         } else if (type.length == 1) {
+            // The main reason that I did not use break for each case is becasue that all valid cases do same thing
             switch (type) {
                 case 't':
-                    queryString += ` AND type = 't'`
-                    break;
                 case 'h':
-                    queryString += ` AND type = 'h'`
-                    break;
                 case 'g':
-                    queryString += ` AND type = 'g'`
-                    break;
                 case 'c':
-                    queryString += ` AND type = 'c'`
+                    queryString += ` AND type = '${type}'`
                     break;
                 default:
                     console.log('Invalid type: ', type);
             }
         }
+    } else {
+        res.send('Invalid category! Please recheck the category!');
+        return;
     }
+
+    console.log(queryString);
 
     pool.getConnection(function(err, conn) {
         if (err) {
@@ -117,56 +107,7 @@ exports.getData = (res, deviceNum, start, end) => {
 
     executeQuery(res, queryString);
 }
-// exports.getData = (res, deviceNum, type, start, end) => {
-//     var queryString;
 
-//     if (start && end) {
-//         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time BETWEEN "${start}" AND "${end}"`;
-//     } else {
-//         queryString = `SELECT * from measurement WHERE deviceNum = "${deviceNum}" AND time > DATE_SUB(NOW(), INTERVAL 14 HOUR)`;
-//     }
-
-//     // var params = [deviceNum, type, value, time];
-//     console.log(queryString);
-//     if (type) {
-//         if (type.length == 2) {
-//             if (!type.includes('t')) {
-//                 queryString += ` AND type != 't'`
-//             } else if (!type.includes('h')) {
-//                 queryString += ` AND type != 'h'`
-//             } else if (!type.includes('g')) {
-//                 queryString += ` AND type != 'g'`
-//             }else if (!type.includes('c')) {
-//                 queryString += ` AND type != 'c'`
-//             }
-//         } else if (type.length == 1) {
-//             switch (type) {
-//                 case 't':
-//                     queryString += ` AND type = 't'`
-//                     break;
-//                 case 'c':
-//                     queryString += ` AND type = 'c'`
-//                     break;
-//                 case 'h':
-//                     queryString += ` AND type = 'h'`
-//                     break;
-//                 case 'g':
-//                     queryString += ` AND type = 'g'`
-//                     break;
-//                 default:
-//                     console.log('Invalid type: ', type);
-//             }
-//         }
-//     }
-
-//     executeQuery(res, queryString);
-// }
-
-// exports.getRecentData = function(res, deviceNum){
-//     var queryString = `SELECT * FROM recent_value WHERE deviceNum = '${deviceNum}'`;
-    
-//     executeQuery(res, queryString);
-// }
 
 exports.updateData = function(res, deviceNum, type, value, time) {
     var queryString = "";
@@ -189,7 +130,7 @@ exports.updateData = function(res, deviceNum, type, value, time) {
             queryString = null
     }
 
-    if (queryString) executeQuery_noRespond(res, queryString, success_msg);
+    if (queryString) executeQuery_noResponse(queryString, success_msg);
 }
 
 exports.getDeviceType = function(res, uuid){
@@ -208,28 +149,28 @@ exports.addDevice = function(email, deviceNum) {
     var params = [deviceNum, email];
     var success_msg = "Successfully added new device";
 
-    executeQuery_withParams_NoRespond(params, queryString, success_msg);
+    executeQuery_withParams_noResponse(params, queryString, success_msg);
 }
 
 exports.addDeviceType = function(res, deviceNum, type){
     var queryString = `INSERT INTO device_sensors (deviceNum, sensors) VALUES ("${deviceNum}", "${type}")`;
     var success_msg = "Successfully added new device's device type";
     
-    executeQuery_noRespond(res, queryString, success_msg);
+    executeQuery_noResponse(queryString, success_msg);
 }
 
 exports.deleteDeviceRelation = function(res, deviceNum){
     var querString = `call deleteDeviceOwner('${deviceNum}')`;
     var success_msg = "Successfully deleted the device";
     
-    executeQuery_noRespond(res, querString, success_msg);
+    executeQuery_noResponse(querString, success_msg);
 }
 
 exports.deleteDeviceType = function(res, deviceNum){
     var querString = `call deleteDeviceSensors('${deviceNum}')`
     var success_msg = "Successfully deleted device's device type";
     
-    executeQuery_noRespond(res, querString, success_msg);
+    executeQuery_noResponse(querString, success_msg);
 }
 
 exports.getUserProfile = (res, email) => {
@@ -288,14 +229,14 @@ exports.deleteMeasurement = function(res, deviceNum){
     var querString = `call deleteMeasurement('${deviceNum}')`;
     var success_msg = "Successfully deleted device's measurement values";
 
-    executeQuery_noRespond(res, querString, success_msg);
+    executeQuery_noResponse(querString, success_msg);
 }
 
 exports.deleteRecentValue = function(res, deviceNum){
     var querString = `call deleteRecentValue('${deviceNum}')`;
     var success_msg = "Successfully deleted device's recent value";
 
-    executeQuery_noRespond(res, querString, success_msg);
+    executeQuery_noResponse(querString, success_msg);
 }
 
 exports.getDataOfRepresentiveDevice = (res, email, start, end) => {
@@ -330,16 +271,14 @@ var executeQuery = (res, queryString) => {
     });
 }
 
-var executeQuery_noRespond = (res, queryString, success_msg) => {
+var executeQuery_noResponse = (queryString, success_msg) => {
     pool.getConnection(function (err, conn) {
         if (err) {
             console.log(err);
-            // res.send(err);
         } else {
             conn.query(queryString, function (err, result, fields) {
                 if (err) {
                     console.log(err);
-                    // res.send('error');
                 } else {
                     console.log(success_msg);
                 }
@@ -350,7 +289,7 @@ var executeQuery_noRespond = (res, queryString, success_msg) => {
     });
 }
 
-var executeQuery_withParams_NoRespond = (params, queryString, success_msg) => {
+var executeQuery_withParams_noResponse = (params, queryString, success_msg) => {
     pool.getConnection(function (err, conn) {
         if (err) {
             console.log(err);
