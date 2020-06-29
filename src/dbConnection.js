@@ -42,7 +42,7 @@ exports.addOwner = function(email, deviceNum) {
     executeQuery_withParams_noResponse(params, queryString, success_msg);
 }
 
-exports.deleteOwner = function(res, email, deviceNum) {
+exports.deleteOwner = function(email, deviceNum) {
     var queryString = `call deleteDeviceFromOwner('${email}', '${deviceNum}')`;
     var success_msg = "Successfully deleted the owner";
 
@@ -109,7 +109,7 @@ exports.getData = (res, deviceNum, start, end) => {
 }
 
 
-exports.updateData = function(res, deviceNum, type, value, time) {
+exports.updateData = function(deviceNum, type, value, time) {
     var queryString = "";
     var success_msg = "Successfully added new data"
 
@@ -152,21 +152,21 @@ exports.addDevice = function(email, deviceNum) {
     executeQuery_withParams_noResponse(params, queryString, success_msg);
 }
 
-exports.addDeviceType = function(res, deviceNum, type){
+exports.addDeviceType = function(deviceNum, type){
     var queryString = `INSERT INTO device_sensors (deviceNum, sensors) VALUES ("${deviceNum}", "${type}")`;
     var success_msg = "Successfully added new device's device type";
     
     executeQuery_noResponse(queryString, success_msg);
 }
 
-exports.deleteDeviceRelation = function(res, deviceNum){
+exports.deleteDeviceRelation = function(deviceNum){
     var querString = `call deleteDeviceOwner('${deviceNum}')`;
     var success_msg = "Successfully deleted the device";
     
     executeQuery_noResponse(querString, success_msg);
 }
 
-exports.deleteDeviceType = function(res, deviceNum){
+exports.deleteDeviceType = function(deviceNum){
     var querString = `call deleteDeviceSensors('${deviceNum}')`
     var success_msg = "Successfully deleted device's device type";
     
@@ -225,14 +225,14 @@ exports.getDateLimit = function(res, uuid, start, end) {
     executeQuery(res, queryString);
 }
 
-exports.deleteMeasurement = function(res, deviceNum){
+exports.deleteMeasurement = function(deviceNum){
     var querString = `call deleteMeasurement('${deviceNum}')`;
     var success_msg = "Successfully deleted device's measurement values";
 
     executeQuery_noResponse(querString, success_msg);
 }
 
-exports.deleteRecentValue = function(res, deviceNum){
+exports.deleteRecentValue = function(deviceNum){
     var querString = `call deleteRecentValue('${deviceNum}')`;
     var success_msg = "Successfully deleted device's recent value";
 

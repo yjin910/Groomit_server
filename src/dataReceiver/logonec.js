@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
         var seq = req.query.s;
 
         if (c_value) {
-            dbcon.updateData(res, device_uid, "c", c_value, time_val);
+            dbcon.updateData(device_uid, "c", c_value, time_val);
             res.send("success");
         } else {
             res.send('Please provide suitable parameters');
