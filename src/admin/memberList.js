@@ -33,23 +33,26 @@ router.post('/removeRelation', (req, res) => {
     var u = req.query.u;
     var email = req.query.email;
 
-    dbcon.deleteOwner(res, email, u);
-})
+    dbcon.deleteOwner(email, u);
+    res.send('delete owner');
+});
 
 router.post('/addDevice', (req, res) => {
     var u = req.query.u;
     var type = req.query.type;
 
-    dbcon.addDeviceType(res, u, type);
+    dbcon.addDeviceType(u, type);
 })
 
 router.post('/deleteDevice', (req, res) => {
     var u = req.query.u;
 
-    dbcon.deleteDeviceType(res, u);
-    dbcon.deleteDeviceRelation(res, u);
-    dbcon.deleteMeasurement(res, u);
-    dbcon.deleteRecentValue(res, u);
+    dbcon.deleteDeviceType(u);
+    dbcon.deleteDeviceRelation(u);
+    dbcon.deleteMeasurement(u);
+    dbcon.deleteRecentValue(u);
+
+    res.send('delete device');
 })
 
 module.exports = router;
