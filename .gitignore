@@ -5,3 +5,6 @@ package-lock.json
 
 private
 private/*
+
+src/public/cap_data
+src/public/cap_data/*
