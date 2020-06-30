@@ -2,6 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
+var sendPushNotification = require('./firebase');
 
 //TODO
 var push_token = '';
