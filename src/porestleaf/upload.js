@@ -9,10 +9,10 @@ var storage = multer.diskStorage({
     var path = '../public/cap_data/' + camNum + '/jpeg/';
       
     if (!fs.existsSync("../public/cap_data/")){
-        fs.mkdirSync(path);
+        fs.mkdirSync("../public/cap_data/");
     }
     if (!fs.existsSync("../public/cap_data/" + camNum)){
-        fs.mkdirSync(path);
+        fs.mkdirSync("../public/cap_data/" + camNum);
     }
     if (!fs.existsSync(path)){
         fs.mkdirSync(path);
