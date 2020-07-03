@@ -6,7 +6,7 @@ var fs = require("fs");
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     var camNum = req.body.camNum;
-    var basePath = './public/cap_data/'
+    var basePath = 'src/public/cap_data/'
     var camPath = `${basePath}${camNum}`;
     var path = `${camPath}/jpeg/`  //'../public/cap_data/' + camNum + '/jpeg/';
 
