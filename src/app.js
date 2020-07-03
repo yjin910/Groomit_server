@@ -50,9 +50,9 @@ app.use('/logoneth', require('./dataReceiver/logoneth'));
 app.use('/logonecth', require('./dataReceiver/logonecth'));
 
 // porestleaf/*
-app.use('/porest_leaf', require('./porest_leaf'));
-app.use('/upload', require('./upload'));
-app.use('/results', require('./results'));
+app.use('/porest_leaf', require('./porestleaf/porest_leaf'));
+app.use('/upload', require('./porestleaf/upload'));
+app.use('/results', require('./porestleaf/results'));
 
 // admin/*
 app.use('/memberList', require('./admin/memberList'));
