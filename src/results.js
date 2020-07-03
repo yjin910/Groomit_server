@@ -1,12 +1,12 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
-var dbcon = require('../dbConnection');
+var dbcon = require('./dbConnection');
 var fs = require('fs');
 var path = require('path');
 
 router.get('/', (req, res) => {
-    var cap_path = '../public/cap_data'
+    var cap_path = './public/cap_data'
     //console.log(__dirname, '../cap_path'));
 
     fs.readdir(path.join(__dirname, cap_path), (err, files) => {
@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    var cap_path = '../public/cap_data'
+    var cap_path = './public/cap_data'
     var id = req.params.id;
     
     fs.readdir(path.join(__dirname, cap_path), (err, files) => {
@@ -50,7 +50,7 @@ router.get('/:id/:id2', (req, res) => {
     var id = req.params.id;
     var id2 = req.params.id2;
 
-    var cap_path = '../public/cap_data/' + id;
+    var cap_path = './public/cap_data/' + id;
 
     fs.readdir(path.join(__dirname, cap_path), (err, files) => {
         if(err){
@@ -92,7 +92,7 @@ router.get('/:id/:id2/:cap', (req, res) => {
     var id2 = req.params.id2;
     var cap = req.params.cap;
 
-    var cap_path = '../public/cap_data/' + id + '/' + id2;
+    var cap_path = './public/cap_data/' + id + '/' + id2;
 
     fs.readdir(path.join(__dirname, cap_path), (err, files) => {
         if(err){

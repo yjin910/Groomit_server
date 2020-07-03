@@ -6,13 +6,15 @@ var fs = require("fs");
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     var camNum = req.body.camNum;
-    var path = '../public/cap_data/' + camNum + '/jpeg/';
-      
-    if (!fs.existsSync("../public/cap_data/")){
-        fs.mkdirSync("../public/cap_data/");
+    var basePath = './public/cap_data/'
+    var camPath = `${basePath}${camNum}`;
+    var path = `${camPath}/jpeg/`  //'../public/cap_data/' + camNum + '/jpeg/';
+
+    if (!fs.existsSync(basePath)){
+        fs.mkdirSync(basePath);
     }
-    if (!fs.existsSync("../public/cap_data/" + camNum)){
-        fs.mkdirSync("../public/cap_data/" + camNum);
+    if (!fs.existsSync(camPath)) {
+        fs.mkdirSync(camPath);
     }
     if (!fs.existsSync(path)){
         fs.mkdirSync(path);
