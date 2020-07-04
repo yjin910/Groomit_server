@@ -63,8 +63,8 @@ app.use('/check', require('./admin/check'));
 app.use('/time', require('./utils/time'));
 
 // spangi/*
-app.use('/spangiNotification', require('./spangi/gcm/pushNotificationRouter'));
-app.use('/spangi', require('./spangi/location'));
+app.use('/spangeNotification', require('./spange/gcm/pushNotificationRouter'));
+app.use('/spange', require('./spange/location'));
 
 app.use('/getdata', require('./getdata'));
 app.use('/profile', require('./profile'));
