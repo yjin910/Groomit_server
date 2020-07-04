@@ -13,7 +13,11 @@ router.get('/', (req, res) => {
     var title = 'TEST'
     var body = 'just a test message'
 
-    sendPushNotification(fcm_target_token, title, body);
+    //TODO location data
+    var latitude = '37.401782989502';
+    var longitude = '126.7320098877';
+
+    sendPushNotification(fcm_target_token, title, body, latitude, longitude);
     res.send('ok');
 });
 
@@ -33,7 +37,11 @@ router.post('/send', (req, res) => {
     var title = 'TEST'
     var body = 'just a test message'
 
-    sendPushNotification(fcm_target_token, title, body);
+    //TODO location data
+    var latitude = req.body.data.latitude;
+    var longitude = req.body.data.longitude;
+
+    sendPushNotification(fcm_target_token, title, body, latitude, longitude);
     res.send('ok');
 });
 

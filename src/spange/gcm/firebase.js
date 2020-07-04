@@ -13,13 +13,15 @@ admin.initializeApp({
  * @param {*} message_title 
  * @param {*} message_body 
  */
-const sendPushNotification = (token_str, message_title, message_body) => {
+const sendPushNotification = (token_str, message_title, message_body, latitude, longitude) => {
     var fcm_target_token = token_str;
     var fcm_message = {
         data: {
             title: message_title,
             body: message_body,
-            android_channel_id: 'gpangi_channel'
+            android_channel_id: 'gpangi_channel',
+            latitude: latitude,
+            longitude: longitude
         },
         android: {
             priority: 'high',
