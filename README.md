@@ -41,16 +41,10 @@ device_owner 테이블 안에 중복 데이터가 생기지 않도록 확인하�
 현재는 무료 계정으로 사용을 하고 있기 때문에 허용된 리소스 사용 가능량이 제한되어 있다. 따라서, 실제로 앱을 publish하기 전에는 파이어베이스 서비스 구매를 해야 할 수도 있을 것이다.
 아니면, 테크노니아 계정이나 다른 공식 계정으로 서비스를 사용하는 것이 옳을 것 같다.
 
-3. Database Stored Procedure test & apply
-
-    1) registerDeviceID4SPANGE(user_id, device_id)  ->  주어진 유저 아이디와 기기 아이디를 spange_device_info 테이블에 추가
-
-    2) updatePushNotificationToken(previous_token, new_token)  ->  gcm_info 테이블에서 previous_token을 new_token으로 업데이트
-
-    3) registerGCMTokenWithDeviceID(user_id, token_str)  ->  주어진 유저 아이디와 토큰이 등록되어 있는지 보고, 안되어 있으면 gcm_info 테이블에 추가
-
-    위의 3개의 프로시져들을 테스트 해보고, dbConnection.js에 이들을 사용하는 메소드를 추가하고 서버에서 디비에 정보를 저장하고 만들기!
-
-4. preferred_service 테이블
+3. preferred_service 테이블
 
 각 사용자가 가장 선호하는 서비스를 저장할 테이블인 preferred_service 테이블을 만들었다. 서버가 이 테이블에 데이터를 저장하고 사용하게 만들자!
+
+4. dbConnection functions
+
+dbConnection.js 파일의 새로운 함수들을 서버에 적용하기!
