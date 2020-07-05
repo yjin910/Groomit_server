@@ -2,6 +2,8 @@
 
 var express = require('express');
 var router = express.Router();
+var dbConn = require('../../dbConnection');
+
 var sendPushNotification = require('./firebase');
 
 //TODO
@@ -25,8 +27,9 @@ router.post('/', (req, res) => {
     var fcm_target_token = req.query.token;
     var device_id = req.query.deviceID;
 
-    //TODO
+    //TODO user_id, device_id
     push_token = fcm_target_token;
+    //dbConn.registerDevice_SPANGE(res, user_id, device_id);
 
     res.send('ok');
 });
