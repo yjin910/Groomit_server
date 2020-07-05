@@ -251,6 +251,17 @@ exports.getDataOfRepresentiveDevice = (res, email, start, end) => {
     executeQuery(res, queryString);
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//  Functions for SPANGE
+
+exports.getTokenByDeviceID_SPANGE = (res, deviceID) =>  executeQuery(res, `call getSPANGETokensByDeviceID('${deviceID}')`);
+exports.registerDevice_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerDeviceID4SPANGE('${userID}', '${deviceID}')`);
+exports.registerUser_SPANGE = (res, userID, token) => executeQuery(res, `call registerGCMTokenWithDeviceID('${userID}', '${token}')`);
+exports.updateGCMTokenByUserID_SPANGE = (res, userID, token) => executeQuery(res, `call updateGCMTokenByUserID('${userID}', '${token}')`)
+exports.updateGCMToken_SPANGE = (res, oldToken, newToken) => executeQuery(res, `call updatePushNotificationToken('${oldToken}', '${newToken}')`);
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 var executeQuery = (res, queryString) => {
     pool.getConnection(function (err, conn) {
