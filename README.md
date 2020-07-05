@@ -43,7 +43,7 @@ device_owner 테이블 안에 중복 데이터가 생기지 않도록 확인하�
 
 3. Database Stored Procedure test & apply
 
-    1) registerDeviceWithToken(token_str, device_id) -> 주어진 device_id를 가진 user id 목록을 spangi_device_info 테이블에서 가져온 뒤, 각 user_id에 대해서 gcm_info 테이블의 정보를 업데이트한다
+    1) registerDeviceID4SPANGE(user_id, device_id)  ->  주어진 유저 아이디와 기기 아이디를 spange_device_info 테이블에 추가
 
     2) updatePushNotificationToken(previous_token, new_token)  ->  gcm_info 테이블에서 previous_token을 new_token으로 업데이트
 
