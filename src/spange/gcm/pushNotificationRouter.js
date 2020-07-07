@@ -48,6 +48,13 @@ router.post('/registerDevice', (req, res) => {
     dbConn.registerDevice_SPANGE(res, user_id, device_id);
 });
 
+router.post('/registerUser', (req, res) => {
+    var user_id = req.query.userID;
+    var token = req.query.token;
+
+    dbConn.registerUser_SPANGE(res, user_id, token);
+});
+
 router.post('/send', (req, res) => {
     //TODO get data
     var fcm_target_token = push_token;
