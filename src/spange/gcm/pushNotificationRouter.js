@@ -12,8 +12,8 @@ var push_token = '';
 router.get('/', (req, res) => {
     //TODO get data
     var fcm_target_token = push_token;
-    var title = 'TEST'
-    var body = 'just a test message'
+    var title = 'SPANGE 긴급 구조 요청'
+    var body = '긴급 구조 요청 테스트'
 
     //TODO location data
     var latitude = '37.401782989502';
