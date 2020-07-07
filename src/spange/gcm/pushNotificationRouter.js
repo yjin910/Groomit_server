@@ -34,11 +34,25 @@ router.post('/', (req, res) => {
     res.send('ok');
 });
 
+router.post('/updateToken', (req, res) => {
+    var previous_token = req.query.previousToken;
+    var new_token = req.query.newToken;
+
+    dbConn.updateGCMToken_SPANGE(res, previous_token, new_token);
+});
+
+router.post('/registerDevice', (req, res) => {
+    var device_id = req.query.deviceID;
+    var user_id = req.query.userID;
+
+    dbConn.registerDevice_SPANGE(res, user_id, device_id);
+});
+
 router.post('/send', (req, res) => {
     //TODO get data
     var fcm_target_token = push_token;
-    var title = 'TEST'
-    var body = 'just a test message'
+    var title = 'SPANGE 긴급 구조 요청'
+    var body = '긴급 구조 요청이 전송되었습니다.'
 
     //TODO location data
     var latitude = req.body.data.latitude;

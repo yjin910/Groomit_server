@@ -19,7 +19,7 @@ const sendPushNotification = (token_str, message_title, message_body, latitude, 
         data: {
             title: message_title,
             body: message_body,
-            android_channel_id: 'gpangi_channel',
+            android_channel_id: 'spange_channel',
             latitude: latitude,
             longitude: longitude
         },
