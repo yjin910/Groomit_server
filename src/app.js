@@ -26,6 +26,34 @@ app.use(cookieParser());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 
+//--------------------------------------------------------------------
+// BodyParser for raw contents
+
+//TODO need to test these codes
+
+var rawBodySaver = function (req, res, buf, encoding) {
+    if (buf && buf.length) {
+        req.rawBody = buf.toString(encoding || 'utf8');
+    }
+}
+
+app.use(bodyParser.json({
+    verify: rawBodySaver
+}));
+app.use(bodyParser.urlencoded({
+    verify: rawBodySaver,
+    extended: true
+}));
+app.use(bodyParser.raw({
+    verify: rawBodySaver,
+    type: function () {
+        return true
+    }
+}));
+
+//--------------------------------------------------------------------
+
+
 // Redirect to main
 app.get('/', (req, res) => {
     res.redirect('/main');
