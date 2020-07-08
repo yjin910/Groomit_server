@@ -69,10 +69,13 @@ router.post('/send', (req, res) => {
     var body = '긴급 구조 요청이 전송되었습니다.'
 
     //TODO location data
-    var latitude = req.body.data.latitude;
-    var longitude = req.body.data.longitude;
+    var {latitude, longitude} = req.body.data;
+    var {api_code, partner_key, member_key, device_sn} = req.body.data;
 
-    sendPushNotification(fcm_target_token, title, body, latitude, longitude);
+    if (latitude == null) latitude = 0;
+    if (longitude == null) longitude = 0;
+
+    //sendPushNotification(fcm_target_token, title, body, latitude, longitude);
     res.send('ok');
 });
 
