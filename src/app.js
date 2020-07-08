@@ -53,6 +53,8 @@ app.use(bodyParser.raw({
 
 //--------------------------------------------------------------------
 // IP Blacklist for security
+//
+// Reference: <https://stackoverrun.com/ko/q/10543379>
 
 
 var expressDefend = require("express-defend");
