@@ -6,5 +6,7 @@ package-lock.json
 private
 private/*
 
+blacklist.txt
+
 src/public/cap_data
 src/public/cap_data/*
