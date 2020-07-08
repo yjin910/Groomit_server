@@ -52,7 +52,25 @@ app.use(bodyParser.raw({
 }));
 
 //--------------------------------------------------------------------
+// IP Blacklist for security
 
+
+var expressDefend = require("express-defend");
+var blacklist = require("express-blacklist");
+
+app.use(blacklist.blockRequests('blacklist.txt'));
+app.use(expressDefend.protect({ 
+    maxAttempts: 7, 
+    dropSuspiciousRequest: true, 
+    logFile: 'suspicious.log', 
+    onMaxAttemptsReached: function(ipAddress, url){
+        blacklist.addAddress(ipAddress);
+    }
+}));
+
+
+//--------------------------------------------------------------------
+// add routers
 
 // Redirect to main
 app.get('/', (req, res) => {
@@ -62,10 +80,6 @@ app.get('/', (req, res) => {
 app.get('/successRegister', (req, res) => {
     res.render('successRegister.html');
 });
-
-
-//--------------------------------------------------------------------
-// add routers
 
 // login/*
 app.use('/login', require('./login/login'));
