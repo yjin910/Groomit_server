@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     var longitude = '126.7320098877';
 
     //sendPushNotification(fcm_target_token, title, body, latitude, longitude);
-    dbConn.getTokenByDeviceID_SPANGE(res, 'test_device', latitude, longitude);
+    dbConn.getTokenByDeviceID_SPANGE(res, '61075', latitude, longitude);
 });
 
 router.post('/', (req, res) => {
