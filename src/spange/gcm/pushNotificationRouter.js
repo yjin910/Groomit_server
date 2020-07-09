@@ -4,33 +4,28 @@ var express = require('express');
 var router = express.Router();
 var dbConn = require('../../dbConnection');
 
-var sendPushNotification = require('./firebase');
+const API_CODE_SPACOSA_LOCATION = 'api.push.member.location';
 
-//TODO
-var push_token = '';
 
 router.get('/', (req, res) => {
-    //TODO get data
-    var fcm_target_token = push_token;
-    var title = 'SPANGE 긴급 구조 요청'
-    var body = '긴급 구조 요청 테스트'
-
     //TODO location data
     var latitude = '37.401782989502';
     var longitude = '126.7320098877';
 
-    sendPushNotification(fcm_target_token, title, body, latitude, longitude);
-    res.send('ok');
+    //sendPushNotification(fcm_target_token, title, body, latitude, longitude);
+    dbConn.getTokenByDeviceID_SPANGE(res, 'test_device', latitude, longitude);
 });
 
 router.post('/', (req, res) => {
     var fcm_target_token = req.query.token;
     var device_id = req.query.deviceID;
+    var user_id = 'app_test';
 
-    //TODO user_id, device_id
-    push_token = fcm_target_token;
-    //dbConn.registerDevice_SPANGE(res, user_id, device_id);
+    console.log('Test - device_id', device_id);
+    console.log('Test - push_token:', fcm_target_token);
 
+    dbConn.registerDevice_SPANGE(res, user_id, device_id);
+    dbConn.registerUser_SPANGE(res, user_id, fcm_target_token);
     res.send('ok');
 });
 
@@ -63,20 +58,16 @@ router.get('/send', (req, res) => {
 });
 
 router.post('/send', (req, res) => {
-    //TODO get data
-    var fcm_target_token = push_token;
-    var title = 'SPANGE 긴급 구조 요청'
-    var body = '긴급 구조 요청이 전송되었습니다.'
-
-    //TODO location data
     var {latitude, longitude} = req.body.data;
     var {api_code, partner_key, member_key, device_sn} = req.body.data;
 
+    if (api_code != API_CODE_SPACOSA_LOCATION) res.send('api_code mismatch!');
+
+    //TODO
     if (latitude == null) latitude = 0;
     if (longitude == null) longitude = 0;
 
-    //sendPushNotification(fcm_target_token, title, body, latitude, longitude);
-    res.send('ok');
+    dbConn.getTokenByDeviceID_SPANGE(res, device_sn, latitude, longitude);
 });
 
 module.exports = router;

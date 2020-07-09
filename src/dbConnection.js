@@ -1,6 +1,7 @@
 'use strict';
 
 const mysql = require('mysql');
+const sendPushNotification = require('./spange/gcm/firebase');
 
 /**
  * This variable creates the connection pool to control the database connections.
@@ -254,11 +255,44 @@ exports.getDataOfRepresentiveDevice = (res, email, start, end) => {
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //  Functions for SPANGE
 
-exports.getTokenByDeviceID_SPANGE = (res, deviceID) =>  executeQuery(res, `call getSPANGETokensByDeviceID('${deviceID}')`);
 exports.registerDevice_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerDeviceID4SPANGE('${userID}', '${deviceID}')`);
 exports.registerUser_SPANGE = (res, userID, token) => executeQuery(res, `call registerGCMTokenWithDeviceID('${userID}', '${token}')`);
 exports.updateGCMTokenByUserID_SPANGE = (res, userID, token) => executeQuery(res, `call updateGCMTokenByUserID('${userID}', '${token}')`)
 exports.updateGCMToken_SPANGE = (res, oldToken, newToken) => executeQuery(res, `call updatePushNotificationToken('${oldToken}', '${newToken}')`);
+
+
+exports.getTokenByDeviceID_SPANGE = (res, deviceID, latitude, longitude) => {
+    var queryString = `call getSPANGETokensByDeviceID('${deviceID}')`;
+    pool.getConnection((err, conn) => {
+        if (err) res.send(err);
+
+        conn.query(queryString, (err, result, fields) => {
+            if (err) res.send(err);
+
+            var title = 'SPANGE 긴급 구조 요청';
+            var body = '긴급 구조 요청 테스트';
+
+            var data = result[0];
+            var success = 0;
+            var total = data.length;
+
+            for (var i = 0; i < data.length; i += 1) {
+                try {
+                    var current_token = data[i].token;
+                    console.log(current_token);
+
+                    // send push notification
+                    sendPushNotification(current_token, title, body, latitude, longitude);
+                    success += 1;  // increase the success count
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+            res.send(`total=${total}, successs=${success}`);
+        });
+    });
+}
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
