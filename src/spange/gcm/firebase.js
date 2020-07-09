@@ -14,7 +14,9 @@ admin.initializeApp({
  * @param {*} message_body 
  */
 const sendPushNotification = (token_raw, message_title, message_body, latitude, longitude) => {
-    var fcm_target_token = `${token_raw}`;
+    var fcm_target_token = token_raw;
+    if (typeof fcm_target_token != 'string') fcm_target_token = `${token_raw}`;
+
     var fcm_message = {
         data: {
             title: message_title,
