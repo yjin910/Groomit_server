@@ -279,8 +279,6 @@ exports.getTokenByDeviceID_SPANGE = (res, deviceID, latitude, longitude) => {
             for (var i = 0; i < data.length; i += 1) {
                 try {
                     var current_token = data[i].token;
-                    console.log(current_token);
-		    console.log(typeof current_token);
 
                     // send push notification
                     sendPushNotification(current_token, title, body, latitude, longitude);
