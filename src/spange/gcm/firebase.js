@@ -9,19 +9,19 @@ admin.initializeApp({
 
 /**
  * The aim of this function is to send the push notification by using the firebase GCM
- * @param {*} token_str 
+ * @param {*} token_raw 
  * @param {*} message_title 
  * @param {*} message_body 
  */
-const sendPushNotification = (token_str, message_title, message_body, latitude, longitude) => {
-    var fcm_target_token = token_str;
+const sendPushNotification = (token_raw, message_title, message_body, latitude, longitude) => {
+    var fcm_target_token = `${token_raw}`;
     var fcm_message = {
         data: {
             title: message_title,
             body: message_body,
             android_channel_id: 'spange_channel',
-            latitude: latitude,
-            longitude: longitude
+            latitude: `${latitude}`,
+            longitude: `${longitude}`
         },
         android: {
             priority: 'high',
