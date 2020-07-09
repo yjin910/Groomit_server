@@ -25,7 +25,6 @@ router.post('/', (req, res) => {
     console.log('Test - push_token:', fcm_target_token);
 
     dbConn.registerUser_SPANGE(res, user_id, fcm_target_token);
-    res.send('ok');
 });
 
 router.post('/updateToken', (req, res) => {
