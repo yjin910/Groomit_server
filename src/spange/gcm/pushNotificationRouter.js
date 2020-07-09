@@ -24,7 +24,6 @@ router.post('/', (req, res) => {
     console.log('Test - device_id', device_id);
     console.log('Test - push_token:', fcm_target_token);
 
-    dbConn.registerDevice_SPANGE(res, user_id, device_id);
     dbConn.registerUser_SPANGE(res, user_id, fcm_target_token);
     res.send('ok');
 });
