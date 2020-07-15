@@ -33,6 +33,10 @@ router.post('/registerDevice', (req, res) => dbConn.registerDeviceID_SPANGE(res,
 
 router.post('/registerUser', (req, res) => dbConn.registerUser_SPANGE(res, req.query.userID, req.query.token) );
 
+
+//------------------------------------------------------------------------------------------------------------------------------------------------
+// Endpoints for Spacosa notification
+
 router.get('/send', (req, res) => {
     console.log('req.query', req.query);
     console.log('req.params', req.params);
@@ -54,5 +58,7 @@ router.post('/send', (req, res) => {
 
     dbConn.getTokenByDeviceID_SPANGE(res, device_sn, latitude, longitude);
 });
+
+//------------------------------------------------------------------------------------------------------------------------------------------------
 
 module.exports = router;
