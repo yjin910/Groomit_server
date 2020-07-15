@@ -261,7 +261,7 @@ exports.registerAdminUserForDevice_SPANGE = (res, userID, deviceID) => executeQu
 
 // Functions for insert and update data into MySQL tables for SPANGE service
 exports.registerDeviceID_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerDeviceID4SPANGE('${userID}', '${deviceID}')`);
-exports.registerUser_SPANGE = (res, userID, token) => executeQuery(res, `call registerGCMTokenWithDeviceID('${userID}', '${token}')`);
+exports.registerUser_SPANGE = (res, userID, token) => executeQuery(res, `call registerGCMTokenWithUserID('${userID}', '${token}')`);
 exports.updateGCMTokenByUserID_SPANGE = (res, userID, token) => executeQuery(res, `call updateGCMTokenByUserID('${userID}', '${token}')`)
 exports.updateGCMToken_SPANGE = (res, oldToken, newToken) => executeQuery(res, `call updatePushNotificationToken('${oldToken}', '${newToken}')`);
 
@@ -272,7 +272,13 @@ exports.getTokenByDeviceID_SPANGE = (res, deviceID, latitude, longitude) => {
         if (err) res.send(err);
 
         conn.query(queryString, (err, result, fields) => {
-            if (err) res.send(err);
+            if (err) {
+                if (err.sqlMessage)
+                    res.send(err.sqlMessage);
+                else
+                    res.send(err)
+                return;
+            }
 
             var title = 'SPANGE 긴급 구조 요청';
             var body = '긴급 구조 요청 테스트';
@@ -309,7 +315,12 @@ var executeQuery = (res, queryString) => {
             conn.query(queryString, function (err, result, fields) {
                 if (err) {
                     console.log(err);
-                    res.send(err);
+
+                    // check if error has an attribute called "sqlMessage"
+                    if (err.sqlMessage)
+                        res.send(err.sqlMessage);
+                    else
+                        res.send(err);
                 } else {
                     res.send(result);
                 }
@@ -351,7 +362,7 @@ var executeQuery_withParams_noResponse = (params, queryString, success_msg) => {
                         console.log(success_msg);
                     }
                 });
-            }else{
+            } else {
                 conn.query(queryString, function (err, result, fields) {
                     if (err) {
                         console.log(err);
