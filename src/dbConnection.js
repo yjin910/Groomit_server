@@ -255,7 +255,12 @@ exports.getDataOfRepresentiveDevice = (res, email, start, end) => {
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //  Functions for SPANGE
 
-exports.registerDevice_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerDeviceID4SPANGE('${userID}', '${deviceID}')`);
+// Functions for spange_device_admin_user table
+exports.registerDevice_SPANGE = (res, deviceID) => executeQuery(res, `call registerDevice_SPANGE('${deviceID}')`);
+exports.registerAdminUserForDevice_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerAdminUserForDevice_SPANGE('${deviceID}', '${userID}')`);
+
+// Functions for insert and update data into MySQL tables for SPANGE service
+exports.registerDeviceID_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerDeviceID4SPANGE('${userID}', '${deviceID}')`);
 exports.registerUser_SPANGE = (res, userID, token) => executeQuery(res, `call registerGCMTokenWithDeviceID('${userID}', '${token}')`);
 exports.updateGCMTokenByUserID_SPANGE = (res, userID, token) => executeQuery(res, `call updateGCMTokenByUserID('${userID}', '${token}')`)
 exports.updateGCMToken_SPANGE = (res, oldToken, newToken) => executeQuery(res, `call updatePushNotificationToken('${oldToken}', '${newToken}')`);
