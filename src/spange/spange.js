@@ -27,6 +27,10 @@ router.post('/', (req, res) => {
     dbConn.registerUser_SPANGE(res, user_id, fcm_target_token);
 });
 
+router.post('/registerNewDevice', (req, res) => dbConn.registerDevice_SPANGE(res, req.query.deviceID) );
+
+router.post('/registerAdminUserForDevice', (req, res) => dbConn.registerAdminUserForDevice_SPANGE(res, req.query.userID, req.query.deviceID) );
+
 router.post('/updateToken', (req, res) => {
     var previous_token = req.query.previousToken;
     var new_token = req.query.newToken;
