@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var dbConn = require('../../dbConnection');
+var dbConn = require('../dbConnection');
 
 const API_CODE_SPACOSA_LOCATION = 'api.push.member.location';
 
@@ -38,7 +38,7 @@ router.post('/registerDevice', (req, res) => {
     var device_id = req.query.deviceID;
     var user_id = req.query.userID;
 
-    dbConn.registerDevice_SPANGE(res, user_id, device_id);
+    dbConn.registerDeviceID_SPANGE(res, user_id, device_id);
 });
 
 router.post('/registerUser', (req, res) => {

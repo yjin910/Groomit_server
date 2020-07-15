@@ -106,10 +106,10 @@ app.use('/check', require('./admin/check'));
 // utils/*
 app.use('/time', require('./utils/time'));
 
-// spangi/*
-app.use('/spangeNotification', require('./spange/gcm/pushNotificationRouter'));
-app.use('/spange', require('./spange/location'));
+// spange/*
+app.use('/spangeNotification', require('./spange/spange'));
 
+// 9room service
 app.use('/getdata', require('./getdata'));
 app.use('/profile', require('./profile'));
 app.use('/main', require('./main'));
