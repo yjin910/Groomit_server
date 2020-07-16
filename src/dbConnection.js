@@ -280,8 +280,8 @@ exports.getTokenByDeviceID_SPANGE = (res, deviceID, latitude, longitude) => {
                 return;
             }
 
-            var title = 'SPANGE 긴급 구조 요청';
-            var body = '긴급 구조 요청 테스트';
+            var title = '긴급 알람 문자';
+            var body = '위급한 상황입니다. 위치를 확인해주세요.';
 
             var data = result[0];
             var success = 0;
