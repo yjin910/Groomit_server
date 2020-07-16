@@ -256,7 +256,7 @@ exports.getDataOfRepresentiveDevice = (res, email, start, end) => {
 //  Functions for SPANGE
 
 // Functions for spange_device_admin_user table
-exports.registerDevice_SPANGE = (res, deviceID) => executeQuery(res, `call registerDevice_SPANGE('${deviceID}')`);
+exports.registerDevice_SPANGE = (res, deviceID, memberKey) => executeQuery(res, `call registerDevice_SPANGE('${deviceID}', '${memberKey}')`);
 exports.registerAdminUserForDevice_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerAdminUserForDevice_SPANGE('${deviceID}', '${userID}')`);
 
 // Functions for insert and update data into MySQL tables for SPANGE service

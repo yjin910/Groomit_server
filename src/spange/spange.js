@@ -29,7 +29,7 @@ router.post('/registerAdminUserForDevice', (req, res) => dbConn.registerAdminUse
 
 router.post('/updateToken', (req, res) => dbConn.updateGCMToken_SPANGE(res, req.query.previousToken, req.query.newToken) );
 
-router.post('/registerDevice', (req, res) => dbConn.registerDeviceID_SPANGE(res, req.query.userID, req.query.deviceID) );
+router.post('/registerDevice', (req, res) => dbConn.registerDeviceID_SPANGE(res, req.query.userID, req.query.deviceID, req.query.member_key) );
 
 router.post('/registerUser', (req, res) => dbConn.registerUser_SPANGE(res, req.query.userID, req.query.token) );
 
