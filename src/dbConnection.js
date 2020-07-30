@@ -260,6 +260,7 @@ exports.registerDevice_SPANGE = (res, deviceID, memberKey) => executeQuery(res, 
 exports.registerAdminUserForDevice_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerAdminUserForDevice_SPANGE('${deviceID}', '${userID}')`);
 
 // Functions for insert and update data into MySQL tables for SPANGE service
+exports.acceptUser_SPANGE = (res, userID, deviceID) => executeQuery(res, `call acceptUser_SPANGE("${userID}", "${deviceID}")`);
 exports.registerDeviceID_SPANGE = (res, userID, deviceID) => executeQuery(res, `call registerDeviceID4SPANGE('${userID}', '${deviceID}')`);
 exports.registerUser_SPANGE = (res, userID, token) => executeQuery(res, `call registerGCMTokenWithUserID('${userID}', '${token}')`);
 exports.updateGCMTokenByUserID_SPANGE = (res, userID, token) => executeQuery(res, `call updateGCMTokenByUserID('${userID}', '${token}')`)
