@@ -35,6 +35,8 @@ router.post('/registerUser', (req, res) => dbConn.registerUser_SPANGE(res, req.q
 
 router.post('/acceptUser', (req, res) => dbConn.acceptUser_SPANGE(res, req.query.userID, req.query.deviceID));
 
+router.post('/deleteUser', (req, res) => dbConn.deleteUserInfo_SPANGE(res, req.query.userID, req.query.deviceID));
+
 //------------------------------------------------------------------------------------------------------------------------------------------------
 // Endpoints for Spacosa notification
 

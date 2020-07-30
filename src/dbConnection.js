@@ -266,6 +266,8 @@ exports.registerUser_SPANGE = (res, userID, token) => executeQuery(res, `call re
 exports.updateGCMTokenByUserID_SPANGE = (res, userID, token) => executeQuery(res, `call updateGCMTokenByUserID('${userID}', '${token}')`)
 exports.updateGCMToken_SPANGE = (res, oldToken, newToken) => executeQuery(res, `call updatePushNotificationToken('${oldToken}', '${newToken}')`);
 
+// Function to delete data from table
+exports.deleteUserInfo_SPANGE = (res, userID, deviceID) => executeQuery(res, `call deleteUserInfo_SPANGE("${userID}", "${deviceID}")`);
 
 exports.getTokenByDeviceID_SPANGE = (res, deviceID, latitude, longitude) => {
     var queryString = `call getSPANGETokensByDeviceID('${deviceID}')`;
