@@ -269,10 +269,41 @@ exports.updateGCMToken_SPANGE = (res, oldToken, newToken) => executeQuery(res, `
 // Function to delete data from table
 exports.deleteUserInfo_SPANGE = (res, userID, deviceID) => executeQuery(res, `call deleteUserInfo_SPANGE("${userID}", "${deviceID}")`);
 
+
+// Functions for SPANGE login
+exports.login_SPANGE = (res, email, pw) => executeQuery_SPANGE_LOGIN(res, `SELECT username FROM spange_users WHERE email = "${email}" AND password = "${pw}"`);
+
+exports.getDeviceID_SPANGE_LOGIN = (res, username) => executeQuery_SPANGE_LOGIN(res, `SELECT device_id FROM spange_device_info WHERE username = "${username}"`);
+
+exports.getMemberKey_SPANGE_LOGIN = (res, deviceID) => executeQuery_SPANGE_LOGIN(res, `select device_member_key from spange_device_admin_user where device_id = "${deviceID}"`)
+
+var executeQuery_SPANGE_LOGIN = (res, queryString) => {
+    pool.getConnection((err, conn) => {
+        if (err) {
+            res.send('Error::DB connection error');
+            return;
+        }
+
+        conn.query(queryString, (err, result, fields) => {
+            if (err) {
+                res.send(`Error::${err}`);
+                return;
+            }
+            var data = result[0];
+            console.log('data :', data);
+            res.send(data);
+        });
+    });
+}
+
+// Function to get GCM token
 exports.getTokenByDeviceID_SPANGE = (res, deviceID, latitude, longitude) => {
     var queryString = `call getSPANGETokensByDeviceID('${deviceID}')`;
     pool.getConnection((err, conn) => {
-        if (err) res.send(err);
+        if (err) {
+            res.send(err);
+            return;
+        }
 
         conn.query(queryString, (err, result, fields) => {
             if (err) {
