@@ -15,6 +15,8 @@ router.post('/registerUser', (req, res) => dbConn.registerUser_SPANGE(res, req.q
 
 router.post('/registerDevice', (req, res) => dbConn.registerDeviceID_SPANGE(res, req.query.userID, req.query.deviceID));
 
+router.post('/users/registered', (req, res) => dbConn.getUsersByDeviceID_SPANGE(res, req.query.deviceID));
+
 //-------------------------------------------------------------------------------------------------------------------------------------
 
 router.post('/registerAdminUserForDevice', (req, res) => dbConn.registerAdminUserForDevice_SPANGE(res, req.query.userID, req.query.deviceID));

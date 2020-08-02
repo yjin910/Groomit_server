@@ -109,6 +109,7 @@ app.use('/time', require('./utils/time'));
 // spange/*
 app.use('/spangeNotification', require('./spange/spange'));
 app.use('/spangeLogin', require('./spange/login'));
+app.use('/spangeSignup', require('./spange/signup'));
 app.use('/spange', require('./spange/service'));
 
 // 9room service
