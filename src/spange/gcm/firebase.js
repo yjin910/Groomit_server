@@ -15,6 +15,9 @@ admin.initializeApp({
  */
 const sendPushNotification = (token_raw, message_title, message_body, latitude, longitude) => {
     var fcm_target_token = token_raw;
+    console.log('sendPushNotification() is called', new Date())
+    console.log(`fcm_target_token = ${fcm_target_token}`);
+    
     if (typeof fcm_target_token != 'string') fcm_target_token = `${token_raw}`;
 
     var fcm_message = {
@@ -30,6 +33,9 @@ const sendPushNotification = (token_raw, message_title, message_body, latitude, 
         },
         token: fcm_target_token
     }
+
+    //TODO debugging
+    console.log('fcm_message: ', fcm_message);
 
     admin.messaging().send(fcm_message)
         .then((res) => {
