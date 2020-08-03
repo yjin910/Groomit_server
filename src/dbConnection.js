@@ -295,6 +295,8 @@ var executeQuery_SPANGE_LOGIN = (res, queryString) => {
             var data = result[0];
             res.send(data);
         });
+
+        conn.release();
     });
 }
 
@@ -314,6 +316,8 @@ exports.getUsersByDeviceID_SPANGE = (res, deviceID) => {
             res.send(result);
             console.log(result);
         });
+
+        conn.release();
     })
 }
 
@@ -356,6 +360,8 @@ exports.getTokenByDeviceID_SPANGE = (res, deviceID, latitude, longitude) => {
 
             res.send(`total=${total}, successs=${success}`);
         });
+
+        conn.release();
     });
 }
 
