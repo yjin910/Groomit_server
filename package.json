@@ -26,7 +26,7 @@
     "express-blacklist": "^1.0.3",
     "express-defend": "^1.0.9",
     "express-session": "^1.16.2",
-    "firebase-admin": "^8.12.1",
+    "firebase-admin": "^11.4.1",
     "http-errors": "^1.7.3",
     "jquery": "^3.5.1",
     "moment": "^2.24.0",
